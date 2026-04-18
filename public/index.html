@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureBioChem - Research & Laboratory Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        * {
+            font-family: 'Manrope', sans-serif;
+        }
+        h1, h2, h3, .headline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+        body {
+            background: #0d0f17;
+            color: #ffffff;
+        }
+        .bg-surface { background: #13161f; }
+        .bg-surface-elevated { background: #1a1d28; }
+        .border-surface { border-color: rgba(255,255,255,0.08); }
+        .text-secondary { color: #8891a4; }
+        .text-cyan { color: #00e5ff; }
+        .text-gold { color: #ffdb3c; }
+        .btn-cyan {
+            background: #00e5ff;
+            color: #000;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .btn-cyan:hover {
+            background: #00ccff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        }
+        .btn-cyan-outline {
+            border: 2px solid #00e5ff;
+            color: #00e5ff;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-cyan-outline:hover {
+            background: rgba(0, 229, 255, 0.1);
+        }
+        .accent-glow {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        }
+        .nav-active {
+            color: #00e5ff;
+            border-bottom: 2px solid #00e5ff;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+        }
+        .accordion-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #8891a4;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            color: #00e5ff;
+            border-bottom-color: #00e5ff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .protocol-card-small {
+            background: #13161f;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .protocol-card-small:hover {
+            border-color: #00e5ff;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        input[type="number"], select, input[type="text"] {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+        }
+        input[type="number"]:focus, select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #00e5ff;
+            background: rgba(0, 229, 255, 0.1);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.open {
+            display: flex;
+        }
+        .modal-content {
+            background: #13161f;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(19, 22, 31, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255,255,255,0.08);
+            transition: right 0.3s ease;
+            z-index: 8000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .cart-sidebar.open {
+            right: 0;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .product-card {
+            background: #13161f;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            border-color: #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+        }
+        .product-image {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+        }
+        .product-body {
+            padding: 1.5rem;
+        }
+        .badge-category {
+            display: inline-block;
+            background: #00e5ff;
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .badge-category.gold {
+            background: #ffdb3c;
+            color: #000;
+        }
+        .protocol-detail-sidebar {
+            background: #13161f;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            color: #8891a4;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.5rem 0;
+        }
+        .sidebar-item.active {
+            color: #00e5ff;
+            border-left-color: #00e5ff;
+        }
+        .sidebar-item:hover {
+            color: #ffffff;
+        }
+        .checkbox-custom {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 0.25rem;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkbox-custom:checked {
+            background: #00e5ff;
+            border-color: #00e5ff;
+        }
+        .checkbox-custom:checked::after {
+            content: '✓';
+            color: #000;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .stat-card {
+            background: #13161f;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #00e5ff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8891a4;
+            margin-top: 0.5rem;
+        }
+        .titration-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .titration-table th {
+            background: rgba(0, 229, 255, 0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8891a4;
+        }
+        .titration-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .titration-table tr:hover td {
+            background: rgba(0, 229, 255, 0.05);
+        }
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+        .reference-table th {
+            background: #1a1d28;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8891a4;
+        }
+        .reference-table td {
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .pill-tag {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid rgba(0, 229, 255, 0.5);
+            color: #00e5ff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .pill-tag:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: #00e5ff;
+        }
+        .pill-tag.active {
+            background: rgba(0, 229, 255, 0.2);
+            border-color: #00e5ff;
+        }
+        .cyan-glow {
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-[#0d0f17]">
+    <!-- AGE GATE OVERLAY -->
+    <div id="ageGate" class="fixed inset-0 z-9999 bg-[#0d0f17] flex flex-col items-center justify-center p-4" style="z-index: 9999;">
+        <div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at 50% 0%, #00e5ff, transparent 70%);"></div>
+        <div class="relative z-10 max-w-md w-full text-center">
+            <h1 class="text-4xl font-bold text-[#00e5ff] mb-2 font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
+            <p class="text-secondary mb-8">Research & Laboratory Portal</p>
+
+            <div class="bg-surface border-l-4 border-gold p-6 mb-8 text-left">
+                <p class="font-bold mb-2">⚠ RESTRICTED ACCESS — FOR LICENSED RESEARCHERS ONLY</p>
+                <p class="text-sm text-secondary">This portal contains sensitive research compound information. Access is strictly limited to qualified researchers, laboratory professionals, and licensed healthcare providers.</p>
+            </div>
+
+            <div class="space-y-4 mb-8 text-left">
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" id="ageCheck" class="checkbox-custom mt-1">
+                    <span class="text-sm">I confirm I am 18 years of age or older</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" id="researchCheck" class="checkbox-custom mt-1">
+                    <span class="text-sm">I confirm I am accessing this site for legitimate scientific research purposes only. All products are for laboratory use only — NOT for human consumption.</span>
+                </label>
+            </div>
+
+            <button id="enterButton" class="w-full btn-cyan disabled:opacity-50 disabled:cursor-not-allowed mb-8">ENTER PORTAL</button>
+
+            <p class="text-xs text-secondary">© 2026 FUTUREBIOCHEM — FOR LABORATORY RESEARCH USE ONLY. NOT FOR HUMAN CONSUMPTION.</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden until age gate passes) -->
+    <div id="mainContent" style="display: none;">
+        <!-- FIXED NAV -->
+        <nav class="fixed top-0 left-0 right-0 bg-surface bg-opacity-95 backdrop-blur border-b border-surface z-40" style="background: rgba(13,15,23,0.95);">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-cyan font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
+
+                <div class="flex items-center gap-8">
+                    <button onclick="showSection('home')" class="nav-link text-secondary hover:text-white transition text-sm">Home</button>
+                    <button onclick="showSection('calculator')" class="nav-link text-secondary hover:text-white transition text-sm">Calculator</button>
+                    <button onclick="showSection('protocols')" class="nav-link text-secondary hover:text-white transition text-sm">Protocols</button>
+                    <button onclick="showSection('library')" class="nav-link text-secondary hover:text-white transition text-sm">Library</button>
+                    <button onclick="showSection('shop')" class="nav-link text-secondary hover:text-white transition text-sm">Shop</button>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleCart()" class="relative p-2 hover:text-cyan transition">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-[#ffdb3c] text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+                    </button>
+                    <button class="p-2 hover:text-cyan transition">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </button>
+                    <button onclick="showSection('calculator')" class="btn-cyan text-xs">Get Started</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- SECTIONS CONTAINER -->
+        <div class="pt-20">
+            <!-- SECTION 1: HOME -->
+            <section id="home" class="section active">
+                <!-- HERO SECTION -->
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <!-- Hero: full-bleed background image + circular vial, matching Stitch design -->
+                    <div class="relative min-h-[600px] flex items-center mb-24 -mx-6 px-6 overflow-hidden rounded-2xl">
+                        <!-- Full-screen background -->
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxqhvo-MD6ADTcsweZ8C3ayjjtD60BSc4J-PyxNA_QY9smrMLRhuEGfHRlSLvAvr5SVUaFMJ420Sji6quZ9Nj2tBFaIjgrKrJalgCOskvTZmIPQBnGfxxuLwSdDIpUqCqqn2y6AzA7RQAdT6w1BF7XuktKHvCK0Vr7Ncl2yiRc8Ff4rrlKTPVDVlfFMzYZrF_mdJCMxeMendavVoDpMZj2bHDXvzh1ei_0RwOEncgV0hokk3QuV8G9a4lnRBFS5JC-ym6SnYys" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none" aria-hidden="true">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0d0f17] via-[#0d0f17]/70 to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0d0f17] pointer-events-none"></div>
+
+                        <!-- Content grid -->
+                        <div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-16">
+                            <div class="space-y-8">
+                                <p class="text-[#00e5ff] text-xs font-bold tracking-widest uppercase">FUTUREBIOCHEM</p>
+                                <h2 class="text-6xl font-bold leading-tight font-['Space_Grotesk']">
+                                    FutureBioChem:<br>
+                                    <span class="text-[#00e5ff]">Optimize Your</span><br>
+                                    Longevity Journey.
+                                </h2>
+                                <p class="text-[#8891a4] max-w-lg text-lg leading-relaxed">Harness the power of laboratory-grade accuracy. Our advanced calculating engine ensures your protocols are measured with microscopic exactness.</p>
+                                <div class="flex gap-4 flex-wrap">
+                                    <button onclick="showSection('calculator')" class="btn-cyan text-base px-8 py-4">Launch Calculator</button>
+                                    <button onclick="showSection('protocols')" class="btn-cyan-outline text-base px-8 py-4">View Protocols</button>
+                                </div>
+                            </div>
+                            <!-- Circular vial image -->
+                            <div class="hidden lg:flex justify-center items-center">
+                                <div class="relative w-96 h-96">
+                                    <div class="absolute inset-0 rounded-full animate-pulse" style="background:rgba(0,229,255,0.05);filter:blur(40px);"></div>
+                                    <div class="relative w-full h-full rounded-full border-2 p-3" style="border-color:rgba(0,229,255,0.2);">
+                                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIHmSn6K2EDB77f8hccmlaX_IqrSLr-WCajeu2jn9LKBOikZqF1TMMMbG8BjV_Vos8S7FFArYLC295zN3GrRFZWzFA4JwvrmTl6I-YrEwu55N19OD5mO0wryUDvyGMEtV3gefUSEzfWXrv1lh60rGKomAwuw_jlZE_hZ0TFt3Z20rrI3qrCnHkqYzX5ry74xcccGKzdRh1V3zFVNu9a_yWI79Eiv8CO5JyaSsRGftYGycbLI8jl4ejswYF04PQoi0pLzy0Wova" alt="Research Vial" class="w-full h-full object-cover rounded-full grayscale" style="box-shadow:0 0 50px rgba(0,229,255,0.2);border:4px solid #272a32;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOSING ENGINE -->
+                <div class="max-w-7xl mx-auto px-6 mb-24">
+                    <div class="text-center mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4">THE DOSING ENGINE</p>
+                        <div class="flex justify-center mb-4">
+                            <div class="w-12 h-0.5 bg-cyan"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 bg-surface border border-surface rounded-xl p-8">
+                        <!-- Panel 1: Peptide Configuration -->
+                        <div>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-6">Peptide Configuration</p>
+                            <div class="mb-4">
+                                <label class="block text-secondary text-xs mb-2">Vial quantity (mg):</label>
+                                <input type="number" id="vialMg" value="5" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-xs mb-2">Reconstitution water (mL):</label>
+                                <input type="number" id="waterMl" value="2" step="0.1" class="w-full">
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Dosing Intent -->
+                        <div>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-6">Dosing Intent</p>
+                            <div class="mb-4">
+                                <label class="block text-secondary text-xs mb-2">Desired dose (MG):</label>
+                                <input type="number" id="desiredDose" value="0.5" step="0.1" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-xs mb-2">Syringe (type):</label>
+                                <select id="syringeType" class="w-full">
+                                    <option value="100">1.0 ml (100 units)</option>
+                                    <option value="50">0.5 ml (50 units)</option>
+                                    <option value="30">0.3 ml (30 units)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Calculator Outcome -->
+                        <div class="bg-[#0a0d14] border border-[#00e5ff]/30 rounded-lg p-6">
+                            <p class="text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-6">Calculator Outcome</p>
+                            <p class="text-6xl font-bold font-['Space_Grotesk'] mb-2 text-[#00e5ff]" id="calculatedUnits">10.0</p>
+                            <p class="text-xs font-bold tracking-widest uppercase mb-6 text-[#8891a4]">Units on Syringe</p>
+                            <div class="mb-6 space-y-3 text-sm border-t border-white/10 pt-4">
+                                <div class="flex justify-between">
+                                    <span class="text-[#8891a4]">Source (ml):</span>
+                                    <span id="sourceVol" class="font-bold text-[#00e5ff]">0.25</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-[#8891a4]">Vol Conversion:</span>
+                                    <span id="volConversion" class="font-bold text-[#00e5ff]">2.0 mg/mL</span>
+                                </div>
+                            </div>
+                            <button onclick="saveProtocol()" class="w-full bg-transparent text-[#00e5ff] border border-[#00e5ff]/50 px-4 py-2 rounded font-bold text-xs transition hover:bg-[#00e5ff]/10">💾 Save Protocol</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCIENCE BEHIND IT -->
+                <div class="max-w-7xl mx-auto px-6 mb-24">
+                    <div class="text-center mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4">Science Behind It</p>
+                        <p class="text-secondary max-w-2xl mx-auto">Our calculation engine is built upon foundational principles of volumetric mathematics and chemical stoichiometry. By synthesizing vial mass, solvent volume, and desired dose, we provide researchers with an integrated framework for precise laboratory measurement.</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="bg-surface border border-surface rounded-xl p-8">
+                            <p class="text-2xl mb-4">🧪</p>
+                            <h3 class="text-white font-bold mb-4">Volumetric Accuracy</h3>
+                            <p class="text-secondary text-sm mb-6">Precise unit calculations based on the specific volume of peptide in vials and the reconstitution volume (mL). This ensures the final concentration matches across all research procedures.</p>
+                            <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline">MAG > DILUTION > UNIT PRECISION > VITRO</a>
+                        </div>
+                        <div class="bg-surface border border-surface rounded-xl p-8">
+                            <p class="text-2xl mb-4">❄️</p>
+                            <h3 class="text-white font-bold mb-4">Molecular Integrity</h3>
+                            <p class="text-secondary text-sm mb-6">Stability is volume-dependent. Correct reconstitution calculations preserve peptide stability, preventing peptide chain damage, preserving molecular structure and the reduction of the research cycle.</p>
+                            <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline">FIND OPTIMAL APPLICATION →</a>
+                        </div>
+                        <div class="bg-surface border border-surface rounded-xl p-8">
+                            <p class="text-2xl mb-4">📊</p>
+                            <h3 class="text-white font-bold mb-4">Research-Grade Precision</h3>
+                            <p class="text-secondary text-sm mb-6">Our algorithms account for SCI-standard formulas in calculating the dosage of the syringe (0.1mL increments). This peer-validated, highly-precise approach supports reproducible research outcomes.</p>
+                            <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline">EXPLORE METHODOLOGY →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REFERENCE PROTOCOLS TABLE -->
+                <div class="max-w-7xl mx-auto px-6 mb-24">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">Reference Protocols</p>
+                            <p class="text-secondary">Laboratory-standard reference using guides for common research protocols and volumetric measurement criteria.</p>
+                        </div>
+                        <a href="#" onclick="showSection('library')" class="text-cyan text-xs font-bold tracking-widest hover:underline">View Complete Database →</a>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>COMPOUND NAME</th>
+                                    <th>COMMON DOSING</th>
+                                    <th>FREQUENCY</th>
+                                    <th>RECONSTITUTE</th>
+                                    <th>RESEARCH LINK</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-white font-bold">BPC-157</td>
+                                    <td class="text-cyan">250 - 500 mcg</td>
+                                    <td>Daily / SubQ</td>
+                                    <td>BAC Water / 5ml</td>
+                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-white font-bold">TB-500</td>
+                                    <td class="text-cyan">3.5 - 5 mg</td>
+                                    <td>Bi-Weekly</td>
+                                    <td>BAC Water</td>
+                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-white font-bold">GHK-CU</td>
+                                    <td class="text-cyan">1.5 - 2 mg</td>
+                                    <td>Daily / Cycle</td>
+                                    <td>Highly Soluble</td>
+                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PRECISION FAQ -->
+                <div class="max-w-7xl mx-auto px-6 mb-24">
+                    <div class="text-center mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">Precision FAQ</p>
+                        <p class="text-secondary">Common technical inquiries regarding volumetric dosing and peptide compatibility.</p>
+                    </div>
+
+                    <div class="space-y-4 max-w-3xl mx-auto">
+                        <div class="bg-surface border border-surface rounded-lg">
+                            <div class="accordion-toggle p-6 flex justify-between items-center" onclick="toggleAccordion(this)">
+                                <h3 class="font-bold text-white">How accurate is the volumetric calculation?</h3>
+                                <span class="text-cyan">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6 text-secondary border-t border-surface pt-6">
+                                    Our engine uses high-precision algorithms to account for syringe dead space and solvent displacement, providing accuracy within 0.01mL tolerances.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface border border-surface rounded-lg">
+                            <div class="accordion-toggle p-6 flex justify-between items-center" onclick="toggleAccordion(this)">
+                                <h3 class="font-bold text-white">What is the shelf life of reconstituted peptides?</h3>
+                                <span class="text-cyan">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6 text-secondary border-t border-surface pt-6">
+                                    Typical research peptides remain stable for 30-60 days when refrigerated at 2-8°C after reconstitution. Always refer to specific documentation for each compound's reconstitution protocol.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface border border-surface rounded-lg">
+                            <div class="accordion-toggle p-6 flex justify-between items-center" onclick="toggleAccordion(this)">
+                                <h3 class="font-bold text-white">Does the syringe size affect the actual dose?</h3>
+                                <span class="text-cyan">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6 text-secondary border-t border-surface pt-6">
+                                    The syringe size changes the visual resolution of the measurement (units). A 0.3ml syringe offers far more precise reading than a 1ml syringe for micro-dosing.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA BANNER -->
+                <div class="max-w-7xl mx-auto px-6 mb-24">
+                    <div class="bg-surface border border-surface rounded-xl p-12 text-center cyan-glow">
+                        <h2 class="text-4xl font-bold mb-4">Ready to Elevate Your Precision?</h2>
+                        <p class="text-secondary mb-8">Join thousands of researchers using FutureBioChem for error-free dosing and protocol management.</p>
+                        <div class="flex gap-4 justify-center">
+                            <button class="btn-cyan">Create Free Account</button>
+                            <button class="btn-cyan-outline">Download Guide</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FOOTER -->
+                <footer class="border-t border-surface py-12 mt-24">
+                    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <h3 class="text-cyan font-bold text-lg font-['Space_Grotesk']">FUTUREBIOCHEM</h3>
+                        <div class="flex gap-8 text-secondary text-sm">
+                            <a href="#" class="hover:text-cyan transition">Privacy Policy</a>
+                            <a href="#" class="hover:text-cyan transition">Terms of Service</a>
+                            <a href="#" class="hover:text-cyan transition">Contact Us</a>
+                            <a href="#" class="hover:text-cyan transition">Research Disclaimer</a>
+                        </div>
+                        <p class="text-secondary text-xs">© 2024 FutureBioChem Synthetic Laboratory. For Research Purposes Only.</p>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- SECTION 2: CALCULATOR -->
+            <section id="calculator" class="section">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-500 p-4 mb-12 rounded">
+                        <p class="text-yellow-400 text-sm">⚠ RESEARCH USE ONLY — All calculations are for laboratory research purposes only. Not for human consumption.</p>
+                    </div>
+
+                    <div class="mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">PRECISION CALCULATORS</p>
+                        <h1 class="text-5xl font-bold font-['Space_Grotesk'] mb-4">Dosing Engine</h1>
+                        <p class="text-secondary">Advanced volumetric calculations for research-grade precision</p>
+                    </div>
+
+                    <!-- TABS -->
+                    <div class="border-b border-surface mb-8 flex gap-8">
+                        <button class="tab-button active" onclick="switchTab('reconstitution', this)">Reconstitution</button>
+                        <button class="tab-button" onclick="switchTab('body-weight', this)">Body Weight</button>
+                        <button class="tab-button" onclick="switchTab('protocol-planner', this)">Protocol Planner</button>
+                        <button class="tab-button" onclick="switchTab('hgh', this)">HGH</button>
+                        <button class="tab-button" onclick="switchTab('blend', this)">Blend</button>
+                    </div>
+
+                    <!-- RECONSTITUTION TAB -->
+                    <div id="reconstitution" class="tab-content active bg-surface border border-surface rounded-xl p-8">
+                        <h2 class="text-2xl font-bold mb-2">Peptide Reconstitution Calculator</h2>
+                        <p class="text-[#8891a4] text-sm mb-6">Enter your vial size, BAC water volume, and desired dose to calculate concentration and draw volume.</p>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Vial Weight (mg)</label>
+                                <input id="rcVialMg" type="number" value="5" min="0" step="0.5" oninput="calcRecon()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">BAC Water (mL)</label>
+                                <input id="rcWaterMl" type="number" value="2" min="0.1" step="0.1" oninput="calcRecon()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Desired Dose (mg)</label>
+                                <input id="rcDoseMg" type="number" value="0.5" min="0" step="0.05" oninput="calcRecon()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                        </div>
+                        <div class="mt-8 grid grid-cols-3 gap-4">
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Concentration</p>
+                                <p class="text-4xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="reconResult">2.5</p>
+                                <p class="text-sm text-[#8891a4] mt-1">mg / mL</p>
+                            </div>
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Concentration</p>
+                                <p class="text-4xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="reconResultMcg">2500</p>
+                                <p class="text-sm text-[#8891a4] mt-1">mcg / mL</p>
+                            </div>
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Draw Volume</p>
+                                <p class="text-4xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="reconDrawVol">20</p>
+                                <p class="text-sm text-[#8891a4] mt-1" id="reconDrawUnits">units (0.20 mL)</p>
+                            </div>
+                        </div>
+                        <!-- Syringe diagram (live update from calcRecon) -->
+                        <div class="mt-6 p-6 bg-[#0a0d14] border border-[#00e5ff]/10 rounded-xl">
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase" id="syringeLabel">U-100 Syringe — 20.0 units filled</p>
+                                <select id="sdSyringeType" oninput="calcRecon()" class="bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:border-[#00e5ff]/50 focus:outline-none">
+                                    <option value="100">U-100 (1 mL)</option>
+                                    <option value="50">U-50 (0.5 mL)</option>
+                                    <option value="30">U-30 (0.3 mL)</option>
+                                </select>
+                            </div>
+
+                            <svg id="syringeSVG" viewBox="0 0 580 88" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px;display:block;margin:0 auto">
+                                <defs>
+                                    <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00e5ff;stop-opacity:0.9"/>
+                                        <stop offset="100%" style="stop-color:#0097a7;stop-opacity:0.9"/>
+                                    </linearGradient>
+                                    <linearGradient id="barrelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#22273a;stop-opacity:1"/>
+                                        <stop offset="40%" style="stop-color:#1a1d2e;stop-opacity:1"/>
+                                        <stop offset="100%" style="stop-color:#13161f;stop-opacity:1"/>
+                                    </linearGradient>
+                                    <clipPath id="barrelClip">
+                                        <rect x="62" y="28" width="400" height="32" rx="4"/>
+                                    </clipPath>
+                                </defs>
+                                <!-- Needle hub -->
+                                <rect x="40" y="33" width="22" height="22" rx="2" fill="#2e3347" stroke="#4a5068" stroke-width="1"/>
+                                <!-- Needle shaft -->
+                                <rect x="10" y="40" width="30" height="8" rx="1" fill="#7a8299"/>
+                                <!-- Needle tip -->
+                                <polygon points="10,40 10,48 2,44" fill="#9aa0b4"/>
+
+                                <!-- Barrel background -->
+                                <rect x="62" y="28" width="400" height="32" rx="4" fill="url(#barrelGrad)" stroke="#3a3f55" stroke-width="1.5"/>
+
+                                <!-- Cyan fill (clipped to barrel) -->
+                                <rect id="syringeFill" x="62" y="28" width="80" height="32" rx="4" fill="url(#fillGrad)" clip-path="url(#barrelClip)"/>
+
+                                <!-- Barrel highlight (glass sheen) -->
+                                <rect x="62" y="29" width="400" height="6" rx="3" fill="rgba(255,255,255,0.06)"/>
+
+                                <!-- Tick marks — 11 marks at 0,10,20,...,100 units (0 = x:62, 100 = x:462, step = 40px) -->
+                                <!-- Major ticks every 20 units (0,20,40,60,80,100), minor every 10 -->
+                                <line x1="62"  y1="28" x2="62"  y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                <text x="62"  y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">0</text>
+
+                                <line x1="102" y1="28" x2="102" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                <text x="102" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">10</text>
+
+                                <line x1="142" y1="28" x2="142" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                <text x="142" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">20</text>
+
+                                <line x1="182" y1="28" x2="182" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                <text x="182" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">30</text>
+
+                                <line x1="222" y1="28" x2="222" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                <text x="222" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">40</text>
+
+                                <line x1="262" y1="28" x2="262" y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                <text x="262" y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">50</text>
+
+                                <line x1="302" y1="28" x2="302" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                <text x="302" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">60</text>
+
+                                <line x1="342" y1="28" x2="342" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                <text x="342" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">70</text>
+
+                                <line x1="382" y1="28" x2="382" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                <text x="382" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">80</text>
+
+                                <line x1="422" y1="28" x2="422" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                <text x="422" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">90</text>
+
+                                <line x1="462" y1="28" x2="462" y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                <text x="462" y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">100</text>
+
+                                <!-- Bottom unit label -->
+                                <text x="262" y="76" text-anchor="middle" fill="#8891a4" font-size="9" font-family="Manrope,sans-serif">UNITS (U-100)</text>
+
+                                <!-- Fill indicator line (arrow head at fill level) -->
+                                <line id="syringeFillLine" x1="142" y1="60" x2="142" y2="72" stroke="#00e5ff" stroke-width="2"/>
+                                <polygon id="syringeFillArrow" points="142,75 137,67 147,67" fill="#00e5ff"/>
+                                <text id="syringeFillLabel" x="142" y="85" text-anchor="middle" fill="#00e5ff" font-size="10" font-family="Space Grotesk,sans-serif" font-weight="700">20 units</text>
+
+                                <!-- Plunger flange -->
+                                <rect x="462" y="22" width="14" height="44" rx="3" fill="#2e3347" stroke="#4a5068" stroke-width="1.5"/>
+                                <!-- Plunger rod -->
+                                <rect x="476" y="38" width="70" height="12" fill="#1a1d2e" stroke="#3a3f55" stroke-width="1"/>
+                                <!-- Thumb ring -->
+                                <rect x="546" y="24" width="10" height="40" rx="3" fill="#2e3347" stroke="#4a5068" stroke-width="1.5"/>
+                            </svg>
+                            <p class="mt-4 text-xs text-[#8891a4]">⚠ Research Use Only — Always verify draw volume visually before use. Diagram is illustrative.</p>
+                        </div>
+                    </div>
+
+                    <!-- BODY WEIGHT TAB -->
+                    <div id="body-weight" class="tab-content bg-surface border border-surface rounded-xl p-8">
+                        <h2 class="text-2xl font-bold mb-6">Body Weight Dosing Calculator</h2>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-secondary text-sm mb-2">Body Weight (lbs)</label>
+                                <input type="number" value="180" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-sm mb-2">Dose per lb (mcg)</label>
+                                <input type="number" value="2.5" step="0.1" class="w-full">
+                            </div>
+                        </div>
+                        <div class="mt-8 p-6 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                            <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Total Dose</p>
+                            <p class="text-5xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="bwResultDose">450 mcg</p>
+                            <p class="text-sm text-[#8891a4] mt-2" id="bwResultMg">0.45 mg</p>
+                        </div>
+                    </div>
+
+                    <!-- PROTOCOL PLANNER TAB -->
+                    <div id="protocol-planner" class="tab-content bg-surface border border-surface rounded-xl p-8">
+                        <h2 class="text-2xl font-bold mb-6">Protocol Planner</h2>
+                        <div class="grid grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-secondary text-sm mb-2">Protocol Duration (weeks)</label>
+                                <input type="number" value="12" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-sm mb-2">Frequency per week</label>
+                                <input type="number" value="3" class="w-full">
+                            </div>
+                        </div>
+                        <div class="mt-8 p-6 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                            <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Protocol Summary</p>
+                            <p class="text-5xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="protocolTotalInjections">36</p>
+                            <p class="text-sm text-[#8891a4] mt-1">Total injections</p>
+                            <p class="text-sm text-[#8891a4] mt-2" id="protocolSummaryLine">12 weeks · 3×/week</p>
+                        </div>
+                    </div>
+
+                    <!-- HGH TAB -->
+                    <div id="hgh" class="tab-content bg-surface border border-surface rounded-xl p-8">
+                        <h2 class="text-2xl font-bold mb-2">HGH Calculator</h2>
+                        <p class="text-[#8891a4] text-sm mb-6">HGH is dosed in International Units (IU). Enter your vial size, BAC water, and desired dose to calculate the exact draw volume.</p>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Vial Size (IU)</label>
+                                <input id="hghVialIU" type="number" value="10" step="1" min="1" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Desired Dose (IU)</label>
+                                <input id="hghDoseIU" type="number" value="2" step="0.5" min="0.5" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">BAC Water (mL)</label>
+                                <input id="hghWaterMl" type="number" value="1" step="0.5" min="0.5" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                            </div>
+                        </div>
+                        <div class="mt-6 grid grid-cols-4 gap-4">
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">IU / mL</p>
+                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghConcIU">10.0</p>
+                                <p class="text-sm text-[#8891a4] mt-1">concentration</p>
+                            </div>
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Units to Draw</p>
+                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghResultUnits">20.0</p>
+                                <p class="text-sm text-[#8891a4] mt-1" id="hghResultVol">on U-100</p>
+                            </div>
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Draw Volume</p>
+                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghDrawMl">0.20</p>
+                                <p class="text-sm text-[#8891a4] mt-1">mL</p>
+                            </div>
+                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Doses / Vial</p>
+                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghDosesPerVial">5</p>
+                                <p class="text-sm text-[#8891a4] mt-1">injections</p>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-xs text-[#8891a4]">⚠ Research Use Only — 1 IU ≈ 333 mcg somatropin. Never freeze reconstituted HGH. Store at 2–8°C. Use within 21 days.</p>
+                    </div>
+
+                    <!-- BLEND TAB -->
+                    <div id="blend" class="tab-content bg-surface border border-surface rounded-xl p-8">
+                        <h2 class="text-2xl font-bold mb-2">Peptide Blend Calculator</h2>
+                        <p class="text-secondary text-sm mb-6">Calculate individual peptide doses from blended vials. Select a preset blend or build a custom formulation.</p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- LEFT: Inputs -->
+                            <div>
+                                <!-- Blend selector -->
+                                <div class="mb-5">
+                                    <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Select Blend</label>
+                                    <select id="blendSelector" onchange="onBlendSelect()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                                        <option value="wolverine">Wolverine Stack (BPC-157 + TB-500)</option>
+                                        <option value="klow">Klow (GHK-Cu + BPC-157 + TB-500 + KPV)</option>
+                                        <option value="glow">Glow (GHK-Cu + BPC-157 + TB-500)</option>
+                                        <option value="custom">Custom Blend</option>
+                                    </select>
+                                </div>
+
+                                <!-- Composition panel (preset display) -->
+                                <div id="blendCompositionPanel" class="mb-5 p-4 bg-[#0a0d14] border border-white/10 rounded-lg">
+                                    <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-3" id="blendCompositionTitle">Wolverine Stack Composition <span class="text-[#00e5ff]" id="blendTotalMgLabel">(10mg vial)</span></p>
+                                    <div id="blendCompositionRows" class="space-y-2"></div>
+                                </div>
+
+                                <!-- Custom compound rows (shown only for Custom) -->
+                                <div id="blendCustomRows" class="mb-5 hidden">
+                                    <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-3">Custom Vial Contents (up to 4 compounds)</p>
+                                    <div class="space-y-2">
+                                        <div class="grid grid-cols-5 gap-2 items-center">
+                                            <input type="text"   id="blendName1" placeholder="Compound 1" value="" class="col-span-3 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                            <input type="number" id="blendMg1" value="" step="0.5" min="0" oninput="calcBlend()" placeholder="mg" class="col-span-2 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                        </div>
+                                        <div class="grid grid-cols-5 gap-2 items-center">
+                                            <input type="text"   id="blendName2" placeholder="Compound 2" value="" class="col-span-3 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                            <input type="number" id="blendMg2" value="" step="0.5" min="0" oninput="calcBlend()" placeholder="mg" class="col-span-2 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                        </div>
+                                        <div class="grid grid-cols-5 gap-2 items-center">
+                                            <input type="text"   id="blendName3" placeholder="Compound 3" value="" class="col-span-3 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                            <input type="number" id="blendMg3" value="" step="0.5" min="0" oninput="calcBlend()" placeholder="mg" class="col-span-2 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                        </div>
+                                        <div class="grid grid-cols-5 gap-2 items-center">
+                                            <input type="text"   id="blendName4" placeholder="Compound 4" value="" class="col-span-3 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                            <input type="number" id="blendMg4" value="" step="0.5" min="0" oninput="calcBlend()" placeholder="mg" class="col-span-2 w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#00e5ff]/50 focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BAC Water -->
+                                <div class="mb-4">
+                                    <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">BAC Water Added (mL)</label>
+                                    <input type="number" id="blendWater" value="2.0" step="0.5" min="0.5" oninput="calcBlend()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                                </div>
+
+                                <!-- Dose By + Desired Dose -->
+                                <div class="grid grid-cols-2 gap-4 mb-5">
+                                    <div>
+                                        <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Dose By (Compound)</label>
+                                        <select id="blendDoseBy" onchange="calcBlend()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                                            <!-- Populated dynamically by onBlendSelect() -->
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Desired Dose (mg)</label>
+                                        <input type="number" id="blendTargetDose" value="2" step="0.1" min="0.01" oninput="calcBlend()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Results -->
+                                <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                                    <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-4">Draw Result</p>
+                                    <div class="grid grid-cols-3 gap-4 mb-4">
+                                        <div>
+                                            <p class="text-xs text-[#8891a4] uppercase tracking-widest mb-1">Draw Volume</p>
+                                            <p class="text-2xl font-bold text-[#00e5ff] font-['Space_Grotesk']" id="blendDrawVol">0.10 mL</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-[#8891a4] uppercase tracking-widest mb-1">Units (U-100)</p>
+                                            <p class="text-2xl font-bold text-[#00e5ff] font-['Space_Grotesk']" id="blendDrawUnits">10.0</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-[#8891a4] uppercase tracking-widest mb-1">Conc. (Dose By)</p>
+                                            <p class="text-2xl font-bold text-[#00e5ff] font-['Space_Grotesk']" id="blendConc">2.50 mg/mL</p>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white/10 pt-3">
+                                        <p class="text-xs text-[#8891a4] uppercase tracking-widest mb-2">Per-Draw Delivery</p>
+                                        <div id="blendPerDrawTable" class="space-y-1.5"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT: Syringe -->
+                            <div class="flex flex-col justify-start">
+                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-4">Syringe Diagram</p>
+                                <div class="bg-[#0a0d14] border border-[#00e5ff]/10 rounded-xl p-5">
+                                    <p class="text-xs text-[#8891a4] mb-3" id="blendSyringeLabel">10.0 units drawn</p>
+                                    <div class="overflow-x-auto">
+                                        <svg viewBox="0 0 580 88" width="100%" height="88" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="2" y="38" width="60" height="12" rx="2" fill="#1a1d2e" stroke="#3a3f55" stroke-width="1"/>
+                                            <polygon points="2,38 10,44 2,50" fill="#2e3347"/>
+                                            <rect x="62" y="26" width="400" height="36" rx="4" fill="#0d1020" stroke="#2e3347" stroke-width="1.5"/>
+                                            <rect id="blendSyringeFill" x="62" y="27" width="40" height="34" rx="2" fill="#00e5ff" opacity="0.35"/>
+                                            <line x1="62"  y1="28" x2="62"  y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                            <text x="62"  y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">0</text>
+                                            <line x1="102" y1="28" x2="102" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                            <text x="102" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">10</text>
+                                            <line x1="142" y1="28" x2="142" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                            <text x="142" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">20</text>
+                                            <line x1="182" y1="28" x2="182" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                            <text x="182" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">30</text>
+                                            <line x1="222" y1="28" x2="222" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                            <text x="222" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">40</text>
+                                            <line x1="262" y1="28" x2="262" y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                            <text x="262" y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">50</text>
+                                            <line x1="302" y1="28" x2="302" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                            <text x="302" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">60</text>
+                                            <line x1="342" y1="28" x2="342" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                            <text x="342" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">70</text>
+                                            <line x1="382" y1="28" x2="382" y2="23" stroke="#4a5068" stroke-width="1"/>
+                                            <text x="382" y="14" text-anchor="middle" fill="#8891a4" font-size="8" font-family="Manrope,sans-serif">80</text>
+                                            <line x1="422" y1="28" x2="422" y2="18" stroke="#6a7088" stroke-width="1.5"/>
+                                            <text x="422" y="14" text-anchor="middle" fill="#aab0c4" font-size="9" font-family="Manrope,sans-serif">90</text>
+                                            <line x1="462" y1="28" x2="462" y2="18" stroke="#00e5ff" stroke-width="1.5"/>
+                                            <text x="462" y="14" text-anchor="middle" fill="#00e5ff" font-size="9" font-family="Manrope,sans-serif">100</text>
+                                            <text x="262" y="76" text-anchor="middle" fill="#8891a4" font-size="9" font-family="Manrope,sans-serif">UNITS (U-100)</text>
+                                            <line id="blendFillLine" x1="102" y1="60" x2="102" y2="72" stroke="#00e5ff" stroke-width="2"/>
+                                            <polygon id="blendFillArrow" points="102,75 97,67 107,67" fill="#00e5ff"/>
+                                            <text id="blendFillLabel" x="102" y="85" text-anchor="middle" fill="#00e5ff" font-size="10" font-family="Space Grotesk,sans-serif" font-weight="700">10.0 units</text>
+                                            <rect x="462" y="22" width="14" height="44" rx="3" fill="#2e3347" stroke="#4a5068" stroke-width="1.5"/>
+                                            <rect x="476" y="38" width="70" height="12" fill="#1a1d2e" stroke="#3a3f55" stroke-width="1"/>
+                                            <rect x="546" y="24" width="10" height="40" rx="3" fill="#2e3347" stroke="#4a5068" stroke-width="1.5"/>
+                                        </svg>
+                                    </div>
+                                    <p class="mt-3 text-xs text-[#8891a4]">⚠ Research Use Only — Verify draw volume visually before use.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: PROTOCOLS -->
+            <section id="protocols" class="section">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div id="protocolsGridView">
+                        <div class="mb-12">
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">Research Protocols</p>
+                            <h1 class="text-5xl font-bold font-['Space_Grotesk'] mb-4">Protocol Database</h1>
+                            <p class="text-secondary">Laboratory-standard injection schedules for all research compounds.</p>
+                        </div>
+
+                        <div class="protocol-grid" id="protocolsGrid">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+
+                    <div id="protocolsDetailView" style="display: none;">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: LIBRARY -->
+            <section id="library" class="section">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div class="mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">Comprehensive Repository</p>
+                        <h1 class="text-5xl font-bold font-['Space_Grotesk'] mb-4">Peptide <span class="text-white">Database</span></h1>
+                        <p class="text-secondary">Access hyper-precise data on synthetic chains. Our library is structured for clinical-grade accuracy, providing solubility profiles and verified research dosing ranges.</p>
+                    </div>
+
+                    <!-- SEARCH/FILTER BAR -->
+                    <div class="bg-surface border border-surface rounded-xl p-6 mb-8">
+                        <div class="grid grid-cols-3 gap-6 mb-6">
+                            <div>
+                                <label class="block text-secondary text-xs mb-2 font-bold">SEARCH CATALOG</label>
+                                <input type="text" id="librarySearch" placeholder="🔍 Enter compound name..." class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-xs mb-2 font-bold">CATEGORY FILTER</label>
+                                <select id="categoryFilter" class="w-full">
+                                    <option value="">All Research Areas</option>
+                                    <option value="metabolic">Metabolic</option>
+                                    <option value="recovery">Recovery</option>
+                                    <option value="anti-aging">Anti-Aging</option>
+                                    <option value="cognitive">Cognitive</option>
+                                    <option value="hormone">Hormone</option>
+                                    <option value="immune">Immune</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-secondary text-xs mb-2 font-bold">SOLUBILITY PROFILE</label>
+                                <select id="solubilityFilter" class="w-full">
+                                    <option value="">Any Solubility</option>
+                                    <option value="highly">Highly Soluble</option>
+                                    <option value="moderate">Moderately Soluble</option>
+                                    <option value="bac">BAC Water Required</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- QUICK TAGS -->
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="pill-tag" onclick="filterByTag('weight-loss')">Weight Loss</button>
+                            <button class="pill-tag" onclick="filterByTag('injury-repair')">Injury Repair</button>
+                            <button class="pill-tag" onclick="filterByTag('cognition')">Cognition</button>
+                            <button class="pill-tag" onclick="filterByTag('sleep')">Sleep Quality</button>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCT GRID -->
+                    <div class="product-grid" id="libraryGrid">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <!-- RESEARCH DISCLOSURE -->
+                    <div class="border-l-4 border-gold bg-surface-elevated p-6 mt-24 rounded">
+                        <p class="font-bold text-gold mb-2">⚠ RESEARCH DISCLOSURE NOTICE</p>
+                        <p class="text-secondary text-sm">All compounds listed in this database are strictly for laboratory research and development purposes only. These products are not intended for human or animal consumption, nor for the treatment of any disease or medical condition. Synthetic chain precision is required for all reconstitution protocols.</p>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <footer class="border-t border-surface py-12 mt-12">
+                        <div class="flex justify-between items-center text-secondary text-sm">
+                            <p>FUTUREBIOCHEM</p>
+                            <div class="flex gap-8">
+                                <a href="#" class="hover:text-cyan transition">Documentation</a>
+                                <a href="#" class="hover:text-cyan transition">Safety Data</a>
+                                <a href="#" class="hover:text-cyan transition">Terms of Service</a>
+                                <a href="#" class="hover:text-cyan transition">Privacy Portal</a>
+                            </div>
+                            <p>© 2024 FutureBioChem Synthetic Laboratory. For Research Purposes Only.</p>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- SECTION 5: SHOP -->
+            <section id="shop" class="section">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div class="bg-red-900 bg-opacity-30 border border-red-600 p-4 mb-12 rounded">
+                        <p class="text-red-400 text-sm">⚠ Research Use Only — All products for laboratory use only. Not for human consumption.</p>
+                    </div>
+
+                    <div class="mb-12">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">Synthetic Repository</p>
+                        <h1 class="text-5xl font-bold font-['Space_Grotesk'] mb-4">Precision <span class="text-white">FutureBioChem</span></h1>
+                        <p class="text-secondary">Laboratory-grade research compounds. Exact molecular precision for scientific validation.</p>
+                    </div>
+
+                    <div class="product-grid" id="shopGrid">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold font-['Space_Grotesk']">Research Cart</h2>
+            <button onclick="toggleCart()" class="text-2xl hover:text-cyan transition">×</button>
+        </div>
+
+        <p class="text-red-400 text-xs mb-6">⚠ FOR LABORATORY RESEARCH USE ONLY</p>
+
+        <div id="cartItems" class="space-y-6 mb-8">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="border-t border-surface pt-6">
+            <div class="flex justify-between mb-6">
+                <span class="text-secondary">Subtotal:</span>
+                <span class="text-white font-bold">$<span id="cartSubtotal">0</span></span>
+            </div>
+            <button onclick="openCheckout()" class="w-full btn-cyan">Checkout with Crypto</button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Checkout</h2>
+                <button onclick="closeCheckout()" class="text-2xl hover:text-cyan">×</button>
+            </div>
+
+            <div class="bg-surface-elevated rounded p-4 mb-6">
+                <p class="text-secondary text-xs mb-2">ORDER SUMMARY</p>
+                <p class="text-white font-bold">Total: $<span id="checkoutTotal">0</span></p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-secondary text-sm mb-3">SELECT CRYPTOCURRENCY</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="border border-cyan text-cyan px-4 py-2 rounded font-bold text-sm hover:bg-cyan hover:text-black transition">BTC</button>
+                    <button class="border border-surface text-secondary px-4 py-2 rounded font-bold text-sm hover:border-cyan hover:text-cyan transition">ETH</button>
+                    <button class="border border-surface text-secondary px-4 py-2 rounded font-bold text-sm hover:border-cyan hover:text-cyan transition">USDT</button>
+                    <button class="border border-surface text-secondary px-4 py-2 rounded font-bold text-sm hover:border-cyan hover:text-cyan transition">USDC</button>
+                    <button class="border border-surface text-secondary px-4 py-2 rounded font-bold text-sm hover:border-cyan hover:text-cyan transition">SOL</button>
+                    <button class="border border-surface text-secondary px-4 py-2 rounded font-bold text-sm hover:border-cyan hover:text-cyan transition">LTC</button>
+                </div>
+            </div>
+
+            <button onclick="proceedToPayment()" class="w-full btn-cyan mb-4">PROCEED TO PAYMENT</button>
+            <p class="text-secondary text-xs text-center">Crypto-only payments. Powered by PayGate.to</p>
+        </div>
+    </div>
+
+    <script>
+        // PEPTIDE DATA
+        const peptideDetails = {
+            'BPC-157': {
+                category: 'HEALING PEPTIDE',
+                sequence: '201-A',
+                formula: 'C₆₂ H₉₈ N₁₆ O₂₂',
+                intent: 'Soft Tissue & Gut Repair',
+                halfLife: '4-6 Hours',
+                receptor: 'Growth Hormone Receptors',
+                storage: 'Lyophilized: 2y / Recon: 30 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 5,
+                cycleDuration: '12 Weeks',
+                titration: [
+                    { phase: 'Loading',      weeks: '01-02', dose: '500 mcg', doseRawMcg: 500,  units: '20 Units', freq: 'Twice Daily' },
+                    { phase: 'Maintenance',  weeks: '03-12', dose: '250 mcg', doseRawMcg: 250,  units: '10 Units', freq: 'Once Daily' }
+                ]
+            },
+            'TB-500': {
+                category: 'SYSTEMIC REPAIR',
+                sequence: '202-B',
+                formula: 'C₂₁₂ H₃₅₀ N₅₆ O₇₈ S',
+                intent: 'Systemic Healing & Recovery',
+                halfLife: '2.0 Days',
+                receptor: 'Actin Binding / Cell Migration',
+                storage: 'Lyophilized: 2y / Recon: 30 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 5,
+                cycleDuration: '10 Weeks',
+                titration: [
+                    { phase: 'Loading',      weeks: '01-06', dose: '2.5 mg',   doseRawMcg: 2500, units: '25 Units',  freq: 'Twice Weekly' },
+                    { phase: 'Maintenance',  weeks: '07-10', dose: '1.25 mg',  doseRawMcg: 1250, units: '12.5 Units', freq: 'Once Weekly' }
+                ]
+            },
+            'Wolverine Stack': {
+                category: 'PREMIUM STACK',
+                sequence: '203-W',
+                formula: 'BPC-157 + TB-500 (Equal mg / Single Vial)',
+                intent: 'Comprehensive Injury Recovery — Single-Vial Blend',
+                halfLife: 'BPC: 4-6H / TB: 2D',
+                receptor: 'Multi-Receptor Synergistic',
+                storage: 'Lyophilized: 2y / Recon: 28 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 10,
+                cycleDuration: '8 Weeks',
+                titration: [
+                    { phase: 'Loading',      weeks: '01-04', dose: 'Blend 250mcg (each)',  doseRawMcg: 250, units: '20 Units', freq: 'Once Daily' },
+                    { phase: 'Maintenance',  weeks: '05-08', dose: 'Blend 125mcg (each)',  doseRawMcg: 125, units: '10 Units', freq: 'Once Daily' }
+                ]
+            },
+            'Retatrutide': {
+                category: 'TRIPLE AGONIST',
+                sequence: '104-B',
+                formula: 'C₂₂₁ H₃₄₂ N₆₂ O₆₈',
+                intent: 'Multi-Receptor Weight Management',
+                halfLife: '~6.0 Days',
+                receptor: 'GLP-1 / GIP / GCG',
+                storage: 'Lyophilized: 2y / Recon: 28 days',
+                purity: '>99.2%',
+                reconVol: '2.0',
+                defaultVialMg: 10,
+                cycleDuration: '16 Weeks',
+                titration: [
+                    { phase: 'Introductory', weeks: '01-04', dose: '2.0 mg',  doseRawMcg: 2000,  units: '20 Units',  freq: 'Every 7 Days' },
+                    { phase: 'Moderate',     weeks: '05-08', dose: '4.0 mg',  doseRawMcg: 4000,  units: '40 Units',  freq: 'Every 7 Days' },
+                    { phase: 'Therapeutic',  weeks: '09-12', dose: '8.0 mg',  doseRawMcg: 8000,  units: '80 Units',  freq: 'Every 7 Days' },
+                    { phase: 'Maximum',      weeks: '13-16', dose: '12.0 mg', doseRawMcg: 12000, units: '120 Units', freq: 'Every 7 Days' }
+                ]
+            },
+            'Mots-C': {
+                category: 'MITOCHONDRIAL',
+                sequence: '301-M',
+                formula: 'C₇₆ H₁₃₀ N₁₄ O₂₈',
+                intent: 'Metabolic Homeostasis',
+                halfLife: '< 1 Hour',
+                receptor: 'AMPK / Mitochondrial',
+                storage: 'Lyophilized: 2y / Recon: 14 days',
+                purity: '>99.0%',
+                reconVol: '1.0',
+                defaultVialMg: 5,
+                cycleDuration: '8 Weeks',
+                titration: [
+                    { phase: 'Loading',      weeks: '01-02', dose: '1 mg',              doseRawMcg: 1000, units: '10 Units',  freq: '5x Weekly' },
+                    { phase: 'Maintenance',  weeks: '03-08', dose: '3.33 mg (10mg/wk)', doseRawMcg: 3333, units: '33.3 Units', freq: '3x Weekly' }
+                ]
+            },
+            'NAD+': {
+                category: 'CELLULAR LONGEVITY',
+                sequence: '401-N',
+                formula: 'C₂₁ H₂₇ N₇ O₁₄ P₂',
+                intent: 'DNA Repair & Cellular Energy',
+                halfLife: 'Variable (SubQ)',
+                receptor: 'Sirtuin / PARP Pathways',
+                storage: 'Light-sensitive, Recon: 7 days',
+                purity: '>99.5%',
+                reconVol: '2.0',
+                defaultVialMg: 500,
+                cycleDuration: '8+ Weeks',
+                titration: [
+                    { phase: 'Loading',     weeks: '01-02', dose: '50 mg',  doseRawMcg: 50000,  units: '20 Units',  freq: '3x Weekly' },
+                    { phase: 'Maintenance', weeks: '03+',   dose: '100 mg', doseRawMcg: 100000, units: '40 Units',  freq: '3x Weekly' }
+                ]
+            },
+            'KPV': {
+                category: 'IMMUNE MODULATOR',
+                sequence: '501-K',
+                formula: 'C₁₆ H₂₈ N₄ O₅',
+                intent: 'Gut & Skin Anti-Inflammation',
+                halfLife: '< 2 Hours',
+                receptor: 'MC1R / NF-κB Inhibition',
+                storage: 'Lyophilized: 2y / Recon: 30 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 5,
+                cycleDuration: '8 Weeks',
+                titration: [
+                    { phase: 'Standard', weeks: '01-08', dose: '500 mcg', doseRawMcg: 500, units: '20 Units', freq: 'Twice Daily' }
+                ]
+            },
+            'GHK-Cu': {
+                category: 'AESTHETICS',
+                sequence: '601-G',
+                formula: 'C₁₄ H₂₃ CuN₆ O₄',
+                intent: 'Collagen Synthesis & Tissue Remodeling',
+                halfLife: '~1.0 Hour',
+                receptor: 'Copper-binding / Gene Expression',
+                storage: 'Light-sensitive / Recon: 30 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 50,
+                cycleDuration: '8 Weeks',
+                titration: [
+                    { phase: 'Daily', weeks: '01-08', dose: '1 mg', doseRawMcg: 1000, units: '10 Units', freq: 'Once Daily' }
+                ]
+            },
+            'HGH': {
+                category: 'GROWTH HORMONE',
+                sequence: '701-H',
+                formula: 'C₉₉₀ H₁₅₂₉ N₂₆₃ O₃₀₁ S₇',
+                intent: 'Anabolic & Regenerative Signaling',
+                halfLife: '~3.0 Hours',
+                receptor: 'GHR / IGF-1 Axis',
+                storage: 'Lyophilized: 2y / Recon: 21 days. Never freeze reconstituted.',
+                purity: '>99.2%',
+                reconVol: '1.0',
+                defaultVialMg: 10,
+                cycleDuration: '24 Weeks',
+                titration: [
+                    { phase: 'Conservative',  weeks: '01-08', dose: '1 IU',  doseRawMcg: null, units: '10 Units', freq: 'Daily (PM)' },
+                    { phase: 'Moderate',      weeks: '09-16', dose: '2 IU',  doseRawMcg: null, units: '20 Units', freq: 'Daily' },
+                    { phase: 'Research Max',  weeks: '17-24', dose: '4 IU',  doseRawMcg: null, units: '40 Units', freq: 'Split AM/PM' }
+                ]
+            },
+            'Klow': {
+                category: 'MULTI-PEPTIDE BLEND',
+                sequence: '801-CG',
+                formula: 'GHK-Cu + BPC-157 + TB-500 + KPV (Single Vial)',
+                intent: 'Comprehensive Recovery, Immunity & Anti-Aging',
+                halfLife: 'GHK: ~1H / BPC: 4-6H / TB: 2D / KPV: <2H',
+                receptor: 'Copper-binding / GH Receptor / Actin / MC1R',
+                storage: 'Refrigerate / Light-sensitive / Recon: 21 days',
+                purity: '>99.0%',
+                reconVol: '2.0',
+                defaultVialMg: 14,
+                cycleDuration: '8 Weeks',
+                titration: [
+                    { phase: 'Standard', weeks: '01-08', dose: 'Blend 0.1 mL draw', doseRawMcg: null, units: '10 Units', freq: 'Once Daily — See Blend Calculator' }
+                ]
+            },
+            'Glow': {
+                category: 'ANTI-AGING BLEND',
+                sequence: '901-AG',
+                formula: 'GHK-Cu + BPC-157 + TB-500 (Single Vial)',
+                intent: 'Longevity & Dermal Regeneration',
+                halfLife: 'GHK: 1H / BPC: 4-6H / TB: 2D',
+                receptor: 'Multi-pathway Anti-Aging',
+                storage: 'Refrigerate / Light-sensitive / Recon: 21 days',
+                purity: '>99.0%',
+                reconVol: '5.0',
+                defaultVialMg: 7,
+                cycleDuration: '6 Weeks loading, monthly maintenance',
+                titration: [
+                    { phase: 'Loading',      weeks: '01-06',   dose: 'Blend 0.2 mL draw', doseRawMcg: null, units: 'Variable', freq: 'Daily — See Blend Calculator' },
+                    { phase: 'Maintenance',  weeks: 'Ongoing', dose: 'Blend 0.2 mL draw', doseRawMcg: null, units: 'Variable', freq: 'Monthly 10-day course' }
+                ]
+            }
+        };
+
+        const libraryItems = [
+            {
+                name: 'Retatrutide',
+                category: 'METABOLIC',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAw7C3-bFKS5pDehdXnMvL4komXFdkrQtG_BynY4AsB-PXRWtShRyD5pARDkfgVO4VtfDN7uxYY075tfJW4s0jQSpqN0PhVuBICZLS8IdwAtJxivYq-8gaIiNpCEk4Z5Q-ESh-hIg2Fuvj2g-GRPtAi4Oi_vBA-Nw4ZBHej4mhotDn5waUbRFIyWXgsSElihwd_u1vYjjm5qfLPSI488S8IAzSEgojN7iOt_7MOYYAxJrFsSBwJJZ47v4XdkpRPOEvxO31VuyDB',
+                description: 'GLP-1, GIP and Glucagon receptor agonist. Leading edge research for significant metabolic intervention.',
+                benefit: 'Extreme Fat Loss',
+                dosing: '1mg - 12mg / week'
+            },
+            {
+                name: 'Mots-C',
+                category: 'MITOCHONDRIAL',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBbwv8rzXPLK6uBHesjB7ukkiGePrEeBc-nqemCV4Ru9zC4xEzRpTreeHBI3ZNrA965CK5GcocXUcvc9zfzBd0IMohOZjKfr9i8eXbNcsSZhCOjH41cf5g5ZRtFBAy9cCFdHzApRec7YKcLFRtVp-E6i-xAeOw3qS-OMI6V08Ndca8YaO8MpGvQSSSRUpIEYVbly5AoI5srsCdCIz1qyN5pg0jEfblbwzWP2Niiz4tu6-fvAy-l55vA0Q2yA4GqtF8XVLqW3bTgp',
+                description: 'Mitochondria-derived peptide that regulates metabolic homeostasis and systemic insulin sensitivity.',
+                benefit: 'Mitochondrial Health',
+                dosing: '5mg - 10mg / 3 days'
+            },
+            {
+                name: 'BPC-157',
+                category: 'HEALING',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRYPa-V4s6uNw9WQevfO85fyoeukKcCL7X5SGBGBOZFpnIXKEhIiSEFI2nfQ2aM5dFw0GNLVVyRqdOpy5bl8d7pOOYIjT_0TevwP087WOJsqIti_onukWQN18cg3Qcdfb7BTNx7cWM4jSQI3nJ8tg3gd1HTdIWG8SQx9LrnApnhHUiuPggMAStp-vDUVOlPHe8lmw9-oD0t2Pgd1CIRxM6YMn06AUVVKubyXF5dAi8cvASh53hVe0-DNbYi232vuE9uhwn5Msi',
+                description: 'Pentadecapeptide shown to accelerate healing of tendons, muscles, and ligaments via angiogenic pathways.',
+                benefit: 'Soft Tissue Repair',
+                dosing: '250mcg - 500mcg BID'
+            },
+            {
+                name: 'TB-500',
+                category: 'RECOVERY',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
+                description: 'Promotes actin upregulation and cell migration for systemic injury recovery and cardiovascular health.',
+                benefit: 'Systemic Healing',
+                dosing: '2mg - 5mg / week'
+            },
+            {
+                name: 'NAD+',
+                category: 'ANTI-AGING',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
+                description: 'Critical co-enzyme for DNA repair and cellular energy production. A staple of longevity research.',
+                benefit: 'Cellular Longevity',
+                dosing: '100mg - 250mg SC'
+            },
+            {
+                name: 'GHK-Cu',
+                category: 'AESTHETICS',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFZfxSQ5MqdZqLSUByW5Q5w99DSgKg8y2Xtcgk97P-B375JZp8EqbxAbdlZrNNsaGTuIzRCdjsXOpM_YGLHh9Mbu033lLDJCIgk6G5ouEvXIiz2iQI0JLVeXoiD-o6My_E8zlaKqMNuEdU5ntsaXxumOzBFNCrq-H8k9vqsrwJR-gidS_09b8nGIIVMaEGFl9Txj7p4hqoIiszrSTYrV6WqxpPVBouB0KEyNRkUUumf55FIwui9oCmB3eeVV2C_wtvt5AuBkg0',
+                description: 'Copper tripeptide that activates tissue remodeling, collagen synthesis, and antioxidant pathways.',
+                benefit: 'Skin & Collagen',
+                dosing: '1mg - 2mg Daily'
+            },
+            {
+                name: 'HGH',
+                category: 'HORMONE',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBMf9RnXQAEVj_EMW5spTnis8D6TXjULnM7zqYYLY7iBoBZ7fAmVWXdGi8QJXEAefD_PFAiFTdl-oSQ5rN1QxNFJv5gi-TvMqch095Qfkp2rM2Kfq_gEAzdc_2nTlvefs8YV3xvW3kHKy-Ro01EqPgo--PHMBi64GrPR1YrIC5WXV82fEpMzNVIXzL_GZ2LLYhrTING7_cdwmsPyMZDBxw8LQ59DXrUkLAKfc89dX1ttiSHqZymSFOATqvqrriRxRtQv1Kucb',
+                description: '191 amino acid somatropin sequence for IGF-1 axis research, body composition, and regenerative signaling.',
+                benefit: 'Anabolic & Regenerative',
+                dosing: '1 IU - 4 IU Daily'
+            },
+            {
+                name: 'KPV',
+                category: 'IMMUNE',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9ovxzepxwvA0BRaLJw8Tq53mdwYkOwyDhEIycea0EpLGl71TQF41jnSbitkOKCim5IpU5LiQUTRhsq_zx4ihzwfr9dq5p9XDyPYkBz6YZUrDSF2PHNAUWrYSyCMREmztNsgocwap3q2C1GY0pW6R85Mu7b92oN9TSQPs6ItdIiq-7w7Eswc9fxGceSzHKO7_txQfTxx6HNEb-GBMY1e7XOYz3WGD2ETpMjZgq8gIIBeKu_dDu6q2A_0uYXYKuz0h7LV9Eg9BW',
+                description: 'Anti-inflammatory peptide for gut and skin health. Modulates immune response.',
+                benefit: 'Immune Support',
+                dosing: '500mcg - 1mg Daily'
+            },
+            {
+                name: 'Klow',
+                category: 'COGNITIVE',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
+                description: 'Cognitive blend combining neuroprotective compounds. Enhanced focus and clarity.',
+                benefit: 'Cognition Support',
+                dosing: '200mcg Daily'
+            },
+            {
+                name: 'Glow',
+                category: 'ANTI-AGING',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
+                description: 'Premium anti-aging blend targeting multiple longevity pathways. Comprehensive formulation.',
+                benefit: 'Longevity Stack',
+                dosing: 'Variable'
+            }
+        ];
+
+        // Product images — sourced directly from Stitch design files
+        const IMG = {
+            retatrutide: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAw7C3-bFKS5pDehdXnMvL4komXFdkrQtG_BynY4AsB-PXRWtShRyD5pARDkfgVO4VtfDN7uxYY075tfJW4s0jQSpqN0PhVuBICZLS8IdwAtJxivYq-8gaIiNpCEk4Z5Q-ESh-hIg2Fuvj2g-GRPtAi4Oi_vBA-Nw4ZBHej4mhotDn5waUbRFIyWXgsSElihwd_u1vYjjm5qfLPSI488S8IAzSEgojN7iOt_7MOYYAxJrFsSBwJJZ47v4XdkpRPOEvxO31VuyDB',
+            motsc:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBbwv8rzXPLK6uBHesjB7ukkiGePrEBc-nqemCV4Ru9zC4xEzRpTreeHBI3ZNrA965CK5GcocXUcvc9zfzBd0IMohOZjKfr9i8eXbNcsSZhCOjH41cf5g5ZRtFBAy9cCFdHzApRec7YKcLFRtVp-E6i-xAeOw3qS-OMI6V08Ndca8YaO8MpGvQSSSRUpIEYVbly5AoI5srsCdCIz1qyN5pg0jEfblbwzWP2Niiz4tu6-fvAy-l55vA0Q2yA4GqtF8XVLqW3bTgp',
+            nad:         'https://lh3.googleusercontent.com/aida-public/AB6AXuBRYPa-V4s6uNw9WQevfO85fyoeukKcCL7X5SGBGBOZFpnIXKEhIiSEFI2nfQ2aM5dFw0GNLVVyRqdOpy5bl8d7pOOYIjT_0TevwP087WOJsqIti_onukWQN18cg3Qcdfb7BTNx7cWM4jSQI3nJ8tg3gd1HTdIWG8SQx9LrnApnhHUiuPggMAStp-vDUVOlPHe8lmw9-oD0t2Pgd1CIRxM6YMn06AUVVKubyXF5dAi8cvASh53hVe0-DNbYi232vuE9uhwn5Msi',
+            kpv:         'https://lh3.googleusercontent.com/aida-public/AB6AXuB9ovxzepxwvA0BRaLJw8Tq53mdwYkOwyDhEIycea0EpLGl71TQF41jnSbitkOKCim5IpU5LiQUTRhsq_zx4ihzwfr9dq5p9XDyPYkBz6YZUrDSF2PHNAUWrYSyCMREmztNsgocwap3q2C1GY0pW6R85Mu7b92oN9TSQPs6ItdIiq-7w7Eswc9fxGceSzHKO7_txQfTxx6HNEb-GBMY1e7XOYz3WGD2ETpMjZgq8gIIBeKu_dDu6q2A_0uYXYKuz0h7LV9Eg9BW',
+            klow:        'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
+            glow:        'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
+            ghkcu:       'https://lh3.googleusercontent.com/aida-public/AB6AXuAFZfxSQ5MqdZqLSUByW5Q5w99DSgKg8y2Xtcgk97P-B375JZp8EqbxAbdlZrNNsaGTuIzRCdjsXOpM_YGLHh9Mbu033lLDJCIgk6G5ouEvXIiz2iQI0JLVeXoiD-o6My_E8zlaKqMNuEdU5ntsaXxumOzBFNCrq-H8k9vqsrwJR-gidS_09b8nGIIVMaEGFl9Txj7p4hqoIiszrSTYrV6WqxpPVBouB0KEyNRkUUumf55FIwui9oCmB3eeVV2C_wtvt5AuBkg0',
+            hgh:         'https://lh3.googleusercontent.com/aida-public/AB6AXuBMf9RnXQAEVj_EMW5spTnis8D6TXjULnM7zqYYLY7iBoBZ7fAmVWXdGi8QJXEAefD_PFAiFTdl-oSQ5rN1QxNFJv5gi-TvMqch095Qfkp2rM2Kfq_gEAzdc_2nTlvefs8YV3xvW3kHKy-Ro01EqPgo--PHMBi64GrPR1YrIC5WXV82fEpMzNVIXzL_GZ2LLYhrTING7_cdwmsPyMZDBxw8LQ59DXrUkLAKfc89dX1ttiSHqZymSFOATqvqrriRxRtQv1Kucb'
+        };
+
+        const shopProducts = [
+            { name: 'Retatrutide', badge: 'GLP-1/GIP/GCG', desc: 'Experimental triple agonist targeting glucagon receptors for advanced metabolic research.', variants: [{ label: '10MG', price: 35 }, { label: '20MG', price: 45 }, { label: '30MG', price: 55 }], image: IMG.retatrutide },
+            { name: 'Mots-C',      badge: 'Mitochondrial',  desc: 'Mitochondria-derived peptide research focused on metabolic homeostasis and exercise mimetic properties.', variants: [{ label: '10MG', price: 35 }, { label: '40MG', price: 55 }], image: IMG.motsc },
+            { name: 'NAD+',        badge: 'Longevity',      desc: 'Nicotinamide Adenine Dinucleotide for cellular energy and DNA repair signaling pathways.', variants: [{ label: '500MG', price: 25 }, { label: '1000MG', price: 35 }], image: IMG.nad },
+            { name: 'KPV',         badge: 'Immune',         desc: 'Potent anti-inflammatory tripeptide research for intestinal and cutaneous immune modulation.', variants: [{ label: '10MG', price: 25 }, { label: '30MG', price: 50 }], image: IMG.kpv },
+            { name: 'Klow',        badge: 'Recovery Blend', desc: 'Comprehensive recovery, immunity & anti-aging blend: GHK-Cu + BPC-157 + TB-500 + KPV in a single vial.', variants: [{ label: '80MG', price: 50 }], image: IMG.klow },
+            { name: 'Glow',        badge: 'Anti-Aging Blend', desc: 'Dermal regeneration and longevity blend: GHK-Cu + BPC-157 + TB-500 in a single vial.', variants: [{ label: '50MG', price: 50 }, { label: '70MG', price: 65 }], image: IMG.glow },
+            { name: 'GHK-Cu',      badge: 'Aesthetics',     desc: 'Copper tripeptide complex with extensive documentation on tissue remodeling and DNA repair.', variants: [{ label: '50MG', price: 25 }, { label: '100MG', price: 35 }], image: IMG.ghkcu },
+            { name: 'HGH',         badge: 'Growth Hormone', desc: 'Human Growth Hormone somatropin sequence. High-stability lyophilized powder for research.', variants: [{ label: '15IU', price: 45 }, { label: '24IU', price: 55 }, { label: '36IU', price: 65 }], image: IMG.hgh }
+        ];
+
+        let cart = [];
+        let currentProtocol = null;
+        let activeTab = 'reconstitution';
+
+        // AGE GATE LOGIC
+        document.addEventListener('DOMContentLoaded', () => {
+            const ageCheck = document.getElementById('ageCheck');
+            const researchCheck = document.getElementById('researchCheck');
+            const enterButton = document.getElementById('enterButton');
+
+            function updateButtonState() {
+                enterButton.disabled = !(ageCheck.checked && researchCheck.checked);
+            }
+
+            ageCheck.addEventListener('change', updateButtonState);
+            researchCheck.addEventListener('change', updateButtonState);
+
+            enterButton.addEventListener('click', () => {
+                sessionStorage.setItem('fbcAgeVerified', 'true');
+                document.getElementById('ageGate').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                initializePage();
+            });
+
+            // Check if already verified
+            if (sessionStorage.getItem('fbcAgeVerified') === 'true') {
+                document.getElementById('ageGate').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                initializePage();
+            }
+        });
+
+        function initializePage() {
+            renderProtocolGrid();
+            renderLibraryGrid();
+            renderShopGrid();
+            calculateDosing();
+            calcRecon();
+            calcDraw();
+            calcHGH();
+            onBlendSelect();
+        }
+
+        // ── RECONSTITUTION CALCULATOR ──────────────────────────────────────────
+        function calcRecon() {
+            const vialMg     = parseFloat(document.getElementById('rcVialMg')?.value)    || 5;
+            const waterMl    = parseFloat(document.getElementById('rcWaterMl')?.value)   || 2;
+            const doseMg     = parseFloat(document.getElementById('rcDoseMg')?.value)    || 0.5;
+            const syringeMax = parseInt(document.getElementById('sdSyringeType')?.value) || 100;
+
+            const concMgMl  = vialMg / waterMl;
+            const concMcgMl = concMgMl * 1000;
+            const drawMl    = doseMg / concMgMl;
+            const drawUnits = drawMl * syringeMax;
+
+            document.getElementById('reconResult').textContent    = concMgMl.toFixed(2);
+            document.getElementById('reconResultMcg').textContent = concMcgMl.toFixed(0);
+            document.getElementById('reconDrawVol').textContent   = drawUnits.toFixed(1);
+            document.getElementById('reconDrawUnits').textContent = `units  (${drawMl.toFixed(3)} mL)`;
+
+            // Drive the syringe graphic
+            updateSyringe(drawUnits, syringeMax);
+        }
+
+        // ── SYRINGE DRAW CALCULATOR ─────────────────────────────────────────
+        function calcDraw() {
+            const conc        = parseFloat(document.getElementById('sdConc')?.value)        || 2.5;
+            const dose        = parseFloat(document.getElementById('sdDose')?.value)        || 0.5;
+            const syringeMax  = parseInt(document.getElementById('sdSyringeType')?.value)   || 100;
+
+            const drawMl    = dose / conc;
+            const units     = drawMl * syringeMax;  // e.g. U-100 = 100 units/mL
+            const pct       = Math.min((units / syringeMax) * 100, 100);
+
+            // Update text outputs
+            document.getElementById('drawResultUnitsNum').textContent = units.toFixed(1);
+            document.getElementById('drawResultVol').textContent      = drawMl.toFixed(3);
+            document.getElementById('drawResultPct').textContent      = pct.toFixed(0) + '%';
+            document.getElementById('drawResultUnits').textContent    = `of U-${syringeMax}`;
+
+            // Update SVG syringe
+            updateSyringe(units, syringeMax);
+        }
+
+        function updateSyringe(units, syringeMax) {
+            // Barrel: x=62 to x=462, width=400px represents syringeMax units
+            const barrelStartX = 62;
+            const barrelWidth  = 400;
+            const fillWidth    = Math.min(Math.max((units / syringeMax) * barrelWidth, 0), barrelWidth);
+            const fillX        = barrelStartX + fillWidth; // x position of fill edge
+
+            // Update fill rect
+            const fill = document.getElementById('syringeFill');
+            if (fill) fill.setAttribute('width', fillWidth.toFixed(1));
+
+            // Update indicator line + arrow + label
+            const line  = document.getElementById('syringeFillLine');
+            const arrow = document.getElementById('syringeFillArrow');
+            const lbl   = document.getElementById('syringeFillLabel');
+            const syrlbl = document.getElementById('syringeLabel');
+
+            if (line)  { line.setAttribute('x1', fillX); line.setAttribute('x2', fillX); }
+            if (arrow) { arrow.setAttribute('points', `${fillX},75 ${fillX-5},67 ${fillX+5},67`); }
+            if (lbl)   { lbl.setAttribute('x', fillX); lbl.textContent = units.toFixed(1) + ' units'; }
+            if (syrlbl){ syrlbl.textContent = `U-${syringeMax} Syringe — ${units.toFixed(1)} units filled (${(units/syringeMax*100).toFixed(0)}%)`; }
+        }
+
+        // ── HGH IU CALCULATOR ───────────────────────────────────────────────
+        function calcHGH() {
+            const vialIU  = parseFloat(document.getElementById('hghVialIU')?.value)  || 10;
+            const doseIU  = parseFloat(document.getElementById('hghDoseIU')?.value)  || 2;
+            const waterMl = parseFloat(document.getElementById('hghWaterMl')?.value) || 1;
+
+            const concIUperMl = vialIU / waterMl;          // IU per mL
+            const drawMl      = doseIU / concIUperMl;       // mL to draw
+            const drawUnits   = drawMl * 100;               // units on U-100
+            const dosesPerVial = Math.floor(vialIU / doseIU);
+
+            const concEl  = document.getElementById('hghConcIU');
+            const unitsEl = document.getElementById('hghResultUnits');
+            const volEl   = document.getElementById('hghResultVol');
+            const mlEl    = document.getElementById('hghDrawMl');
+            const dosesEl = document.getElementById('hghDosesPerVial');
+
+            if (concEl)  concEl.textContent  = concIUperMl.toFixed(1);
+            if (unitsEl) unitsEl.textContent = drawUnits.toFixed(1);
+            if (volEl)   volEl.textContent   = `on U-100 (${drawMl.toFixed(3)} mL)`;
+            if (mlEl)    mlEl.textContent    = drawMl.toFixed(3);
+            if (dosesEl) dosesEl.textContent = dosesPerVial;
+        }
+
+        // ── BLEND CALCULATOR ────────────────────────────────────────────────
+
+        // Active blend compound definitions — set by onBlendSelect() for presets
+        let activeBlendCompounds = [
+            { name: 'BPC-157', mg: 5 },
+            { name: 'TB-500',  mg: 5 }
+        ];
+
+        const BLEND_PRESETS = {
+            wolverine: {
+                label: 'Wolverine Stack',
+                compounds: [
+                    { name: 'BPC-157', mg: 5 },
+                    { name: 'TB-500',  mg: 5 }
+                ],
+                defaultWater: 2.0,
+                defaultDose:  0.5   // mg
+            },
+            klow: {
+                label: 'Klow',
+                compounds: [
+                    { name: 'GHK-Cu',  mg: 50 },
+                    { name: 'BPC-157', mg: 10 },
+                    { name: 'TB-500',  mg: 10 },
+                    { name: 'KPV',     mg: 10 }
+                ],
+                defaultWater: 2.0,
+                defaultDose:  2.0   // mg
+            },
+            glow: {
+                label: 'Glow',
+                compounds: [
+                    { name: 'GHK-Cu',  mg: 10 },
+                    { name: 'BPC-157', mg: 5  },
+                    { name: 'TB-500',  mg: 5  }
+                ],
+                defaultWater: 2.0,
+                defaultDose:  1.0   // mg
+            }
+        };
+
+        function onBlendSelect() {
+            const selector   = document.getElementById('blendSelector');
+            const val        = selector?.value || 'wolverine';
+            const customRows = document.getElementById('blendCustomRows');
+            const compPanel  = document.getElementById('blendCompositionPanel');
+            const compRows   = document.getElementById('blendCompositionRows');
+            const doseByEl   = document.getElementById('blendDoseBy');
+
+            if (val === 'custom') {
+                if (customRows) customRows.classList.remove('hidden');
+                if (compPanel)  compPanel.classList.add('hidden');
+                activeBlendCompounds = null;
+                // Populate Dose By from whatever custom names are filled in
+                if (doseByEl) {
+                    const names = [1,2,3,4].map(i =>
+                        document.getElementById(`blendName${i}`)?.value?.trim()
+                    ).filter(Boolean);
+                    doseByEl.innerHTML = names.length
+                        ? names.map((n,i) => `<option value="${i}">${n}</option>`).join('')
+                        : '<option value="0">Compound 1</option>';
+                }
+            } else {
+                const preset = BLEND_PRESETS[val];
+                if (!preset) return;
+
+                if (customRows) customRows.classList.add('hidden');
+                if (compPanel)  compPanel.classList.remove('hidden');
+
+                activeBlendCompounds = preset.compounds;
+
+                // Update panel title
+                const titleEl = document.getElementById('blendCompositionTitle');
+                if (titleEl) {
+                    titleEl.innerHTML = `${preset.label} — Vial Contents <span class="text-[#00e5ff]" id="blendTotalMgLabel">(edit quantities as needed)</span>`;
+                }
+
+                // Populate editable compound rows with preset defaults
+                if (compRows) {
+                    compRows.innerHTML = preset.compounds.map((c, i) =>
+                        `<div class="flex items-center justify-between gap-3 py-1.5 border-b border-white/5 last:border-0">
+                            <label class="text-white text-sm font-medium flex-1">${c.name}</label>
+                            <div class="flex items-center gap-1.5">
+                                <input type="number" id="blendCompMg_${i}" value="${c.mg}" step="1" min="0"
+                                    oninput="calcBlend()"
+                                    class="w-20 bg-[#13161f] border border-white/15 rounded-md px-2 py-1 text-[#00e5ff] font-bold text-sm text-right focus:border-[#00e5ff]/60 focus:outline-none">
+                                <span class="text-[#8891a4] text-xs w-5">mg</span>
+                            </div>
+                        </div>`
+                    ).join('');
+                }
+
+                // Populate Dose By dropdown with compound names
+                if (doseByEl) {
+                    doseByEl.innerHTML = preset.compounds
+                        .map((c, i) => `<option value="${i}">${c.name}</option>`)
+                        .join('');
+                }
+
+                // Apply preset defaults
+                const waterEl = document.getElementById('blendWater');
+                const doseEl  = document.getElementById('blendTargetDose');
+                if (waterEl) waterEl.value = preset.defaultWater;
+                if (doseEl)  doseEl.value  = preset.defaultDose;
+            }
+
+            calcBlend();
+        }
+
+        function calcBlend() {
+            const water    = parseFloat(document.getElementById('blendWater')?.value)      || 2.0;
+            const targetMg = parseFloat(document.getElementById('blendTargetDose')?.value) || 2.0;
+            const doseByIdx = parseInt(document.getElementById('blendDoseBy')?.value)       || 0;
+
+            // Read compound mg amounts — from editable preset inputs or custom fields
+            let compounds;
+            const selectorVal = document.getElementById('blendSelector')?.value;
+            if (selectorVal === 'custom') {
+                compounds = [1, 2, 3, 4].map(i => ({
+                    name: document.getElementById(`blendName${i}`)?.value?.trim() || '',
+                    mg:   parseFloat(document.getElementById(`blendMg${i}`)?.value) || 0
+                })).filter(c => c.name && c.mg > 0);
+            } else {
+                // Read from the editable blendCompMg_N inputs (user may have changed defaults)
+                compounds = (activeBlendCompounds || []).map((c, i) => ({
+                    name: c.name,
+                    mg:   parseFloat(document.getElementById(`blendCompMg_${i}`)?.value) ?? c.mg
+                })).filter(c => c.mg > 0);
+            }
+
+            if (compounds.length === 0 || water <= 0) return;
+
+            // Dominant compound is the one the user wants to dose
+            const dominant = compounds[Math.min(doseByIdx, compounds.length - 1)];
+            const domConc   = dominant.mg / water;   // mg/mL
+            if (domConc <= 0) return;
+
+            const drawMl    = targetMg / domConc;
+            const drawUnits = drawMl * 100;
+
+            const volEl  = document.getElementById('blendDrawVol');
+            const uEl    = document.getElementById('blendDrawUnits');
+            const concEl = document.getElementById('blendConc');
+            if (volEl)  volEl.textContent  = drawMl.toFixed(3) + ' mL';
+            if (uEl)    uEl.textContent    = drawUnits.toFixed(1) + ' units';
+            if (concEl) concEl.textContent = domConc.toFixed(2) + ' mg/mL';
+
+            // Per-compound delivery at this draw volume
+            const tableEl = document.getElementById('blendPerDrawTable');
+            if (tableEl) {
+                tableEl.innerHTML = compounds.map(c => {
+                    const conc      = c.mg / water;
+                    const delivered = conc * drawMl;  // mg
+                    const display   = delivered < 1
+                        ? (delivered * 1000).toFixed(0) + ' mcg'
+                        : delivered.toFixed(3) + ' mg';
+                    const isDominant = c.name === dominant.name;
+                    return `<div class="flex justify-between items-center py-1">
+                        <span class="text-sm ${isDominant ? 'text-white font-semibold' : 'text-[#8891a4]'}">${c.name}${isDominant ? ' ★' : ''}</span>
+                        <span class="text-[#00e5ff] font-bold text-sm">${display}</span>
+                    </div>`;
+                }).join('');
+            }
+
+            // Update syringe label
+            const lblEl = document.getElementById('blendSyringeLabel');
+            if (lblEl) lblEl.textContent = `${drawUnits.toFixed(1)} units drawn`;
+
+            updateBlendSyringe(drawUnits);
+        }
+
+        function updateBlendSyringe(units) {
+            const barrelWidth = 400;
+            const fillWidth   = Math.min(Math.max((units / 100) * barrelWidth, 0), barrelWidth);
+            const fillX       = 62 + fillWidth;
+
+            const fill  = document.getElementById('blendSyringeFill');
+            const line  = document.getElementById('blendFillLine');
+            const arrow = document.getElementById('blendFillArrow');
+            const lbl   = document.getElementById('blendFillLabel');
+
+            if (fill)  fill.setAttribute('width', fillWidth.toFixed(1));
+            if (line)  { line.setAttribute('x1', fillX.toFixed(1)); line.setAttribute('x2', fillX.toFixed(1)); }
+            if (arrow) arrow.setAttribute('points', `${fillX},75 ${(fillX-5)},67 ${(fillX+5)},67`);
+            if (lbl)   { lbl.setAttribute('x', fillX.toFixed(1)); lbl.textContent = units.toFixed(1) + ' units'; }
+        }
+
+        function setBlendPreset(preset) {
+            const selector = document.getElementById('blendSelector');
+            if (selector) selector.value = preset;
+            onBlendSelect();
+        }
+
+        // ── PROTOCOL UNIT RECALCULATOR ───────────────────────────────────────
+        function recalcProtocolUnits() {
+            const vialMg = parseFloat(document.getElementById('protocolVialMg')?.value) || 5;
+            const bacMl  = parseFloat(document.getElementById('protocolBacMl')?.value)  || 2;
+            const conc   = vialMg / bacMl; // mg/mL
+
+            const concEl = document.getElementById('protocolConc');
+            if (concEl) concEl.textContent = conc.toFixed(2) + ' mg/mL';
+
+            // Update any titration table cells that carry a data-dose-mcg attribute
+            document.querySelectorAll('[data-dose-mcg]').forEach(cell => {
+                const doseMcg = parseFloat(cell.getAttribute('data-dose-mcg'));
+                if (doseMcg > 0 && conc > 0) {
+                    const drawMl    = (doseMcg / 1000) / conc;
+                    const drawUnits = drawMl * 100;
+                    cell.textContent = drawUnits.toFixed(1) + ' Units';
+                }
+            });
+        }
+
+        // ── HOME DOSING ENGINE ───────────────────────────────────────────────
+        function calculateDosing() {
+            const vialMg = parseFloat(document.getElementById('vialMg')?.value || 5);
+            const waterMl = parseFloat(document.getElementById('waterMl')?.value || 2);
+            const desiredDose = parseFloat(document.getElementById('desiredDose')?.value || 0.5);
+            const syringeType = parseInt(document.getElementById('syringeType')?.value || 100);
+
+            const concentration = vialMg / waterMl;
+            const drawMl = desiredDose / concentration;
+            const units = drawMl * 100;
+
+            if (document.getElementById('calculatedUnits')) {
+                document.getElementById('calculatedUnits').textContent = units.toFixed(1);
+                document.getElementById('sourceVol').textContent = drawMl.toFixed(2);
+                document.getElementById('volConversion').textContent = concentration.toFixed(1) + ' mg/mL';
+            }
+        }
+
+        // ADD EVENT LISTENERS FOR CALCULATOR INPUTS
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const inputs = ['vialMg', 'waterMl', 'desiredDose', 'syringeType'];
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('input', calculateDosing);
+                });
+            }, 100);
+        });
+
+        function toggleAccordion(el) {
+            const content = el.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+            document.querySelectorAll('.accordion-toggle span').forEach(s => s.textContent = '+');
+            if (!isOpen) {
+                content.classList.add('open');
+                el.querySelector('span').textContent = '−';
+            }
+        }
+
+        function switchTab(tabName, btn) {
+            activeTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName)?.classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // PROTOCOLS SECTION
+        function renderProtocolGrid() {
+            const grid = document.getElementById('protocolsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            Object.keys(peptideDetails).forEach(name => {
+                const detail = peptideDetails[name];
+                const card = document.createElement('div');
+                card.className = 'protocol-card-small';
+                card.onclick = () => showProtocolDetail(name);
+                card.innerHTML = `
+                    <div class="badge-category">${detail.category}</div>
+                    <h3 class="text-white font-bold text-xl mb-2">${name}</h3>
+                    <p class="text-secondary text-sm mb-4">${detail.intent}</p>
+                    <p class="text-cyan text-sm font-bold mb-2">Dose Range:</p>
+                    <p class="text-cyan text-sm mb-4">${detail.intent}</p>
+                    <button class="text-cyan text-xs font-bold tracking-widest hover:underline">View Full Protocol →</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showProtocolDetail(peptideName) {
+            currentProtocol = peptideName;
+            document.getElementById('protocolsGridView').style.display = 'none';
+            const detail = peptideDetails[peptideName];
+            const detailView = document.getElementById('protocolsDetailView');
+
+            let titrationHTML = detail.titration.map(t => `
+                <tr>
+                    <td>${t.phase}</td>
+                    <td>${t.weeks}</td>
+                    <td>${t.dose}</td>
+                    <td ${t.doseRawMcg ? `data-dose-mcg="${t.doseRawMcg}"` : ''}>${t.units}</td>
+                    <td>${t.freq}</td>
+                </tr>
+            `).join('');
+
+            let libraryHTML = [
+                { name: 'Cagrilintide', category: 'Weight Mgmt', halfLife: '174H' },
+                { name: 'Tirzepatide', category: 'Dual Agonist', halfLife: '5.0D' },
+                { name: 'Retatrutide', category: 'Triple Agonist', halfLife: '6.0D' },
+                { name: 'BPC-157', category: 'Healing', halfLife: '4-6H' },
+                { name: 'TB-500', category: 'Regeneration', halfLife: '2.0D' }
+            ].map(p => `
+                <div class="protocol-card-small text-center">
+                    <p class="text-cyan text-xs font-bold mb-2">${p.category}</p>
+                    <p class="text-white font-bold text-sm mb-1">${p.name}</p>
+                    <p class="text-secondary text-xs">T½: ${p.halfLife}</p>
+                </div>
+            `).join('');
+
+            detailView.innerHTML = `
+                <div class="flex gap-6 min-h-screen">
+                    <div class="w-56 protocol-detail-sidebar">
+                        <div class="mb-8">
+                            <div class="w-12 h-12 rounded-full bg-cyan text-black flex items-center justify-center font-bold text-lg mb-3">LP</div>
+                            <p class="text-white font-bold">Lab Station 04</p>
+                            <p class="text-cyan text-xs font-bold tracking-widest">PRECISION RESEARCHER</p>
+                        </div>
+                        <button onclick="showSection('calculator')" class="w-full btn-cyan text-sm mb-8">NEW CALCULATION</button>
+                        <p class="text-secondary text-xs font-bold tracking-widest mb-4">RESEARCH CATEGORIES</p>
+                        <div class="sidebar-item active">
+                            <span class="material-symbols-outlined text-sm">analytics</span>
+                            <span class="text-sm">RESEARCH HUB</span>
+                        </div>
+                        <div class="sidebar-item" onclick="showSection('protocols'); backToProtocols();">
+                            <span class="material-symbols-outlined text-sm">science</span>
+                            <span class="text-sm">ALL PROTOCOLS</span>
+                        </div>
+                        <div class="sidebar-item" onclick="showSection('library')">
+                            <span class="material-symbols-outlined text-sm">menu_book</span>
+                            <span class="text-sm">PEPTIDE LIBRARY</span>
+                        </div>
+                        <div class="sidebar-item" onclick="showSection('shop')">
+                            <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                            <span class="text-sm">SHOP</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-8">
+                        <button onclick="backToProtocols()" class="text-cyan text-sm font-bold tracking-widest mb-8 hover:underline">← Back to Protocols</button>
+                        <div class="badge-category mb-4">${detail.category}</div>
+                        <p class="text-secondary text-xs mb-2">RESEARCH SEQUENCE: ${detail.sequence}</p>
+                        <h1 class="text-6xl font-bold font-['Space_Grotesk'] mb-4">${peptideName}</h1>
+                        <p class="text-secondary text-sm font-mono mb-6">♦ ${detail.formula}</p>
+
+                        <!-- Reconstitution inputs — live unit recalculation -->
+                        <div class="flex gap-4 mb-8 p-5 bg-[#0a0d14] border border-[#00e5ff]/20 rounded-xl items-end">
+                            <div class="flex-1">
+                                <label class="block text-xs text-[#8891a4] tracking-widest uppercase mb-2">Vial Content (mg)</label>
+                                <input type="number" id="protocolVialMg" value="${detail.defaultVialMg || 5}" step="0.5" min="0.5" oninput="recalcProtocolUnits()" class="w-full">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs text-[#8891a4] tracking-widest uppercase mb-2">BAC Water (mL)</label>
+                                <input type="number" id="protocolBacMl" value="${detail.reconVol || 2}" step="0.5" min="0.5" oninput="recalcProtocolUnits()" class="w-full">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs text-[#8891a4] tracking-widest uppercase mb-2">Concentration</label>
+                                <p class="text-[#00e5ff] font-bold text-2xl font-['Space_Grotesk']" id="protocolConc">${((detail.defaultVialMg||5)/(parseFloat(detail.reconVol)||2)).toFixed(2)} mg/mL</p>
+                            </div>
+                        </div>
+                        <div class="float-right bg-surface border border-surface rounded-lg p-4 w-64 mb-6">
+                            <p class="text-secondary text-xs font-bold tracking-widest mb-2">PRIMARY RESEARCH INTENT</p>
+                            <p class="text-white">${detail.intent}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6 mb-8 clear-right">
+                            <div class="bg-surface border border-surface rounded-lg p-6">
+                                <p class="text-cyan text-xs font-bold tracking-widest mb-6">RECONSTITUTION</p>
+                                <div class="space-y-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-6 h-6 rounded-full bg-cyan text-black flex items-center justify-center text-xs font-bold flex-shrink-0">1</div>
+                                        <p class="text-sm text-secondary">Clean vial stopper with 70% Isopropyl alcohol. Allow to air dry completely.</p>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-6 h-6 rounded-full bg-surface-elevated text-secondary flex items-center justify-center text-xs font-bold flex-shrink-0">2</div>
+                                        <p class="text-sm text-secondary">Gently introduce ${detail.reconVol}mL of Bacteriostatic Water along the vial wall.</p>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-6 h-6 rounded-full bg-surface-elevated text-secondary flex items-center justify-center text-xs font-bold flex-shrink-0">3</div>
+                                        <p class="text-sm text-secondary">Swirl gently. DO NOT SHAKE. Wait 10 minutes for clear solution.</p>
+                                    </div>
+                                </div>
+                                <div class="border-l-4 border-gold bg-surface-elevated p-3 mt-6">
+                                    <p class="text-yellow-300 text-xs font-bold">⚠ WARNING</p>
+                                    <p class="text-secondary text-xs">Solution must be stored at 2°C - 8°C after reconstitution.</p>
+                                </div>
+                            </div>
+                            <div class="bg-surface border border-surface rounded-lg p-6">
+                                <p class="text-cyan text-xs font-bold tracking-widest mb-4">TITRATION SCHEDULE</p>
+                                <p class="text-secondary text-xs mb-6">DURATION: ${detail.cycleDuration}</p>
+                                <div class="overflow-x-auto">
+                                    <table class="titration-table">
+                                        <thead>
+                                            <tr>
+                                                <th>PHASE</th>
+                                                <th>WEEKS</th>
+                                                <th>DOSAGE</th>
+                                                <th>UNITS</th>
+                                                <th>FREQ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${titrationHTML}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4 mb-8">
+                            <div class="stat-card">
+                                <p class="stat-value">${detail.halfLife}</p>
+                                <p class="stat-label">HALF-LIFE (T1/2)</p>
+                            </div>
+                            <div class="stat-card">
+                                <p class="stat-value text-sm">${detail.receptor}</p>
+                                <p class="stat-label">RECEPTOR AFFINITY</p>
+                            </div>
+                            <div class="stat-card">
+                                <p class="stat-value text-sm">${detail.storage}</p>
+                                <p class="stat-label">STORAGE INFO</p>
+                            </div>
+                            <div class="stat-card">
+                                <p class="stat-value text-sm">${detail.purity}</p>
+                                <p class="stat-label">PURITY RATING</p>
+                            </div>
+                        </div>
+                        <div class="mb-8">
+                            <p class="text-white font-bold mb-4">PROTOCOL LIBRARY</p>
+                            <div class="grid grid-cols-5 gap-4">
+                                ${libraryHTML}
+                            </div>
+                            <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline mt-4 inline-block">VIEW ALL RESEARCH →</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            detailView.style.display = 'block';
+        }
+
+        function backToProtocols() {
+            currentProtocol = null;
+            document.getElementById('protocolsGridView').style.display = 'block';
+            document.getElementById('protocolsDetailView').style.display = 'none';
+        }
+
+        // LIBRARY SECTION
+        function renderLibraryGrid() {
+            const grid = document.getElementById('libraryGrid');
+            if (!grid) return;
+            grid.innerHTML = libraryItems.map(item => `
+                <div class="product-card">
+                    <img src="${item.image}" alt="${item.name}" class="product-image">
+                    <div class="product-body">
+                        <div class="badge-category">${item.category}</div>
+                        <h3 class="text-white font-bold text-lg mb-2">${item.name}</h3>
+                        <p class="text-secondary text-sm mb-4">${item.description}</p>
+                        <p class="text-secondary text-xs mb-1"><strong>PRIMARY BENEFIT</strong></p>
+                        <p class="text-cyan text-sm font-bold mb-4">${item.benefit}</p>
+                        <p class="text-secondary text-xs mb-1"><strong>DOSING RANGE</strong></p>
+                        <p class="text-cyan text-sm font-bold mb-4">${item.dosing}</p>
+                        <button onclick="showSection('protocols')" class="w-full border border-cyan text-cyan px-4 py-2 rounded font-bold text-xs hover:bg-cyan hover:text-black transition">View Protocol →</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByTag(tag) {
+            // Implement tag filtering
+        }
+
+        // SHOP SECTION
+        function renderShopGrid() {
+            const grid = document.getElementById('shopGrid');
+            if (!grid) return;
+            grid.innerHTML = shopProducts.map((product, idx) => {
+                const firstPrice = product.variants[0].price;
+                const variantBtns = product.variants.map((v, vi) => `
+                    <button onclick="selectVariant(${idx},${vi},this)"
+                        class="shop-variant-btn py-2 text-[11px] font-bold rounded-lg border transition-all ${vi === 0 ? 'border-[#00e5ff] bg-[#00e5ff]/10 text-[#00e5ff]' : 'border-white/10 text-[#8891a4] hover:border-[#00e5ff]/50'}"
+                        data-price="${v.price}">${v.label}</button>`).join('');
+                return `
+                <div class="product-card group">
+                    <div class="relative overflow-hidden" style="aspect-ratio:4/5;">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-[#00e5ff]/10 text-[#00e5ff] px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase backdrop-blur-md border border-[#00e5ff]/20">${product.badge}</span>
+                        </div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="font-['Space_Grotesk'] text-lg font-bold text-white uppercase tracking-tight mb-2">${product.name}</h3>
+                        <p class="text-[#8891a4] text-xs leading-relaxed mb-4">${product.desc}</p>
+                        <p class="text-[#8891a4] text-[10px] font-bold tracking-widest uppercase mb-2">Concentration</p>
+                        <div class="grid grid-cols-${product.variants.length} gap-2 mb-4">${variantBtns}</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <span class="font-['Space_Grotesk'] text-2xl font-bold text-white" id="price-${idx}">$${firstPrice}.00</span>
+                            <button onclick="addToCart('${product.name}', ${idx})"
+                                class="bg-[#00e5ff] text-black px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all">
+                                Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectVariant(productIdx, variantIdx, btn) {
+            const card = btn.closest('.product-card');
+            card.querySelectorAll('.shop-variant-btn').forEach(b => {
+                b.classList.remove('border-[#00e5ff]','bg-[#00e5ff]/10','text-[#00e5ff]');
+                b.classList.add('border-white/10','text-[#8891a4]');
+            });
+            btn.classList.add('border-[#00e5ff]','bg-[#00e5ff]/10','text-[#00e5ff]');
+            btn.classList.remove('border-white/10','text-[#8891a4]');
+            document.getElementById(`price-${productIdx}`).textContent = `$${btn.dataset.price}.00`;
+        }
+
+        // CART LOGIC
+        function addToCart(name, productIdx) {
+            const product = shopProducts[productIdx];
+            const priceEl = document.getElementById(`price-${productIdx}`);
+            const price = priceEl ? parseFloat(priceEl.textContent.replace('$','')) : product.variants[0].price;
+            const activeBtn = document.querySelector(`#shopGrid .product-card:nth-child(${productIdx+1}) .shop-variant-btn.border-\\[\\#00e5ff\\]`);
+            const variant = activeBtn ? activeBtn.textContent.trim() : product.variants[0].label;
+            const id = `${productIdx}-${variant}`;
+            const item = { id, name, price, variant, qty: 1 };
+            const existing = cart.find(c => c.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push(item);
+            }
+            updateCart();
+            toggleCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const badge = document.getElementById('cartBadge');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-secondary text-sm">Your cart is empty</p>';
+                badge.classList.add('hidden');
+            } else {
+                badge.textContent = cart.length;
+                badge.classList.remove('hidden');
+                cartItems.innerHTML = cart.map((item, idx) => `
+                    <div class="border-b border-surface pb-4">
+                        <p class="text-white font-bold text-sm">${item.name}</p>
+                        <p class="text-cyan text-sm mb-3">$${item.price}</p>
+                        <div class="flex items-center gap-3">
+                            <button onclick="changeQty(${idx}, -1)" class="px-3 py-1 bg-surface rounded">−</button>
+                            <span class="text-white">${item.qty}</span>
+                            <button onclick="changeQty(${idx}, 1)" class="px-3 py-1 bg-surface rounded">+</button>
+                            <button onclick="removeFromCart(${idx})" class="ml-auto text-red-400 text-xs">Remove</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('cartSubtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
+        }
+
+        function changeQty(idx, delta) {
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) {
+                cart.splice(idx, 1);
+            }
+            updateCart();
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        // CHECKOUT
+        function openCheckout() {
+            if (cart.length === 0) return;
+            document.getElementById('checkoutModal').classList.add('open');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('open');
+        }
+
+        function proceedToPayment() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            window.open(`https://paygate.to/?amount=${total}`, '_blank');
+        }
+
+        // NAVIGATION
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(name)?.classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
+            event.target.classList.add('nav-active');
+            window.scrollTo(0, 0);
+        }
+
+        function saveProtocol() {
+            alert('Protocol saved to your research library!');
+        }
+    </script>
+</body>
+</html>

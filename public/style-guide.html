@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureBioChem — Brand Style Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style>
+        * { font-family: 'Manrope', sans-serif; }
+        h1,h2,h3,h4,.headline { font-family: 'Space Grotesk', sans-serif; }
+        body { background: #0d0f17; color: #fff; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #13161f; }
+        ::-webkit-scrollbar-thumb { background: #00e5ff44; border-radius: 3px; }
+
+        /* Sidebar nav */
+        .sg-nav { position: fixed; top: 0; left: 0; width: 220px; height: 100vh; background: #0a0d14; border-right: 1px solid rgba(255,255,255,0.06); overflow-y: auto; z-index: 100; padding: 2rem 0; }
+        .sg-nav-item { display: block; padding: 0.55rem 1.5rem; color: #8891a4; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.03em; text-decoration: none; border-left: 2px solid transparent; transition: all 0.2s; }
+        .sg-nav-item:hover { color: #fff; border-left-color: rgba(0,229,255,0.4); }
+        .sg-nav-item.active { color: #00e5ff; border-left-color: #00e5ff; }
+        .sg-nav-section { padding: 0.4rem 1.5rem 0.2rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #4a5068; margin-top: 1.2rem; }
+
+        /* Main content */
+        .sg-main { margin-left: 220px; padding: 3rem 3.5rem; max-width: 960px; }
+
+        /* Section headers */
+        .sg-section { padding-top: 4rem; margin-bottom: 2.5rem; border-top: 1px solid rgba(255,255,255,0.06); }
+        .sg-section:first-child { border-top: none; }
+
+        /* Color swatches */
+        .swatch { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+        .swatch-color { height: 80px; }
+        .swatch-info { background: #13161f; padding: 0.75rem 1rem; }
+
+        /* Type specimens */
+        .type-row { padding: 1.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+        /* Component cards */
+        .comp-card { background: #13161f; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.75rem; padding: 1.75rem; margin-bottom: 1.5rem; }
+        .comp-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #4a5068; margin-bottom: 1rem; }
+
+        /* Spacing tokens */
+        .space-bar { background: rgba(0,229,255,0.15); border: 1px solid rgba(0,229,255,0.3); border-radius: 2px; height: 24px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+
+        /* Code block */
+        .code { background: #0a0d14; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.5rem; padding: 1rem 1.25rem; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #00e5ff; line-height: 1.7; overflow-x: auto; }
+
+        /* Glow effects */
+        .cyan-glow { box-shadow: 0 0 20px rgba(0,229,255,0.25); }
+        .gold-glow { box-shadow: 0 0 20px rgba(255,219,60,0.2); }
+
+        /* Buttons matching site */
+        .btn-cyan { background: #00e5ff; color: #000; font-weight: 700; border-radius: 0.5rem; padding: 0.75rem 1.5rem; border: none; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 0.875rem; transition: all 0.3s; }
+        .btn-cyan:hover { background: #00ccff; box-shadow: 0 0 20px rgba(0,229,255,0.4); }
+        .btn-outline { border: 2px solid #00e5ff; color: #00e5ff; background: transparent; border-radius: 0.5rem; padding: 0.75rem 1.5rem; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 0.875rem; font-weight: 600; transition: all 0.3s; }
+        .btn-outline:hover { background: rgba(0,229,255,0.1); }
+        .btn-ghost { background: rgba(255,255,255,0.05); color: #8891a4; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.5rem; padding: 0.75rem 1.5rem; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 0.875rem; font-weight: 600; transition: all 0.3s; }
+        .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+
+        /* Copy chip */
+        .chip { display: inline-block; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; color: #00e5ff; font-family: 'Courier New', monospace; cursor: pointer; user-select: all; }
+        .chip:hover { background: rgba(0,229,255,0.15); }
+    </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR NAV ─────────────────────────────────────────── -->
+<nav class="sg-nav">
+    <div style="padding: 0 1.5rem 1.5rem;">
+        <p style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem; color:#00e5ff; letter-spacing:0.08em; text-transform:uppercase;">FUTUREBIOCHEM</p>
+        <p style="font-size:0.7rem; color:#4a5068; margin-top:2px;">Brand Style Guide</p>
+    </div>
+    <div class="sg-nav-section">Foundation</div>
+    <a class="sg-nav-item active" href="#brand">Brand Identity</a>
+    <a class="sg-nav-item" href="#colors">Color Palette</a>
+    <a class="sg-nav-item" href="#typography">Typography</a>
+    <div class="sg-nav-section">Components</div>
+    <a class="sg-nav-item" href="#buttons">Buttons</a>
+    <a class="sg-nav-item" href="#badges">Badges & Tags</a>
+    <a class="sg-nav-item" href="#cards">Cards & Surfaces</a>
+    <a class="sg-nav-item" href="#inputs">Form Inputs</a>
+    <a class="sg-nav-item" href="#tables">Data Tables</a>
+    <div class="sg-nav-section">Standards</div>
+    <a class="sg-nav-item" href="#spacing">Spacing & Radius</a>
+    <a class="sg-nav-item" href="#motion">Motion & Transitions</a>
+    <a class="sg-nav-item" href="#icons">Icons</a>
+    <a class="sg-nav-item" href="#dos">Do's & Don'ts</a>
+</nav>
+
+<!-- ── MAIN CONTENT ───────────────────────────────────────── -->
+<main class="sg-main">
+
+    <!-- COVER HERO -->
+    <div style="padding: 4rem 0 5rem; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 0;">
+        <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#00e5ff; margin-bottom:1rem;">Brand Style Guide — v1.0</p>
+        <h1 style="font-family:'Space Grotesk',sans-serif; font-size:3.5rem; font-weight:700; line-height:1.1; margin-bottom:1.25rem;">
+            FUTURE<span style="color:#00e5ff;">BIO</span>CHEM
+        </h1>
+        <p style="color:#8891a4; font-size:1.1rem; max-width:520px; line-height:1.7;">
+            This document defines the visual language of FutureBioChem — the typography, color system, component standards, and interaction patterns that make up the brand experience.
+        </p>
+        <div style="display:flex; gap:0.75rem; margin-top:2rem; flex-wrap:wrap;">
+            <span style="background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); border-radius:6px; padding:0.4rem 0.9rem; font-size:0.75rem; color:#00e5ff;">Dark Interface</span>
+            <span style="background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); border-radius:6px; padding:0.4rem 0.9rem; font-size:0.75rem; color:#00e5ff;">Research & Science</span>
+            <span style="background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); border-radius:6px; padding:0.4rem 0.9rem; font-size:0.75rem; color:#00e5ff;">Futuristic Precision</span>
+        </div>
+    </div>
+
+    <!-- ── 1. BRAND IDENTITY ─────────────────────────────── -->
+    <section class="sg-section" id="brand">
+        <p class="comp-label" style="margin-bottom:0.5rem;">01 — Foundation</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Brand Identity</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">The FutureBioChem wordmark combines two weights of Space Grotesk. "FUTURE" and "CHEM" render in white at full weight; "BIO" renders in the brand cyan to create a natural visual break and emphasize the biological core of the brand.</p>
+
+        <!-- Wordmark on dark -->
+        <div class="comp-card" style="text-align:center; padding:3rem;">
+            <div class="comp-label" style="text-align:left;">Primary — Dark Background</div>
+            <h1 style="font-family:'Space Grotesk',sans-serif; font-size:3rem; font-weight:700; letter-spacing:0.04em;">
+                FUTURE<span style="color:#00e5ff;">BIO</span>CHEM
+            </h1>
+        </div>
+
+        <!-- Wordmark on surface -->
+        <div class="comp-card" style="text-align:center; padding:3rem; background:#1a1d28;">
+            <div class="comp-label" style="text-align:left;">Secondary — Elevated Surface</div>
+            <h1 style="font-family:'Space Grotesk',sans-serif; font-size:3rem; font-weight:700; letter-spacing:0.04em;">
+                FUTURE<span style="color:#00e5ff;">BIO</span>CHEM
+            </h1>
+        </div>
+
+        <div style="background:rgba(255,219,60,0.05); border:1px solid rgba(255,219,60,0.2); border-radius:0.75rem; padding:1.25rem 1.5rem; margin-top:1rem;">
+            <p style="font-size:0.8rem; color:#ffdb3c; font-weight:600; margin-bottom:0.3rem;">⚠ Wordmark Usage Rules</p>
+            <p style="font-size:0.8rem; color:#8891a4; line-height:1.6;">Never recolor the full wordmark in a single flat color. Do not use on light backgrounds without a dark backdrop. Always maintain clear space equal to the cap-height of the "F" on all sides. Do not stretch, condense, or add effects to the wordmark.</p>
+        </div>
+    </section>
+
+    <!-- ── 2. COLOR PALETTE ──────────────────────────────── -->
+    <section class="sg-section" id="colors">
+        <p class="comp-label" style="margin-bottom:0.5rem;">02 — Foundation</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Color Palette</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">The palette is built around deep navy backgrounds, a signature cyan accent, and a secondary gold highlight. All UI color is specified in HEX.</p>
+
+        <!-- PRIMARY BRAND COLORS -->
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:1rem; color:#8891a4; text-transform:uppercase; letter-spacing:0.08em;">Brand Accent Colors</h3>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem;">
+            <div class="swatch">
+                <div class="swatch-color cyan-glow" style="background:#00e5ff;"></div>
+                <div class="swatch-info">
+                    <p style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.9rem; margin-bottom:4px;">Cyan — Primary Accent</p>
+                    <span class="chip">#00E5FF</span>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:6px;">rgb(0, 229, 255)</p>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:2px;">CTAs, highlights, active states, data values</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#00ccff;"></div>
+                <div class="swatch-info">
+                    <p style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.9rem; margin-bottom:4px;">Cyan Hover</p>
+                    <span class="chip">#00CCFF</span>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:6px;">rgb(0, 204, 255)</p>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:2px;">Hover state for cyan elements only</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color gold-glow" style="background:#ffdb3c;"></div>
+                <div class="swatch-info">
+                    <p style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.9rem; margin-bottom:4px;">Gold — Secondary Accent</p>
+                    <span class="chip">#FFDB3C</span>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:6px;">rgb(255, 219, 60)</p>
+                    <p style="font-size:0.72rem; color:#8891a4; margin-top:2px;">Warnings, premium badges, alerts</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BACKGROUNDS -->
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:1rem; color:#8891a4; text-transform:uppercase; letter-spacing:0.08em;">Background & Surface Scale</h3>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem;">
+            <div class="swatch">
+                <div class="swatch-color" style="background:#0d0f17; border:1px solid rgba(255,255,255,0.1);"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Page Background</p>
+                    <span class="chip">#0D0F17</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Base layer — never use on interactive elements</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#13161f;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Surface</p>
+                    <span class="chip">#13161F</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Cards, panels, tab content areas</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#1a1d28;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Surface Elevated</p>
+                    <span class="chip">#1A1D28</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Table headers, nested panels, modals</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#0a0d14;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Input Background</p>
+                    <span class="chip">#0A0D14</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Form inputs, inset panels, code blocks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEXT COLORS -->
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:1rem; color:#8891a4; text-transform:uppercase; letter-spacing:0.08em;">Text Colors</h3>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem;">
+            <div class="swatch">
+                <div class="swatch-color" style="background:#ffffff;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Primary Text</p>
+                    <span class="chip">#FFFFFF</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Headings, body, labels</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#8891a4;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Secondary Text</p>
+                    <span class="chip">#8891A4</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Subtitles, metadata, hints</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#4a5068;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Muted Text</p>
+                    <span class="chip">#4A5068</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Nav section labels, disabled text</p>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#00e5ff;"></div>
+                <div class="swatch-info">
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Accent Text</p>
+                    <span class="chip">#00E5FF</span>
+                    <p style="font-size:0.7rem; color:#8891a4; margin-top:4px;">Numeric values, active links, highlights</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BORDER COLORS -->
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:1rem; color:#8891a4; text-transform:uppercase; letter-spacing:0.08em;">Border Colors</h3>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+            <div class="comp-card" style="border:1px solid rgba(255,255,255,0.08); padding:1rem;">
+                <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Default Border</p>
+                <span class="chip">rgba(255,255,255, 0.08)</span>
+                <p style="font-size:0.7rem; color:#8891a4; margin-top:6px;">Cards, panels, table lines</p>
+            </div>
+            <div class="comp-card" style="border:1px solid rgba(0,229,255,0.25); padding:1rem;">
+                <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px;">Accent Border</p>
+                <span class="chip">rgba(0,229,255, 0.25)</span>
+                <p style="font-size:0.7rem; color:#8891a4; margin-top:6px;">Result panels, focus rings, highlights</p>
+            </div>
+            <div class="comp-card" style="border:2px solid #00e5ff; padding:1rem;">
+                <p style="font-weight:700; font-size:0.82rem; margin-bottom:4px; color:#00e5ff;">Active Border</p>
+                <span class="chip">#00E5FF — 2px</span>
+                <p style="font-size:0.7rem; color:#8891a4; margin-top:6px;">Active tabs, outline buttons, selected states</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 3. TYPOGRAPHY ─────────────────────────────────── -->
+    <section class="sg-section" id="typography">
+        <p class="comp-label" style="margin-bottom:0.5rem;">03 — Foundation</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Typography</h2>
+        <p style="color:#8891a4; margin-bottom:2.5rem; line-height:1.7;">Two typefaces define the FutureBioChem visual voice. Space Grotesk carries authority and scientific precision in headings. Manrope provides warmth and readability across all body and UI text.</p>
+
+        <!-- Font families -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:3rem;">
+            <div class="comp-card">
+                <div class="comp-label">Display & Headings</div>
+                <p style="font-family:'Space Grotesk',sans-serif; font-size:2.5rem; font-weight:700; color:#00e5ff; line-height:1.1; margin-bottom:0.75rem;">Space Grotesk</p>
+                <p style="font-family:'Space Grotesk',sans-serif; font-size:0.9rem; color:#8891a4; line-height:1.7;">A geometric sans-serif designed for digital interfaces. Used for all H1–H3 elements, the brand wordmark, data numerals, and navigation labels. Available weights: 300, 400, 500, 600, 700.</p>
+                <div class="code" style="margin-top:1rem;">font-family: 'Space Grotesk', sans-serif;</div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-label">Body & UI</div>
+                <p style="font-size:2.5rem; font-weight:700; color:#fff; line-height:1.1; margin-bottom:0.75rem;">Manrope</p>
+                <p style="font-size:0.9rem; color:#8891a4; line-height:1.7;">A humanist sans-serif that excels at small sizes and long-form text. Used for all body copy, form labels, button text, table cells, and descriptive UI elements. Available weights: 300–800.</p>
+                <div class="code" style="margin-top:1rem;">font-family: 'Manrope', sans-serif;</div>
+            </div>
+        </div>
+
+        <!-- Type scale -->
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:1.25rem; color:#8891a4; text-transform:uppercase; letter-spacing:0.08em;">Type Scale</h3>
+        <div class="comp-card" style="padding:0;">
+            <div style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; padding:0.75rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.06);">
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4a5068;">ROLE</span>
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4a5068;">SPECIMEN</span>
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4a5068;">FAMILY</span>
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4a5068;">SIZE</span>
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4a5068;">WEIGHT</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem;">
+                <span style="font-size:0.75rem; color:#8891a4;">Hero / H1</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-size:2.5rem; font-weight:700;">Page Title</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Space Grotesk</span>
+                <span style="font-size:0.75rem; color:#8891a4;">2.25rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">700</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem;">
+                <span style="font-size:0.75rem; color:#8891a4;">Section / H2</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700;">Section Title</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Space Grotesk</span>
+                <span style="font-size:0.75rem; color:#8891a4;">1.75rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">700</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem;">
+                <span style="font-size:0.75rem; color:#8891a4;">Card / H3</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700;">Card Heading</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Space Grotesk</span>
+                <span style="font-size:0.75rem; color:#8891a4;">1.25rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">700</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem;">
+                <span style="font-size:0.75rem; color:#8891a4;">Label</span>
+                <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#8891a4;">SECTION LABEL</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Manrope</span>
+                <span style="font-size:0.75rem; color:#8891a4;">0.65rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">700 + UC</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem;">
+                <span style="font-size:0.75rem; color:#8891a4;">Body</span>
+                <span style="font-size:1rem; color:#8891a4; line-height:1.6;">Body text for descriptions and explanatory copy that accompanies UI elements.</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Manrope</span>
+                <span style="font-size:0.75rem; color:#8891a4;">1rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">400</span>
+            </div>
+            <div class="type-row" style="display:grid; grid-template-columns:100px 1fr 120px 80px 80px; align-items:center; padding:1rem 1.25rem; border-bottom:none;">
+                <span style="font-size:0.75rem; color:#8891a4;">Data Value</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; color:#00e5ff;">24.7 Units</span>
+                <span style="font-size:0.75rem; color:#8891a4;">Space Grotesk</span>
+                <span style="font-size:0.75rem; color:#8891a4;">1.75rem</span>
+                <span style="font-size:0.75rem; color:#8891a4;">700 Cyan</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 4. BUTTONS ────────────────────────────────────── -->
+    <section class="sg-section" id="buttons">
+        <p class="comp-label" style="margin-bottom:0.5rem;">04 — Components</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Buttons</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">Three button variants handle different interaction priorities. Use solid cyan for the primary action on any surface, outline for secondary actions, and ghost for low-priority or tertiary actions.</p>
+
+        <div class="comp-card">
+            <div class="comp-label">Button Variants</div>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+                <button class="btn-cyan">Primary CTA</button>
+                <button class="btn-outline">Secondary Action</button>
+                <button class="btn-ghost">Ghost / Tertiary</button>
+            </div>
+            <div class="code">/* Primary */
+background: #00E5FF;  color: #000;  font-weight: 700;
+border-radius: 0.5rem;  padding: 0.75rem 1.5rem;
+
+/* Secondary */
+border: 2px solid #00E5FF;  color: #00E5FF;
+background: transparent;    border-radius: 0.5rem;
+
+/* Ghost */
+background: rgba(255,255,255,0.05);  color: #8891A4;
+border: 1px solid rgba(255,255,255,0.08);</div>
+        </div>
+
+        <div class="comp-card">
+            <div class="comp-label">Tab Buttons</div>
+            <div style="display:flex; gap:0; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:1rem;">
+                <button style="padding:0.75rem 1.5rem; background:transparent; border:none; color:#00e5ff; border-bottom:2px solid #00e5ff; cursor:pointer; font-family:'Manrope',sans-serif; font-size:0.875rem; font-weight:600;">Active Tab</button>
+                <button style="padding:0.75rem 1.5rem; background:transparent; border:none; border-bottom:2px solid transparent; color:#8891a4; cursor:pointer; font-family:'Manrope',sans-serif; font-size:0.875rem;">Inactive Tab</button>
+                <button style="padding:0.75rem 1.5rem; background:transparent; border:none; border-bottom:2px solid transparent; color:#8891a4; cursor:pointer; font-family:'Manrope',sans-serif; font-size:0.875rem;">Inactive Tab</button>
+            </div>
+            <div class="code">/* Active tab */
+color: #00E5FF;  border-bottom: 2px solid #00E5FF;  background: transparent;
+
+/* Inactive tab */
+color: #8891A4;  border-bottom: 2px solid transparent;</div>
+        </div>
+    </section>
+
+    <!-- ── 5. BADGES ─────────────────────────────────────── -->
+    <section class="sg-section" id="badges">
+        <p class="comp-label" style="margin-bottom:0.5rem;">05 — Components</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Badges & Tags</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">Badges categorize content and draw attention to compound classifications. Always uppercase, always short (1–3 words max).</p>
+
+        <div class="comp-card">
+            <div class="comp-label">Category Badges</div>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+                <span style="display:inline-block; background:#00e5ff; color:#000; padding:0.25rem 0.75rem; border-radius:9999px; font-size:0.75rem; font-weight:700; text-transform:uppercase;">GLP-1/GIP/GCG</span>
+                <span style="display:inline-block; background:#00e5ff; color:#000; padding:0.25rem 0.75rem; border-radius:9999px; font-size:0.75rem; font-weight:700; text-transform:uppercase;">MITOCHONDRIAL</span>
+                <span style="display:inline-block; background:#00e5ff; color:#000; padding:0.25rem 0.75rem; border-radius:9999px; font-size:0.75rem; font-weight:700; text-transform:uppercase;">LONGEVITY</span>
+                <span style="display:inline-block; background:#ffdb3c; color:#000; padding:0.25rem 0.75rem; border-radius:9999px; font-size:0.75rem; font-weight:700; text-transform:uppercase;">PREMIUM STACK</span>
+            </div>
+            <div class="code">/* Cyan badge */
+background: #00E5FF;  color: #000;
+border-radius: 9999px;  padding: 0.25rem 0.75rem;
+font-size: 0.75rem;  font-weight: 700;  text-transform: uppercase;
+
+/* Gold badge (premium / alerts) */
+background: #FFDB3C;  color: #000;</div>
+        </div>
+
+        <div class="comp-card">
+            <div class="comp-label">Inline Chip Tags</div>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+                <span style="background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); border-radius:6px; padding:0.35rem 0.9rem; font-size:0.75rem; color:#00e5ff; font-weight:600;">Research Only</span>
+                <span style="background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); border-radius:6px; padding:0.35rem 0.9rem; font-size:0.75rem; color:#00e5ff; font-weight:600;">Dark Interface</span>
+                <span style="background:rgba(255,219,60,0.08); border:1px solid rgba(255,219,60,0.25); border-radius:6px; padding:0.35rem 0.9rem; font-size:0.75rem; color:#ffdb3c; font-weight:600;">⚠ Warning</span>
+            </div>
+            <div class="code">/* Cyan chip */
+background: rgba(0,229,255,0.08);  border: 1px solid rgba(0,229,255,0.2);
+border-radius: 6px;  color: #00E5FF;  font-size: 0.75rem;</div>
+        </div>
+    </section>
+
+    <!-- ── 6. CARDS & SURFACES ───────────────────────────── -->
+    <section class="sg-section" id="cards">
+        <p class="comp-label" style="margin-bottom:0.5rem;">06 — Components</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Cards & Surfaces</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">Cards are the primary container for grouped content. They sit one level above the page background and have a subtle cyan glow on hover.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+            <div class="comp-card" style="cursor:pointer; transition:all 0.3s;" onmouseover="this.style.borderColor='#00e5ff'; this.style.boxShadow='0 0 20px rgba(0,229,255,0.15)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.boxShadow='none'">
+                <div class="comp-label">Default Card (hover me)</div>
+                <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:0.5rem;">BPC-157</h3>
+                <p style="font-size:0.85rem; color:#8891a4; line-height:1.6;">Synthetic peptide known for its exceptional healing and regenerative properties across multiple tissue types.</p>
+            </div>
+            <div style="background:#13161f; border:1px solid #00e5ff; border-radius:0.75rem; padding:1.75rem; box-shadow:0 0 20px rgba(0,229,255,0.15);">
+                <div class="comp-label">Active / Selected Card</div>
+                <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:#00e5ff;">TB-500</h3>
+                <p style="font-size:0.85rem; color:#8891a4; line-height:1.6;">Thymosin Beta-4 fragment promoting actin upregulation and systemic injury recovery.</p>
+            </div>
+        </div>
+        <div class="code">/* Default card */
+background: #13161F;  border: 1px solid rgba(255,255,255,0.08);
+border-radius: 0.75rem;  padding: 1.75rem;
+
+/* Hover state */
+border-color: #00E5FF;
+box-shadow: 0 0 20px rgba(0,229,255,0.15);</div>
+    </section>
+
+    <!-- ── 7. FORM INPUTS ────────────────────────────────── -->
+    <section class="sg-section" id="inputs">
+        <p class="comp-label" style="margin-bottom:0.5rem;">07 — Components</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Form Inputs</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">Inputs use the darkest surface (#0A0D14) with a low-opacity white border. On focus, the border transitions to the brand cyan.</p>
+
+        <div class="comp-card">
+            <div class="comp-label">Input States</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+                <div>
+                    <label style="display:block; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#8891a4; margin-bottom:0.5rem;">Default State</label>
+                    <input type="number" value="5" style="width:100%; background:#0a0d14; border:1px solid rgba(255,255,255,0.1); color:#fff; padding:0.75rem 1rem; border-radius:0.375rem; outline:none; font-family:'Manrope',sans-serif;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#8891a4; margin-bottom:0.5rem;">Focus State</label>
+                    <input type="number" value="5" style="width:100%; background:rgba(0,229,255,0.1); border:1px solid #00e5ff; color:#fff; padding:0.75rem 1rem; border-radius:0.375rem; outline:none; font-family:'Manrope',sans-serif;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#8891a4; margin-bottom:0.5rem;">Select / Dropdown</label>
+                    <select style="width:100%; background:#0a0d14; border:1px solid rgba(255,255,255,0.1); color:#fff; padding:0.75rem 1rem; border-radius:0.375rem; outline:none; font-family:'Manrope',sans-serif;">
+                        <option>BPC-157</option>
+                        <option>TB-500</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#8891a4; margin-bottom:0.5rem;">Text Input</label>
+                    <input type="text" value="Compound name" style="width:100%; background:#0a0d14; border:1px solid rgba(255,255,255,0.1); color:#fff; padding:0.75rem 1rem; border-radius:0.375rem; outline:none; font-family:'Manrope',sans-serif;">
+                </div>
+            </div>
+            <div class="code">/* Default */
+background: #0A0D14;  border: 1px solid rgba(255,255,255,0.1);
+color: #FFF;  border-radius: 0.375rem;
+
+/* Focus */
+border-color: #00E5FF;  background: rgba(0,229,255,0.1);</div>
+        </div>
+    </section>
+
+    <!-- ── 8. DATA TABLES ────────────────────────────────── -->
+    <section class="sg-section" id="tables">
+        <p class="comp-label" style="margin-bottom:0.5rem;">08 — Components</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Data Tables</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">Used in dosing protocols and titration schedules. Headers are uppercase in the secondary text color; rows highlight with a subtle cyan tint on hover.</p>
+
+        <div class="comp-card" style="padding:0; overflow:hidden;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="background:rgba(0,229,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem; text-align:left; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891a4;">Phase</th>
+                        <th style="background:rgba(0,229,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem; text-align:left; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891a4;">Weeks</th>
+                        <th style="background:rgba(0,229,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem; text-align:left; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891a4;">Dose</th>
+                        <th style="background:rgba(0,229,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem; text-align:left; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891a4;">Units</th>
+                        <th style="background:rgba(0,229,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem; text-align:left; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891a4;">Frequency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onmouseover="this.style.background='rgba(0,229,255,0.05)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#fff; font-weight:600;">Loading</td>
+                        <td style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#8891a4;">01–02</td>
+                        <td style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#8891a4;">250 mcg</td>
+                        <td style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#00e5ff; font-weight:700;">25.0 Units</td>
+                        <td style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#8891a4;">Once Daily</td>
+                    </tr>
+                    <tr onmouseover="this.style.background='rgba(0,229,255,0.05)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding:1rem; color:#fff; font-weight:600;">Maintenance</td>
+                        <td style="padding:1rem; color:#8891a4;">03–08</td>
+                        <td style="padding:1rem; color:#8891a4;">125 mcg</td>
+                        <td style="padding:1rem; color:#00e5ff; font-weight:700;">12.5 Units</td>
+                        <td style="padding:1rem; color:#8891a4;">Once Daily</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ── 9. SPACING & RADIUS ───────────────────────────── -->
+    <section class="sg-section" id="spacing">
+        <p class="comp-label" style="margin-bottom:0.5rem;">09 — Standards</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Spacing & Border Radius</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">All spacing follows a 4px base grid. Border radius tokens determine the visual softness of elements — smaller for inputs, larger for cards and modals.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+            <div class="comp-card">
+                <div class="comp-label">Spacing Scale</div>
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:4px; min-width:4px;">  </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">4px — xs (tight gaps)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:8px; min-width:8px;">  </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">8px — sm (inline spacing)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:16px; min-width:16px;"> </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">16px — md (element padding)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:24px; min-width:24px;"> </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">24px — lg (card padding)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:32px; min-width:32px;"> </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">32px — xl (section gaps)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="space-bar" style="width:56px; min-width:56px;"> </div>
+                        <span style="font-size:0.8rem; color:#8891a4;">56px — 2xl (section padding)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-label">Border Radius Tokens</div>
+                <div style="display:flex; flex-direction:column; gap:1rem;">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:4px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">4px — sm</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Code chips, small tags</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:6px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">6px — md</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Inline chips, mini tags</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:8px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">8px — lg</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Buttons, inputs, dropdowns</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:12px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">12px — xl</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Cards, panels, tab containers</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:16px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">16px — 2xl</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Modals, large panels</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:28px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); border-radius:9999px;"></div>
+                        <div>
+                            <p style="font-size:0.8rem; font-weight:600; margin-bottom:1px;">9999px — pill</p>
+                            <p style="font-size:0.72rem; color:#8891a4;">Category badges, status pills</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 10. MOTION ────────────────────────────────────── -->
+    <section class="sg-section" id="motion">
+        <p class="comp-label" style="margin-bottom:0.5rem;">10 — Standards</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Motion & Transitions</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">All transitions use a single 0.3s ease curve. Never use bounce, spring, or elaborate keyframe animations — the interface should feel precise and scientific, not playful.</p>
+
+        <div class="comp-card">
+            <div class="comp-label">Transition Standard</div>
+            <div class="code">transition: all 0.3s ease;
+
+/* Applied to: buttons, cards, nav items, tab indicators,
+   border colors, box shadows, opacity, background fills */
+
+/* Accordion panels use max-height for smooth expand: */
+transition: max-height 0.3s ease;</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+            <div class="comp-card">
+                <div class="comp-label">Glow — Cyan</div>
+                <div style="height:48px; background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.3); border-radius:0.5rem; box-shadow:0 0 20px rgba(0,229,255,0.25);"></div>
+                <div class="code" style="margin-top:0.75rem; font-size:0.72rem;">box-shadow: 0 0 20px rgba(0,229,255,0.25);</div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-label">Glow — Gold</div>
+                <div style="height:48px; background:rgba(255,219,60,0.08); border:1px solid rgba(255,219,60,0.3); border-radius:0.5rem; box-shadow:0 0 20px rgba(255,219,60,0.2);"></div>
+                <div class="code" style="margin-top:0.75rem; font-size:0.72rem;">box-shadow: 0 0 20px rgba(255,219,60,0.2);</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 11. ICONS ─────────────────────────────────────── -->
+    <section class="sg-section" id="icons">
+        <p class="comp-label" style="margin-bottom:0.5rem;">11 — Standards</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Icons</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">All icons use the Material Symbols Outlined library with thin weight settings. Icons appear in secondary text color unless they are part of an active or accent element.</p>
+
+        <div class="comp-card">
+            <div class="comp-label">Icon Library & Usage</div>
+            <div class="code">/* Google Fonts import */
+&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:
+  wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/&gt;
+
+/* Usage in HTML */
+&lt;span class="material-symbols-outlined"&gt;science&lt;/span&gt;
+&lt;span class="material-symbols-outlined"&gt;medication&lt;/span&gt;
+&lt;span class="material-symbols-outlined"&gt;calculate&lt;/span&gt;
+
+/* CSS variation settings */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}</div>
+            <div style="margin-top:1rem; background:rgba(0,229,255,0.05); border:1px solid rgba(0,229,255,0.15); border-radius:0.5rem; padding:1rem;">
+                <p style="font-size:0.75rem; color:#00e5ff; font-weight:600; margin-bottom:0.25rem;">Icon Color Rule</p>
+                <p style="font-size:0.8rem; color:#8891a4;">Default icons render in <span style="color:#8891a4; font-family:'Courier New'">#8891A4</span>. Icons within active sidebar items or cyan UI elements render in <span style="color:#00e5ff; font-family:'Courier New'">#00E5FF</span>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 12. DOS & DONTS ───────────────────────────────── -->
+    <section class="sg-section" id="dos">
+        <p class="comp-label" style="margin-bottom:0.5rem;">12 — Standards</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700; margin-bottom:0.5rem;">Do's & Don'ts</h2>
+        <p style="color:#8891a4; margin-bottom:2rem; line-height:1.7;">These guardrails keep the FutureBioChem interface consistent, legible, and on-brand.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+            <div style="background:#0a1a12; border:1px solid rgba(0,255,128,0.2); border-radius:0.75rem; padding:1.5rem;">
+                <p style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#00e87a; margin-bottom:1rem;">✓ Do</p>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.75rem;">
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Use Space Grotesk for all numerical data values displayed in the UI</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Maintain the 0.3s ease transition on all interactive elements</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Use the gold accent (#FFDB3C) exclusively for warnings and premium items</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Keep badge text to 3 words or fewer, always uppercase</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Use uppercase + wide letter-spacing (0.08–0.16em) for section labels</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(0,232,122,0.4);">Pair every cyan glow with rgba(0,229,255,0.15–0.25) opacity</li>
+                </ul>
+            </div>
+            <div style="background:#1a0d0d; border:1px solid rgba(255,80,80,0.2); border-radius:0.75rem; padding:1.5rem;">
+                <p style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#ff6060; margin-bottom:1rem;">✗ Don't</p>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.75rem;">
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Use light backgrounds — the entire interface is dark-first</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Use the cyan accent for body text — only for values, labels, and CTAs</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Mix more than two typefaces anywhere on a single screen</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Apply drop shadows — use glow effects (box-shadow with rgba) only</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Use bounce, spring, or elaborate keyframe animations</li>
+                    <li style="font-size:0.85rem; color:#8891a4; padding-left:1rem; border-left:2px solid rgba(255,96,96,0.4);">Alter the "BIO" cyan split in the wordmark or render it flat single-color</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top:5rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <p style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:700; color:#00e5ff; letter-spacing:0.08em; margin-bottom:0.5rem;">FUTURE<span style="color:#fff;">BIO</span>CHEM</p>
+            <p style="font-size:0.75rem; color:#4a5068;">Brand Style Guide v1.0 — Digital Edition — For Internal Use</p>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    // Active nav highlighting on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.sg-nav-item');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            if (window.scrollY >= s.offsetTop - 120) current = s.id;
+        });
+        navItems.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        });
+    });
+    // Smooth scroll
+    navItems.forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+</body>
+</html>
