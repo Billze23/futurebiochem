@@ -49,6 +49,9 @@
         .btn-cyan-outline:hover {
             background: rgba(0, 229, 255, 0.1);
         }
+        .tracker-tab { cursor: pointer; user-select: none; white-space: nowrap; }
+        .tracker-tab-content { }
+        .hover\:bg-white\/2:hover { background: rgba(255,255,255,0.02); }
         .accent-glow {
             box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
         }
@@ -337,6 +340,65 @@
         .cyan-glow {
             box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
         }
+
+        /* ── MOBILE OVERRIDES ───────────────────────────────────────────── */
+        /* Hamburger menu */
+        #mobileMenu { display: none; }
+        #mobileMenu.open { display: flex; }
+        #navLinks { display: flex; }
+
+        /* Cart full-width on mobile */
+        @media (max-width: 640px) {
+            .cart-sidebar { width: 100%; right: -100%; }
+            .cart-sidebar.open { right: 0; }
+            .modal-content { width: 96%; padding: 1.25rem; }
+            .product-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .product-body { padding: 1rem; }
+            .tab-button { padding: 0.6rem 0.9rem; font-size: 0.75rem; }
+            /* Tracker tab labels shorter */
+            .tracker-tab { padding-left: 0.75rem; padding-right: 0.75rem; font-size: 0.75rem; }
+            /* Auth modal full height scroll */
+            #authModal > div { max-height: 95vh; }
+            /* Protocol detail sidebar hide */
+            .protocol-detail-sidebar { display: none !important; }
+        }
+
+        @media (max-width: 768px) {
+            #navLinks { display: none; }
+            #navHamburger { display: flex; }
+            /* Tables scroll horizontally */
+            .titration-table, .reference-table { font-size: 0.75rem; }
+            .titration-table th, .titration-table td,
+            .reference-table th, .reference-table td { padding: 0.6rem 0.5rem; }
+        }
+
+        #navHamburger { display: none; }
+
+        /* Drawer overlay */
+        #mobileDrawer {
+            position: fixed; inset: 0; z-index: 9500;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            display: none; flex-direction: column;
+        }
+        #mobileDrawer.open { display: flex; }
+        #mobileDrawerPanel {
+            background: #13161f;
+            width: 80%; max-width: 320px;
+            height: 100%; padding: 2rem 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            display: flex; flex-direction: column; gap: 0.25rem;
+            overflow-y: auto;
+        }
+        .mobile-nav-link {
+            display: block; padding: 0.875rem 1rem;
+            color: #8891a4; font-weight: 600; font-size: 0.95rem;
+            border-radius: 0.5rem; transition: all 0.2s;
+            cursor: pointer; text-align: left; width: 100%;
+            border: none; background: transparent;
+        }
+        .mobile-nav-link:hover, .mobile-nav-link.active {
+            color: #00e5ff; background: rgba(0,229,255,0.06);
+        }
     </style>
 </head>
 <body class="bg-[#0d0f17]">
@@ -373,29 +435,61 @@
     <div id="mainContent" style="display: none;">
         <!-- FIXED NAV -->
         <nav class="fixed top-0 left-0 right-0 bg-surface bg-opacity-95 backdrop-blur border-b border-surface z-40" style="background: rgba(13,15,23,0.95);">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-cyan font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
+            <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+                <h1 class="text-xl md:text-2xl font-bold text-cyan font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
 
-                <div class="flex items-center gap-8">
+                <!-- Desktop links -->
+                <div id="navLinks" class="items-center gap-6">
                     <button onclick="showSection('home')" class="nav-link text-secondary hover:text-white transition text-sm">Home</button>
                     <button onclick="showSection('calculator')" class="nav-link text-secondary hover:text-white transition text-sm">Calculator</button>
                     <button onclick="showSection('protocols')" class="nav-link text-secondary hover:text-white transition text-sm">Protocols</button>
                     <button onclick="showSection('library')" class="nav-link text-secondary hover:text-white transition text-sm">Library</button>
                     <button onclick="showSection('shop')" class="nav-link text-secondary hover:text-white transition text-sm">Shop</button>
+                    <button id="navTrackerBtn" onclick="openTracker()" class="nav-link text-secondary hover:text-cyan transition text-sm hidden" title="My Tracker">
+                        <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-3px;">monitoring</span>
+                        Tracker
+                    </button>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <!-- Right actions (always visible) -->
+                <div class="flex items-center gap-2 md:gap-4">
                     <button onclick="toggleCart()" class="relative p-2 hover:text-cyan transition">
                         <span class="material-symbols-outlined">shopping_cart</span>
                         <span id="cartBadge" class="absolute -top-1 -right-1 bg-[#ffdb3c] text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
                     </button>
-                    <button class="p-2 hover:text-cyan transition">
+                    <button id="navAccountBtn" onclick="openAuthModal()" class="p-2 hover:text-cyan transition flex items-center gap-1" title="My Account">
                         <span class="material-symbols-outlined">account_circle</span>
+                        <span id="navUserName" class="text-xs font-bold text-cyan hidden md:inline"></span>
                     </button>
-                    <button onclick="showSection('calculator')" class="btn-cyan text-xs">Get Started</button>
+                    <button onclick="showSection('calculator')" class="btn-cyan text-xs hidden md:block">Get Started</button>
+                    <!-- Hamburger (mobile only) -->
+                    <button id="navHamburger" onclick="openMobileDrawer()" class="p-2 hover:text-cyan transition" aria-label="Menu">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
                 </div>
             </div>
         </nav>
+
+        <!-- MOBILE DRAWER -->
+        <div id="mobileDrawer" onclick="closeMobileDrawer()">
+            <div id="mobileDrawerPanel" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-cyan font-bold text-lg font-['Space_Grotesk']">FUTUREBIOCHEM</span>
+                    <button onclick="closeMobileDrawer()" class="text-secondary hover:text-white p-1">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <button onclick="mobileNav('home')"       class="mobile-nav-link">🏠  Home</button>
+                <button onclick="mobileNav('calculator')" class="mobile-nav-link">⚗️  Calculator</button>
+                <button onclick="mobileNav('protocols')"  class="mobile-nav-link">📋  Protocols</button>
+                <button onclick="mobileNav('library')"    class="mobile-nav-link">📚  Library</button>
+                <button onclick="mobileNav('shop')"       class="mobile-nav-link">🛒  Shop</button>
+                <button id="mobileTrackerBtn" onclick="mobileNav('tracker')" class="mobile-nav-link hidden">📊  Tracker</button>
+                <div class="border-t border-white/10 my-4"></div>
+                <button onclick="openAuthModal(); closeMobileDrawer();" class="mobile-nav-link">👤  My Account</button>
+                <button onclick="mobileNav('calculator')" class="btn-cyan w-full text-sm mt-4">Get Started</button>
+            </div>
+        </div>
 
         <!-- SECTIONS CONTAINER -->
         <div class="pt-20">
@@ -414,15 +508,15 @@
                         <div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-16">
                             <div class="space-y-8">
                                 <p class="text-[#00e5ff] text-xs font-bold tracking-widest uppercase">FUTUREBIOCHEM</p>
-                                <h2 class="text-6xl font-bold leading-tight font-['Space_Grotesk']">
+                                <h2 class="text-4xl md:text-6xl font-bold leading-tight font-['Space_Grotesk']">
                                     FutureBioChem:<br>
                                     <span class="text-[#00e5ff]">Optimize Your</span><br>
                                     Longevity Journey.
                                 </h2>
-                                <p class="text-[#8891a4] max-w-lg text-lg leading-relaxed">Harness the power of laboratory-grade accuracy. Our advanced calculating engine ensures your protocols are measured with microscopic exactness.</p>
-                                <div class="flex gap-4 flex-wrap">
-                                    <button onclick="showSection('calculator')" class="btn-cyan text-base px-8 py-4">Launch Calculator</button>
-                                    <button onclick="showSection('protocols')" class="btn-cyan-outline text-base px-8 py-4">View Protocols</button>
+                                <p class="text-[#8891a4] max-w-lg text-base md:text-lg leading-relaxed">Harness the power of laboratory-grade accuracy. Our advanced calculating engine ensures your protocols are measured with microscopic exactness.</p>
+                                <div class="flex gap-3 flex-wrap">
+                                    <button onclick="showSection('calculator')" class="btn-cyan text-sm md:text-base px-5 md:px-8 py-3 md:py-4">Launch Calculator</button>
+                                    <button onclick="showSection('protocols')" class="btn-cyan-outline text-sm md:text-base px-5 md:px-8 py-3 md:py-4">View Protocols</button>
                                 </div>
                             </div>
                             <!-- Circular vial image -->
@@ -447,10 +541,10 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-6 bg-surface border border-surface rounded-xl p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 bg-surface border border-surface rounded-xl p-5 md:p-8">
                         <!-- Panel 1: Peptide Configuration -->
                         <div>
-                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-6">Peptide Configuration</p>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4 md:mb-6">Peptide Configuration</p>
                             <div class="mb-4">
                                 <label class="block text-secondary text-xs mb-2">Vial quantity (mg):</label>
                                 <input type="number" id="vialMg" value="5" class="w-full">
@@ -463,7 +557,7 @@
 
                         <!-- Panel 2: Dosing Intent -->
                         <div>
-                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-6">Dosing Intent</p>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4 md:mb-6">Dosing Intent</p>
                             <div class="mb-4">
                                 <label class="block text-secondary text-xs mb-2">Desired dose (MG):</label>
                                 <input type="number" id="desiredDose" value="0.5" step="0.1" class="w-full">
@@ -479,9 +573,9 @@
                         </div>
 
                         <!-- Panel 3: Calculator Outcome -->
-                        <div class="bg-[#0a0d14] border border-[#00e5ff]/30 rounded-lg p-6">
-                            <p class="text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-6">Calculator Outcome</p>
-                            <p class="text-6xl font-bold font-['Space_Grotesk'] mb-2 text-[#00e5ff]" id="calculatedUnits">10.0</p>
+                        <div class="bg-[#0a0d14] border border-[#00e5ff]/30 rounded-lg p-5 md:p-6">
+                            <p class="text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-4 md:mb-6">Calculator Outcome</p>
+                            <p class="text-5xl md:text-6xl font-bold font-['Space_Grotesk'] mb-2 text-[#00e5ff]" id="calculatedUnits">10.0</p>
                             <p class="text-xs font-bold tracking-widest uppercase mb-6 text-[#8891a4]">Units on Syringe</p>
                             <div class="mb-6 space-y-3 text-sm border-t border-white/10 pt-4">
                                 <div class="flex justify-between">
@@ -493,7 +587,10 @@
                                     <span id="volConversion" class="font-bold text-[#00e5ff]">2.0 mg/mL</span>
                                 </div>
                             </div>
-                            <button onclick="saveProtocol()" class="w-full bg-transparent text-[#00e5ff] border border-[#00e5ff]/50 px-4 py-2 rounded font-bold text-xs transition hover:bg-[#00e5ff]/10">💾 Save Protocol</button>
+                            <div class="flex gap-2">
+                                <button onclick="saveProtocol()" class="flex-1 bg-transparent text-[#00e5ff] border border-[#00e5ff]/50 px-4 py-2 rounded font-bold text-xs transition hover:bg-[#00e5ff]/10">💾 Save Protocol</button>
+                                <button onclick="quickLogFromCalc()" id="calcLogBtn" class="flex-1 bg-transparent text-[#ffdb3c] border border-[#ffdb3c]/50 px-4 py-2 rounded font-bold text-xs transition hover:bg-[#ffdb3c]/10">📋 Log This Dose</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -505,8 +602,8 @@
                         <p class="text-secondary max-w-2xl mx-auto">Our calculation engine is built upon foundational principles of volumetric mathematics and chemical stoichiometry. By synthesizing vial mass, solvent volume, and desired dose, we provide researchers with an integrated framework for precise laboratory measurement.</p>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-6">
-                        <div class="bg-surface border border-surface rounded-xl p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+                        <div class="bg-surface border border-surface rounded-xl p-6 md:p-8">
                             <p class="text-2xl mb-4">🧪</p>
                             <h3 class="text-white font-bold mb-4">Volumetric Accuracy</h3>
                             <p class="text-secondary text-sm mb-6">Precise unit calculations based on the specific volume of peptide in vials and the reconstitution volume (mL). This ensures the final concentration matches across all research procedures.</p>
@@ -627,54 +724,54 @@
                         <h2 class="text-4xl font-bold mb-4">Ready to Elevate Your Precision?</h2>
                         <p class="text-secondary mb-8">Join thousands of researchers using FutureBioChem for error-free dosing and protocol management.</p>
                         <div class="flex gap-4 justify-center">
-                            <button class="btn-cyan">Create Free Account</button>
+                            <button onclick="openAuthModal('register')" class="btn-cyan">Create Free Account</button>
                             <button class="btn-cyan-outline">Download Guide</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- FOOTER -->
-                <footer class="border-t border-surface py-12 mt-24">
-                    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                <footer class="border-t border-surface py-10 mt-16 md:mt-24">
+                    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 text-center md:text-left">
                         <h3 class="text-cyan font-bold text-lg font-['Space_Grotesk']">FUTUREBIOCHEM</h3>
-                        <div class="flex gap-8 text-secondary text-sm">
+                        <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-secondary text-sm">
                             <a href="#" class="hover:text-cyan transition">Privacy Policy</a>
                             <a href="#" class="hover:text-cyan transition">Terms of Service</a>
                             <a href="#" class="hover:text-cyan transition">Contact Us</a>
                             <a href="#" class="hover:text-cyan transition">Research Disclaimer</a>
                         </div>
-                        <p class="text-secondary text-xs">© 2024 FutureBioChem Synthetic Laboratory. For Research Purposes Only.</p>
+                        <p class="text-secondary text-xs">© 2024 FutureBioChem. Research Use Only.</p>
                     </div>
                 </footer>
             </section>
 
             <!-- SECTION 2: CALCULATOR -->
             <section id="calculator" class="section">
-                <div class="max-w-7xl mx-auto px-6 py-20">
+                <div class="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-20">
                     <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-500 p-4 mb-12 rounded">
                         <p class="text-yellow-400 text-sm">⚠ RESEARCH USE ONLY — All calculations are for laboratory research purposes only. Not for human consumption.</p>
                     </div>
 
-                    <div class="mb-12">
+                    <div class="mb-8 md:mb-12">
                         <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-2">PRECISION CALCULATORS</p>
-                        <h1 class="text-5xl font-bold font-['Space_Grotesk'] mb-4">Dosing Engine</h1>
-                        <p class="text-secondary">Advanced volumetric calculations for research-grade precision</p>
+                        <h1 class="text-3xl md:text-5xl font-bold font-['Space_Grotesk'] mb-3">Dosing Engine</h1>
+                        <p class="text-secondary text-sm md:text-base">Advanced volumetric calculations for research-grade precision</p>
                     </div>
 
-                    <!-- TABS -->
-                    <div class="border-b border-surface mb-8 flex gap-8">
-                        <button class="tab-button active" onclick="switchTab('reconstitution', this)">Reconstitution</button>
-                        <button class="tab-button" onclick="switchTab('body-weight', this)">Body Weight</button>
-                        <button class="tab-button" onclick="switchTab('protocol-planner', this)">Protocol Planner</button>
-                        <button class="tab-button" onclick="switchTab('hgh', this)">HGH</button>
-                        <button class="tab-button" onclick="switchTab('blend', this)">Blend</button>
+                    <!-- TABS — scrollable on mobile -->
+                    <div class="border-b border-surface mb-6 md:mb-8 overflow-x-auto flex gap-0 -mx-2 px-2 md:mx-0 md:px-0" style="scrollbar-width:none;">
+                        <button class="tab-button active whitespace-nowrap" onclick="switchTab('reconstitution', this)">Reconstitution</button>
+                        <button class="tab-button whitespace-nowrap" onclick="switchTab('body-weight', this)">Body Weight</button>
+                        <button class="tab-button whitespace-nowrap" onclick="switchTab('protocol-planner', this)">Protocol</button>
+                        <button class="tab-button whitespace-nowrap" onclick="switchTab('hgh', this)">HGH</button>
+                        <button class="tab-button whitespace-nowrap" onclick="switchTab('blend', this)">Blend</button>
                     </div>
 
                     <!-- RECONSTITUTION TAB -->
-                    <div id="reconstitution" class="tab-content active bg-surface border border-surface rounded-xl p-8">
-                        <h2 class="text-2xl font-bold mb-2">Peptide Reconstitution Calculator</h2>
-                        <p class="text-[#8891a4] text-sm mb-6">Enter your vial size, BAC water volume, and desired dose to calculate concentration and draw volume.</p>
-                        <div class="grid grid-cols-3 gap-6">
+                    <div id="reconstitution" class="tab-content active bg-surface border border-surface rounded-xl p-5 md:p-8">
+                        <h2 class="text-xl md:text-2xl font-bold mb-2">Peptide Reconstitution Calculator</h2>
+                        <p class="text-[#8891a4] text-sm mb-5">Enter your vial size, BAC water volume, and desired dose to calculate concentration and draw volume.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Vial Weight (mg)</label>
                                 <input id="rcVialMg" type="number" value="5" min="0" step="0.5" oninput="calcRecon()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
@@ -688,7 +785,7 @@
                                 <input id="rcDoseMg" type="number" value="0.5" min="0" step="0.05" oninput="calcRecon()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
                             </div>
                         </div>
-                        <div class="mt-8 grid grid-cols-3 gap-4">
+                        <div class="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                             <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
                                 <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Concentration</p>
                                 <p class="text-4xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="reconResult">2.5</p>
@@ -802,9 +899,9 @@
                     </div>
 
                     <!-- BODY WEIGHT TAB -->
-                    <div id="body-weight" class="tab-content bg-surface border border-surface rounded-xl p-8">
-                        <h2 class="text-2xl font-bold mb-6">Body Weight Dosing Calculator</h2>
-                        <div class="grid grid-cols-2 gap-6">
+                    <div id="body-weight" class="tab-content bg-surface border border-surface rounded-xl p-5 md:p-8">
+                        <h2 class="text-xl md:text-2xl font-bold mb-5">Body Weight Dosing Calculator</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-secondary text-sm mb-2">Body Weight (lbs)</label>
                                 <input type="number" value="180" class="w-full">
@@ -822,9 +919,9 @@
                     </div>
 
                     <!-- PROTOCOL PLANNER TAB -->
-                    <div id="protocol-planner" class="tab-content bg-surface border border-surface rounded-xl p-8">
-                        <h2 class="text-2xl font-bold mb-6">Protocol Planner</h2>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div id="protocol-planner" class="tab-content bg-surface border border-surface rounded-xl p-5 md:p-8">
+                        <h2 class="text-xl md:text-2xl font-bold mb-5">Protocol Planner</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-5">
                             <div>
                                 <label class="block text-secondary text-sm mb-2">Protocol Duration (weeks)</label>
                                 <input type="number" value="12" class="w-full">
@@ -843,10 +940,10 @@
                     </div>
 
                     <!-- HGH TAB -->
-                    <div id="hgh" class="tab-content bg-surface border border-surface rounded-xl p-8">
-                        <h2 class="text-2xl font-bold mb-2">HGH Calculator</h2>
-                        <p class="text-[#8891a4] text-sm mb-6">HGH is dosed in International Units (IU). Enter your vial size, BAC water, and desired dose to calculate the exact draw volume.</p>
-                        <div class="grid grid-cols-3 gap-6">
+                    <div id="hgh" class="tab-content bg-surface border border-surface rounded-xl p-5 md:p-8">
+                        <h2 class="text-xl md:text-2xl font-bold mb-2">HGH Calculator</h2>
+                        <p class="text-[#8891a4] text-sm mb-5">HGH is dosed in International Units (IU). Enter your vial size, BAC water, and desired dose to calculate the exact draw volume.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Vial Size (IU)</label>
                                 <input id="hghVialIU" type="number" value="10" step="1" min="1" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
@@ -860,8 +957,8 @@
                                 <input id="hghWaterMl" type="number" value="1" step="0.5" min="0.5" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
                             </div>
                         </div>
-                        <div class="mt-6 grid grid-cols-4 gap-4">
-                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
+                        <div class="mt-5 md:mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                            <div class="p-4 md:p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
                                 <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">IU / mL</p>
                                 <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghConcIU">10.0</p>
                                 <p class="text-sm text-[#8891a4] mt-1">concentration</p>
@@ -886,7 +983,7 @@
                     </div>
 
                     <!-- BLEND TAB -->
-                    <div id="blend" class="tab-content bg-surface border border-surface rounded-xl p-8">
+                    <div id="blend" class="tab-content bg-surface border border-surface rounded-xl p-5 md:p-8">
                         <h2 class="text-2xl font-bold mb-2">Peptide Blend Calculator</h2>
                         <p class="text-secondary text-sm mb-6">Calculate individual peptide doses from blended vials. Select a preset blend or build a custom formulation.</p>
 
@@ -956,7 +1053,7 @@
                                 <!-- Results -->
                                 <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
                                     <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-4">Draw Result</p>
-                                    <div class="grid grid-cols-3 gap-4 mb-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4">
                                         <div>
                                             <p class="text-xs text-[#8891a4] uppercase tracking-widest mb-1">Draw Volume</p>
                                             <p class="text-2xl font-bold text-[#00e5ff] font-['Space_Grotesk']" id="blendDrawVol">0.10 mL</p>
@@ -1059,7 +1156,7 @@
 
                     <!-- SEARCH/FILTER BAR -->
                     <div class="bg-surface border border-surface rounded-xl p-6 mb-8">
-                        <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-5">
                             <div>
                                 <label class="block text-secondary text-xs mb-2 font-bold">SEARCH CATALOG</label>
                                 <input type="text" id="librarySearch" placeholder="🔍 Enter compound name..." class="w-full">
@@ -1141,6 +1238,197 @@
                     </div>
                 </div>
             </section>
+
+            <!-- SECTION 6: TRACKER -->
+            <section id="tracker" class="section">
+                <div class="max-w-5xl mx-auto px-6 py-16">
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-10">
+                        <div>
+                            <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-1">RESEARCH LOG</p>
+                            <h1 class="text-4xl font-bold font-['Space_Grotesk']">Peptide Tracker</h1>
+                            <p class="text-secondary mt-1 text-sm">Log doses, track vials, and manage your research cycles.</p>
+                        </div>
+                        <div id="trackerLoginPrompt" class="hidden text-center">
+                            <p class="text-secondary text-sm mb-3">Sign in to access your tracker.</p>
+                            <button onclick="openAuthModal('login')" class="btn-cyan text-sm">Sign In</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Bar -->
+                    <div id="trackerStats" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 text-center">
+                            <p class="text-3xl font-bold text-cyan font-['Space_Grotesk']" id="statTotalDoses">—</p>
+                            <p class="text-secondary text-xs font-bold tracking-widest uppercase mt-1">Total Doses</p>
+                        </div>
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 text-center">
+                            <p class="text-3xl font-bold text-gold font-['Space_Grotesk']" id="statStreak">—</p>
+                            <p class="text-secondary text-xs font-bold tracking-widest uppercase mt-1">Day Streak</p>
+                        </div>
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 text-center">
+                            <p class="text-3xl font-bold text-white font-['Space_Grotesk']" id="statVials">—</p>
+                            <p class="text-secondary text-xs font-bold tracking-widest uppercase mt-1">Active Vials</p>
+                        </div>
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 text-center">
+                            <p class="text-xl font-bold text-white font-['Space_Grotesk'] truncate" id="statTopCompound">—</p>
+                            <p class="text-secondary text-xs font-bold tracking-widest uppercase mt-1">Top Compound</p>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div id="trackerContent" class="hidden">
+                        <div class="flex gap-0 mb-8 border-b border-white/10">
+                            <button onclick="switchTrackerTab('tlog')" id="ttab-tlog" class="tracker-tab active-tab px-5 py-3 text-sm font-bold border-b-2 border-cyan text-cyan -mb-px transition">
+                                <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">vaccines</span> Dose Log
+                            </button>
+                            <button onclick="switchTrackerTab('tvials')" id="ttab-tvials" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition">
+                                <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">science</span> Vials
+                            </button>
+                            <button onclick="switchTrackerTab('tcycles')" id="ttab-tcycles" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition">
+                                <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">restart_alt</span> Cycles
+                            </button>
+                        </div>
+
+                        <!-- ── DOSE LOG TAB ─────────────────────────────────── -->
+                        <div id="tlog" class="tracker-tab-content">
+                            <!-- Quick Log Form -->
+                            <div class="bg-surface border border-white/5 rounded-xl p-6 mb-6">
+                                <p class="text-xs font-bold tracking-widest uppercase text-cyan mb-4">Log a Dose</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                                    <div>
+                                        <label class="auth-label">Compound</label>
+                                        <select id="logCompound" class="auth-input">
+                                            <option value="">— select —</option>
+                                            <option>BPC-157</option><option>TB-500</option><option>GHK-Cu</option>
+                                            <option>KPV</option><option>Retatrutide</option><option>Mots-C</option>
+                                            <option>NAD+</option><option>HGH</option><option>Wolverine Stack</option>
+                                            <option>Klow</option><option>Glow</option><option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Dose (mg)</label>
+                                        <input id="logDoseMg" type="number" step="0.01" min="0.001" placeholder="e.g. 0.5" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Vial (optional)</label>
+                                        <select id="logVialId" class="auth-input">
+                                            <option value="">— none —</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Injection Site</label>
+                                        <select id="logSite" class="auth-input">
+                                            <option value="">— optional —</option>
+                                            <option>Abdomen</option><option>Thigh</option><option>Deltoid</option>
+                                            <option>Glute</option><option>Forearm</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                    <div>
+                                        <label class="auth-label">Date / Time</label>
+                                        <input id="logDateTime" type="datetime-local" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Notes</label>
+                                        <input id="logNotes" type="text" placeholder="Optional research notes" class="auth-input">
+                                    </div>
+                                </div>
+                                <div id="logMsg" class="auth-msg text-sm mb-3"></div>
+                                <button onclick="submitDoseLog()" class="btn-cyan text-sm px-6">Log Dose</button>
+                            </div>
+
+                            <!-- Log History -->
+                            <div id="doseLogList">
+                                <p class="text-secondary text-sm text-center py-8">Loading dose log…</p>
+                            </div>
+                        </div>
+
+                        <!-- ── VIALS TAB ──────────────────────────────────────── -->
+                        <div id="tvials" class="tracker-tab-content hidden">
+                            <!-- Add Vial Form -->
+                            <div class="bg-surface border border-white/5 rounded-xl p-6 mb-6">
+                                <p class="text-xs font-bold tracking-widest uppercase text-cyan mb-4">Register a Vial</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                    <div>
+                                        <label class="auth-label">Compound</label>
+                                        <select id="vialCompound" class="auth-input">
+                                            <option value="">— select —</option>
+                                            <option>BPC-157</option><option>TB-500</option><option>GHK-Cu</option>
+                                            <option>KPV</option><option>Retatrutide</option><option>Mots-C</option>
+                                            <option>NAD+</option><option>HGH</option><option>Klow</option>
+                                            <option>Glow</option><option>Wolverine Stack</option><option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Total mg</label>
+                                        <input id="vialTotalMg" type="number" step="0.1" min="0.1" placeholder="e.g. 5" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">BAC Water (mL)</label>
+                                        <input id="vialBacWater" type="number" step="0.1" min="0.5" value="2.0" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Expiry Date</label>
+                                        <input id="vialExpiry" type="date" class="auth-input">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="auth-label">Lot / Batch Note</label>
+                                    <input id="vialLotNote" type="text" placeholder="Optional: lot #, supplier ref, etc." class="auth-input">
+                                </div>
+                                <div id="vialMsg" class="auth-msg text-sm mb-3"></div>
+                                <button onclick="submitVial()" class="btn-cyan text-sm px-6">Add Vial</button>
+                            </div>
+
+                            <!-- Vial List -->
+                            <div id="vialList">
+                                <p class="text-secondary text-sm text-center py-8">Loading vials…</p>
+                            </div>
+                        </div>
+
+                        <!-- ── CYCLES TAB ──────────────────────────────────────── -->
+                        <div id="tcycles" class="tracker-tab-content hidden">
+                            <!-- Start Cycle Form -->
+                            <div class="bg-surface border border-white/5 rounded-xl p-6 mb-6">
+                                <p class="text-xs font-bold tracking-widest uppercase text-cyan mb-4">Start a Cycle / Protocol</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                                    <div>
+                                        <label class="auth-label">Cycle Name</label>
+                                        <input id="cycleName" type="text" placeholder="e.g. 8-Week BPC Stack" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Start Date</label>
+                                        <input id="cycleStart" type="date" class="auth-input">
+                                    </div>
+                                    <div>
+                                        <label class="auth-label">Planned End Date</label>
+                                        <input id="cycleEnd" type="date" class="auth-input">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="auth-label">Compounds in Cycle (comma-separated)</label>
+                                    <input id="cycleCompounds" type="text" placeholder="e.g. BPC-157, TB-500, GHK-Cu" class="auth-input">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="auth-label">Protocol Notes</label>
+                                    <input id="cycleNotes" type="text" placeholder="Dosing schedule, goals, references…" class="auth-input">
+                                </div>
+                                <div id="cycleMsg" class="auth-msg text-sm mb-3"></div>
+                                <button onclick="submitCycle()" class="btn-cyan text-sm px-6">Start Cycle</button>
+                            </div>
+
+                            <!-- Cycle List -->
+                            <div id="cycleList">
+                                <p class="text-secondary text-sm text-center py-8">Loading cycles…</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
         </div>
     </div>
 
@@ -1940,7 +2228,7 @@
 
             detailView.innerHTML = `
                 <div class="flex gap-6 min-h-screen">
-                    <div class="w-56 protocol-detail-sidebar">
+                    <div class="w-56 protocol-detail-sidebar hidden md:flex">
                         <div class="mb-8">
                             <div class="w-12 h-12 rounded-full bg-cyan text-black flex items-center justify-center font-bold text-lg mb-3">LP</div>
                             <p class="text-white font-bold">Lab Station 04</p>
@@ -2034,7 +2322,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-4 gap-4 mb-8">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
                             <div class="stat-card">
                                 <p class="stat-value">${detail.halfLife}</p>
                                 <p class="stat-label">HALF-LIFE (T1/2)</p>
@@ -2054,7 +2342,7 @@
                         </div>
                         <div class="mb-8">
                             <p class="text-white font-bold mb-4">PROTOCOL LIBRARY</p>
-                            <div class="grid grid-cols-5 gap-4">
+                            <div class="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
                                 ${libraryHTML}
                             </div>
                             <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline mt-4 inline-block">VIEW ALL RESEARCH →</a>
@@ -2233,6 +2521,754 @@
         function saveProtocol() {
             alert('Protocol saved to your research library!');
         }
+
+        // ═══════════════════════════════════════════════════════════════════
+        //  AUTH SYSTEM
+        // ═══════════════════════════════════════════════════════════════════
+
+        let currentUser = null;
+        let authToken = localStorage.getItem('fbcToken') || null;
+
+        // ── Helpers ────────────────────────────────────────────────────────
+        async function authFetch(url, opts = {}) {
+            opts.headers = opts.headers || {};
+            if (authToken) opts.headers['Authorization'] = `Bearer ${authToken}`;
+            opts.headers['Content-Type'] = 'application/json';
+            return fetch(url, opts);
+        }
+
+        function authSetUser(user, token) {
+            currentUser = user;
+            authToken = token;
+            if (token) localStorage.setItem('fbcToken', token);
+            else localStorage.removeItem('fbcToken');
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const nameEl = document.getElementById('navUserName');
+            if (currentUser) {
+                nameEl.textContent = currentUser.name.split(' ')[0];
+                nameEl.classList.remove('hidden');
+                // If account dashboard is visible, refresh it
+                if (!document.getElementById('authPane-dashboard').classList.contains('hidden')) {
+                    loadDashboard();
+                }
+            } else {
+                nameEl.textContent = '';
+                nameEl.classList.add('hidden');
+            }
+        }
+
+        // ── Modal open / close ─────────────────────────────────────────────
+        function openAuthModal(pane) {
+            document.getElementById('authModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            if (currentUser) {
+                showAuthPane('dashboard');
+                loadDashboard();
+            } else {
+                showAuthPane(pane || 'login');
+            }
+            clearAuthMessages();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function showAuthPane(pane) {
+            ['login','register','dashboard'].forEach(p => {
+                document.getElementById(`authPane-${p}`).classList.toggle('hidden', p !== pane);
+            });
+            clearAuthMessages();
+        }
+
+        function clearAuthMessages() {
+            document.querySelectorAll('.auth-msg').forEach(el => { el.textContent = ''; el.className = 'auth-msg'; });
+        }
+
+        function showAuthMsg(elId, msg, isError = true) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.textContent = msg;
+            el.className = `auth-msg text-sm mt-2 ${isError ? 'text-red-400' : 'text-green-400'}`;
+        }
+
+        // ── Register ───────────────────────────────────────────────────────
+        async function doRegister(e) {
+            e.preventDefault();
+            const name     = document.getElementById('regName').value.trim();
+            const email    = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const password2= document.getElementById('regPassword2').value;
+
+            if (password !== password2) return showAuthMsg('regMsg', 'Passwords do not match.');
+            if (password.length < 8)    return showAuthMsg('regMsg', 'Password must be at least 8 characters.');
+
+            const btn = document.getElementById('regBtn');
+            btn.textContent = 'Creating…'; btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) { showAuthMsg('regMsg', data.error || 'Registration failed.'); return; }
+                authSetUser(data.user, data.token);
+                showAuthPane('dashboard');
+                loadDashboard();
+            } catch { showAuthMsg('regMsg', 'Network error. Please try again.'); }
+            finally { btn.textContent = 'Create Account'; btn.disabled = false; }
+        }
+
+        // ── Login ──────────────────────────────────────────────────────────
+        async function doLogin(e) {
+            e.preventDefault();
+            const email    = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const btn = document.getElementById('loginBtn');
+            btn.textContent = 'Signing in…'; btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) { showAuthMsg('loginMsg', data.error || 'Login failed.'); return; }
+                authSetUser(data.user, data.token);
+                showAuthPane('dashboard');
+                loadDashboard();
+            } catch { showAuthMsg('loginMsg', 'Network error. Please try again.'); }
+            finally { btn.textContent = 'Sign In'; btn.disabled = false; }
+        }
+
+        // ── Logout ─────────────────────────────────────────────────────────
+        function doLogout() {
+            authSetUser(null, null);
+            closeAuthModal();
+        }
+
+        // ── Dashboard ──────────────────────────────────────────────────────
+        async function loadDashboard() {
+            if (!currentUser) return;
+            document.getElementById('dashUserName').textContent = currentUser.name;
+            document.getElementById('dashUserEmail').textContent = currentUser.email;
+
+            // Load preferences
+            try {
+                const res = await authFetch('/api/user/preferences');
+                if (res.ok) {
+                    const prefs = await res.json();
+                    document.getElementById('prefUnits').value = prefs.units || 'mcg';
+                    document.getElementById('prefBacWater').value = prefs.bac_water_ml || 2.0;
+                    document.getElementById('prefFavs').textContent =
+                        (prefs.fav_compounds || []).length > 0
+                            ? prefs.fav_compounds.join(', ')
+                            : 'None saved yet';
+                }
+            } catch {}
+
+            // Load order history
+            try {
+                const res = await authFetch('/api/user/orders');
+                if (res.ok) {
+                    const orders = await res.json();
+                    const el = document.getElementById('dashOrders');
+                    if (orders.length === 0) {
+                        el.innerHTML = '<p class="text-secondary text-sm">No orders yet.</p>';
+                    } else {
+                        el.innerHTML = orders.map(o => `
+                            <div class="bg-surface border border-surface rounded-lg p-4 mb-3">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-white font-bold text-sm">Order #${o.id}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full font-bold ${
+                                        o.status === 'invoiced' ? 'bg-cyan/10 text-cyan border border-cyan/20' : 'bg-yellow-900/30 text-yellow-400 border border-yellow-500/20'
+                                    }">${o.status.toUpperCase()}</span>
+                                </div>
+                                <p class="text-secondary text-xs mb-2">${new Date(o.created_at).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' })}</p>
+                                <div class="space-y-1 mb-3">
+                                    ${o.items.map(i => `<p class="text-secondary text-xs">${i.name} ${i.variant || ''} × ${i.qty} — $${(i.price * i.qty).toFixed(2)}</p>`).join('')}
+                                </div>
+                                <div class="flex justify-between items-center pt-2 border-t border-surface">
+                                    <span class="text-secondary text-xs">Total</span>
+                                    <span class="text-cyan font-bold">$${parseFloat(o.total).toFixed(2)}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch {}
+        }
+
+        async function savePreferences() {
+            const units       = document.getElementById('prefUnits').value;
+            const bac_water_ml = parseFloat(document.getElementById('prefBacWater').value);
+            const btn = document.getElementById('savePrefBtn');
+            btn.textContent = 'Saving…'; btn.disabled = true;
+
+            try {
+                const res = await authFetch('/api/user/preferences', {
+                    method: 'PUT',
+                    body: JSON.stringify({ units, bac_water_ml })
+                });
+                if (res.ok) showAuthMsg('prefMsg', 'Preferences saved!', false);
+                else        showAuthMsg('prefMsg', 'Failed to save preferences.');
+            } catch { showAuthMsg('prefMsg', 'Network error.'); }
+            finally { btn.textContent = 'Save Preferences'; btn.disabled = false; }
+        }
+
+        // ── Auto-login on load ─────────────────────────────────────────────
+        (async () => {
+            if (!authToken) return;
+            try {
+                const res = await authFetch('/api/auth/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    currentUser = data.user;
+                    updateAuthUI();
+                } else {
+                    authToken = null;
+                    localStorage.removeItem('fbcToken');
+                }
+            } catch {}
+        })();
+
+        // ═══════════════════════════════════════════════════════════════════
+        //  TRACKER SYSTEM
+        // ═══════════════════════════════════════════════════════════════════
+
+        // ── Tab switching ──────────────────────────────────────────────────
+        function switchTrackerTab(tab) {
+            document.querySelectorAll('.tracker-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tracker-tab').forEach(el => {
+                el.classList.remove('border-cyan','text-cyan','active-tab');
+                el.classList.add('border-transparent','text-secondary');
+            });
+            document.getElementById(tab).classList.remove('hidden');
+            const btn = document.getElementById('ttab-' + tab);
+            btn.classList.add('border-cyan','text-cyan','active-tab');
+            btn.classList.remove('border-transparent','text-secondary');
+        }
+
+        // ── Open tracker section ───────────────────────────────────────────
+        function openTracker() {
+            showSection('tracker');
+            if (!currentUser) {
+                document.getElementById('trackerLoginPrompt').classList.remove('hidden');
+                document.getElementById('trackerStats').classList.add('hidden');
+                document.getElementById('trackerContent').classList.add('hidden');
+            } else {
+                document.getElementById('trackerLoginPrompt').classList.add('hidden');
+                document.getElementById('trackerStats').classList.remove('hidden');
+                document.getElementById('trackerContent').classList.remove('hidden');
+                loadTrackerStats();
+                loadDoseLogs();
+                loadVials();
+                loadCycles();
+                prefillVialDropdown();
+            }
+            // Prefill date-time to now
+            const now = new Date();
+            const localISO = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            const dtEl = document.getElementById('logDateTime');
+            if (dtEl) dtEl.value = localISO;
+            const csEl = document.getElementById('cycleStart');
+            if (csEl && !csEl.value) csEl.value = localISO.slice(0, 10);
+        }
+
+        // ── Stats ──────────────────────────────────────────────────────────
+        async function loadTrackerStats() {
+            try {
+                const res = await authFetch('/api/tracker/stats');
+                if (!res.ok) return;
+                const s = await res.json();
+                document.getElementById('statTotalDoses').textContent = s.totalDoses;
+                document.getElementById('statStreak').textContent = s.streak + (s.streak === 1 ? ' day' : ' days');
+                document.getElementById('statVials').textContent = s.totalVials;
+                document.getElementById('statTopCompound').textContent = s.topCompound || '—';
+            } catch {}
+        }
+
+        // ── Dose Log ───────────────────────────────────────────────────────
+        async function loadDoseLogs() {
+            const el = document.getElementById('doseLogList');
+            try {
+                const res = await authFetch('/api/tracker/logs?limit=30');
+                if (!res.ok) { el.innerHTML = '<p class="text-secondary text-sm text-center py-8">Could not load logs.</p>'; return; }
+                const logs = await res.json();
+                if (logs.length === 0) {
+                    el.innerHTML = '<p class="text-secondary text-sm text-center py-8">No doses logged yet. Use the form above to log your first dose.</p>';
+                    return;
+                }
+                el.innerHTML = `
+                    <div class="overflow-x-auto rounded-xl border border-white/5">
+                        <table class="w-full text-sm">
+                            <thead class="bg-surface">
+                                <tr class="text-left">
+                                    <th class="px-4 py-3 text-secondary text-xs font-bold tracking-widest uppercase">Date / Time</th>
+                                    <th class="px-4 py-3 text-secondary text-xs font-bold tracking-widest uppercase">Compound</th>
+                                    <th class="px-4 py-3 text-secondary text-xs font-bold tracking-widest uppercase">Dose</th>
+                                    <th class="px-4 py-3 text-secondary text-xs font-bold tracking-widest uppercase">Site</th>
+                                    <th class="px-4 py-3 text-secondary text-xs font-bold tracking-widest uppercase">Notes</th>
+                                    <th class="px-4 py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                ${logs.map(l => `
+                                    <tr class="hover:bg-white/2 transition">
+                                        <td class="px-4 py-3 text-secondary text-xs whitespace-nowrap">${formatLogDate(l.logged_at)}</td>
+                                        <td class="px-4 py-3 text-white font-bold">${l.compound}</td>
+                                        <td class="px-4 py-3 text-cyan font-bold">${l.dose_mg} mg</td>
+                                        <td class="px-4 py-3 text-secondary text-xs">${l.site || '—'}</td>
+                                        <td class="px-4 py-3 text-secondary text-xs">${l.notes || '—'}</td>
+                                        <td class="px-4 py-3">
+                                            <button onclick="deleteLog(${l.id})" class="text-red-400 hover:text-red-300 text-xs transition" title="Delete">✕</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            } catch { el.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error loading logs.</p>'; }
+        }
+
+        function formatLogDate(ts) {
+            const d = new Date(ts);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                 + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+
+        async function submitDoseLog() {
+            const compound = document.getElementById('logCompound').value;
+            const dose_mg  = parseFloat(document.getElementById('logDoseMg').value);
+            const vial_id  = document.getElementById('logVialId').value || null;
+            const site     = document.getElementById('logSite').value || null;
+            const notes    = document.getElementById('logNotes').value || null;
+            const dt       = document.getElementById('logDateTime').value;
+            const logged_at = dt ? new Date(dt).toISOString() : null;
+
+            if (!compound) return showAuthMsg('logMsg', 'Please select a compound.');
+            if (!dose_mg || dose_mg <= 0) return showAuthMsg('logMsg', 'Please enter a valid dose.');
+
+            try {
+                const res = await authFetch('/api/tracker/logs', {
+                    method: 'POST',
+                    body: JSON.stringify({ compound, dose_mg, vial_id, site, notes, logged_at })
+                });
+                const data = await res.json();
+                if (!res.ok) return showAuthMsg('logMsg', data.error || 'Failed to log dose.');
+                showAuthMsg('logMsg', `✓ ${compound} ${dose_mg}mg logged.`, false);
+                document.getElementById('logDoseMg').value = '';
+                document.getElementById('logNotes').value = '';
+                document.getElementById('logSite').value = '';
+                loadDoseLogs();
+                loadTrackerStats();
+                loadVials(); // refresh vial remaining
+                prefillVialDropdown();
+            } catch { showAuthMsg('logMsg', 'Network error.'); }
+        }
+
+        async function deleteLog(id) {
+            if (!confirm('Remove this dose log entry?')) return;
+            await authFetch(`/api/tracker/logs/${id}`, { method: 'DELETE' });
+            loadDoseLogs();
+            loadTrackerStats();
+            loadVials();
+            prefillVialDropdown();
+        }
+
+        // ── Quick Log from Calculator ───────────────────────────────────────
+        function quickLogFromCalc() {
+            if (!currentUser) { openAuthModal('login'); return; }
+            const compoundEl = document.getElementById('compoundSelect') || document.getElementById('protocolPeptide');
+            const doseEl     = document.getElementById('desiredDose');
+            openTracker();
+            switchTrackerTab('tlog');
+            if (doseEl) document.getElementById('logDoseMg').value = parseFloat(doseEl.value) || '';
+        }
+
+        // ── Vials ──────────────────────────────────────────────────────────
+        async function loadVials() {
+            const el = document.getElementById('vialList');
+            try {
+                const res = await authFetch('/api/tracker/vials');
+                if (!res.ok) { el.innerHTML = '<p class="text-secondary text-sm text-center py-8">Could not load vials.</p>'; return; }
+                const vials = await res.json();
+                if (vials.length === 0) {
+                    el.innerHTML = '<p class="text-secondary text-sm text-center py-8">No active vials. Register one above.</p>';
+                    return;
+                }
+                el.innerHTML = vials.map(v => {
+                    const pct = Math.max(0, Math.min(100, (v.remaining_mg / v.total_mg) * 100));
+                    const color = pct > 60 ? '#00e5ff' : pct > 25 ? '#ffdb3c' : '#f87171';
+                    const expiry = v.expires_at ? new Date(v.expires_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+                    const conc = (v.total_mg / v.bac_water_ml).toFixed(2);
+                    return `
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 mb-4">
+                            <div class="flex items-start justify-between mb-3">
+                                <div>
+                                    <p class="text-white font-bold text-base">${v.compound}</p>
+                                    <p class="text-secondary text-xs">${conc} mg/mL · BAC ${v.bac_water_ml}mL${v.lot_note ? ' · ' + v.lot_note : ''}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-cyan font-bold font-['Space_Grotesk'] text-lg">${v.remaining_mg.toFixed(2)} <span class="text-xs text-secondary">mg left</span></p>
+                                    <p class="text-secondary text-xs">of ${v.total_mg} mg · exp ${expiry}</p>
+                                </div>
+                            </div>
+                            <!-- Progress bar -->
+                            <div class="w-full bg-white/5 rounded-full h-2 mb-3">
+                                <div class="h-2 rounded-full transition-all" style="width:${pct.toFixed(1)}%;background:${color};"></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="archiveVial(${v.id})" class="text-xs text-secondary hover:text-white border border-white/10 rounded px-3 py-1 transition">Archive</button>
+                                <button onclick="deleteVialConfirm(${v.id})" class="text-xs text-red-400 hover:text-red-300 border border-red-400/20 rounded px-3 py-1 transition">Delete</button>
+                            </div>
+                        </div>`;
+                }).join('');
+            } catch { el.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error loading vials.</p>'; }
+        }
+
+        async function prefillVialDropdown() {
+            const sel = document.getElementById('logVialId');
+            if (!sel) return;
+            try {
+                const res = await authFetch('/api/tracker/vials');
+                if (!res.ok) return;
+                const vials = await res.json();
+                sel.innerHTML = '<option value="">— none —</option>' +
+                    vials.map(v => `<option value="${v.id}">${v.compound} (${v.remaining_mg.toFixed(1)}mg left)</option>`).join('');
+            } catch {}
+        }
+
+        async function submitVial() {
+            const compound    = document.getElementById('vialCompound').value;
+            const total_mg    = parseFloat(document.getElementById('vialTotalMg').value);
+            const bac_water_ml = parseFloat(document.getElementById('vialBacWater').value) || 2.0;
+            const expires_at  = document.getElementById('vialExpiry').value || null;
+            const lot_note    = document.getElementById('vialLotNote').value || null;
+
+            if (!compound) return showAuthMsg('vialMsg', 'Please select a compound.');
+            if (!total_mg || total_mg <= 0) return showAuthMsg('vialMsg', 'Please enter a valid mg amount.');
+
+            try {
+                const res = await authFetch('/api/tracker/vials', {
+                    method: 'POST',
+                    body: JSON.stringify({ compound, total_mg, bac_water_ml, expires_at, lot_note })
+                });
+                const data = await res.json();
+                if (!res.ok) return showAuthMsg('vialMsg', data.error || 'Failed to add vial.');
+                showAuthMsg('vialMsg', `✓ ${compound} ${total_mg}mg vial registered.`, false);
+                document.getElementById('vialTotalMg').value = '';
+                document.getElementById('vialLotNote').value = '';
+                document.getElementById('vialExpiry').value = '';
+                loadVials();
+                loadTrackerStats();
+                prefillVialDropdown();
+            } catch { showAuthMsg('vialMsg', 'Network error.'); }
+        }
+
+        async function archiveVial(id) {
+            await authFetch(`/api/tracker/vials/${id}/archive`, { method: 'PATCH', body: '{}' });
+            loadVials(); loadTrackerStats(); prefillVialDropdown();
+        }
+
+        async function deleteVialConfirm(id) {
+            if (!confirm('Permanently delete this vial? This cannot be undone.')) return;
+            await authFetch(`/api/tracker/vials/${id}`, { method: 'DELETE' });
+            loadVials(); loadTrackerStats(); prefillVialDropdown();
+        }
+
+        // ── Cycles ─────────────────────────────────────────────────────────
+        async function loadCycles() {
+            const el = document.getElementById('cycleList');
+            try {
+                const res = await authFetch('/api/tracker/cycles');
+                if (!res.ok) { el.innerHTML = '<p class="text-secondary text-sm text-center py-8">Could not load cycles.</p>'; return; }
+                const cycles = await res.json();
+                if (cycles.length === 0) {
+                    el.innerHTML = '<p class="text-secondary text-sm text-center py-8">No cycles yet. Start one above.</p>';
+                    return;
+                }
+                el.innerHTML = cycles.map(c => {
+                    const start = new Date(c.start_date);
+                    const now = new Date();
+                    const dayIn = Math.floor((now - start) / 86400000) + 1;
+                    const totalDays = c.end_date ? Math.ceil((new Date(c.end_date) - start) / 86400000) : null;
+                    const pct = totalDays ? Math.min(100, (dayIn / totalDays) * 100) : null;
+                    const statusColor = c.status === 'active' ? 'text-cyan' : c.status === 'completed' ? 'text-green-400' : 'text-secondary';
+                    return `
+                        <div class="bg-surface border border-white/5 rounded-xl p-5 mb-4">
+                            <div class="flex items-start justify-between mb-2">
+                                <div>
+                                    <p class="text-white font-bold text-base">${c.name}</p>
+                                    <p class="text-secondary text-xs">${(c.compounds || []).join(' · ') || 'No compounds listed'}</p>
+                                </div>
+                                <span class="text-xs font-bold tracking-widest uppercase ${statusColor}">${c.status}</span>
+                            </div>
+                            <p class="text-secondary text-xs mb-3">${c.notes || ''}</p>
+                            ${c.status === 'active' && totalDays ? `
+                                <div class="mb-3">
+                                    <div class="flex justify-between text-xs text-secondary mb-1">
+                                        <span>Day ${dayIn} of ${totalDays}</span>
+                                        <span>${pct.toFixed(0)}%</span>
+                                    </div>
+                                    <div class="w-full bg-white/5 rounded-full h-1.5">
+                                        <div class="h-1.5 rounded-full bg-cyan" style="width:${pct.toFixed(1)}%"></div>
+                                    </div>
+                                </div>` : ''}
+                            <div class="flex gap-2 mt-2">
+                                ${c.status === 'active' ? `<button onclick="completeCycle(${c.id})" class="text-xs text-green-400 hover:text-green-300 border border-green-400/20 rounded px-3 py-1 transition">Mark Complete</button>` : ''}
+                                <button onclick="deleteCycleConfirm(${c.id})" class="text-xs text-red-400 hover:text-red-300 border border-red-400/20 rounded px-3 py-1 transition">Delete</button>
+                            </div>
+                        </div>`;
+                }).join('');
+            } catch { el.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error loading cycles.</p>'; }
+        }
+
+        async function submitCycle() {
+            const name       = document.getElementById('cycleName').value.trim();
+            const start_date = document.getElementById('cycleStart').value;
+            const end_date   = document.getElementById('cycleEnd').value || null;
+            const compounds  = document.getElementById('cycleCompounds').value.split(',').map(s => s.trim()).filter(Boolean);
+            const notes      = document.getElementById('cycleNotes').value || null;
+
+            if (!name)       return showAuthMsg('cycleMsg', 'Please enter a cycle name.');
+            if (!start_date) return showAuthMsg('cycleMsg', 'Please set a start date.');
+
+            try {
+                const res = await authFetch('/api/tracker/cycles', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, start_date, end_date, compounds, notes })
+                });
+                const data = await res.json();
+                if (!res.ok) return showAuthMsg('cycleMsg', data.error || 'Failed to create cycle.');
+                showAuthMsg('cycleMsg', `✓ Cycle "${name}" started.`, false);
+                document.getElementById('cycleName').value = '';
+                document.getElementById('cycleEnd').value  = '';
+                document.getElementById('cycleCompounds').value = '';
+                document.getElementById('cycleNotes').value = '';
+                loadCycles();
+            } catch { showAuthMsg('cycleMsg', 'Network error.'); }
+        }
+
+        async function completeCycle(id) {
+            const today = new Date().toISOString().slice(0,10);
+            await authFetch(`/api/tracker/cycles/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status: 'completed', end_date: today })
+            });
+            loadCycles();
+        }
+
+        async function deleteCycleConfirm(id) {
+            if (!confirm('Delete this cycle? Logged doses will not be affected.')) return;
+            await authFetch(`/api/tracker/cycles/${id}`, { method: 'DELETE' });
+            loadCycles();
+        }
+
+        // ── Extend updateAuthUI to show/hide tracker nav ───────────────────
+        const _origUpdateAuthUI = updateAuthUI;
+        updateAuthUI = function() {
+            _origUpdateAuthUI();
+            const btn = document.getElementById('navTrackerBtn');
+            if (btn) btn.classList.toggle('hidden', !currentUser);
+            const mBtn = document.getElementById('mobileTrackerBtn');
+            if (mBtn) mBtn.classList.toggle('hidden', !currentUser);
+        };
+
+        // ── Mobile drawer ──────────────────────────────────────────────────
+        function openMobileDrawer() {
+            document.getElementById('mobileDrawer').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileDrawer() {
+            document.getElementById('mobileDrawer').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function mobileNav(section) {
+            closeMobileDrawer();
+            if (section === 'tracker') { openTracker(); return; }
+            // Synthesize a click-like event for showSection
+            const fakeEvent = { target: document.createElement('button') };
+            const orig = window.event;
+            showSection.call(null, section, fakeEvent);
+        }
+
+        // Patch showSection so it doesn't crash on synthetic events
+        const _origShowSection = showSection;
+        showSection = function(name, fakeEvt) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(name)?.classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
+            if (window.event && window.event.target) window.event.target.classList.add('nav-active');
+            window.scrollTo(0, 0);
+            // Trigger section data
+            if (name === 'library')   renderLibraryGrid();
+            if (name === 'shop')      renderShopGrid();
+            if (name === 'protocols') { renderProtocolGrid(); document.getElementById('protocolsGridView').style.display = 'block'; document.getElementById('protocolsDetailView').style.display = 'none'; }
+        };
+
     </script>
+
+    <!-- ═══════════════════════ AUTH MODAL ═══════════════════════════════ -->
+    <style>
+        .auth-input {
+            width: 100%;
+            background: #0d0f17;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+        .auth-input:focus { outline: none; border-color: #00e5ff; }
+        .auth-input::placeholder { color: #8891a4; }
+        .auth-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #8891a4;
+            margin-bottom: 0.4rem;
+        }
+        .auth-field { margin-bottom: 1rem; }
+        .auth-msg { min-height: 1.25rem; }
+        select.auth-input option { background: #1a1d28; }
+    </style>
+
+    <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);">
+        <div class="bg-[#13161f] border border-white/10 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden" style="max-height:90vh;overflow-y:auto;">
+
+            <!-- Close -->
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-secondary hover:text-white transition z-10">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <!-- Branding strip -->
+            <div class="px-8 pt-8 pb-0">
+                <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-1">FUTUREBIOCHEM</p>
+            </div>
+
+            <!-- ── LOGIN PANE ─────────────────────────────────────────── -->
+            <div id="authPane-login" class="">
+                <div class="px-8 pt-4 pb-8">
+                    <h2 class="text-2xl font-bold text-white mb-1">Welcome back</h2>
+                    <p class="text-secondary text-sm mb-6">Sign in to your researcher account.</p>
+
+                    <form onsubmit="doLogin(event)" autocomplete="on">
+                        <div class="auth-field">
+                            <label class="auth-label">Email Address</label>
+                            <input id="loginEmail" type="email" class="auth-input" placeholder="you@example.com" required autocomplete="email">
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Password</label>
+                            <input id="loginPassword" type="password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                        <div id="loginMsg" class="auth-msg text-sm mb-3"></div>
+                        <button id="loginBtn" type="submit" class="btn-cyan w-full">Sign In</button>
+                    </form>
+
+                    <p class="text-secondary text-sm text-center mt-5">
+                        Don't have an account?
+                        <button onclick="showAuthPane('register')" class="text-cyan font-bold hover:underline ml-1">Create one free</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── REGISTER PANE ──────────────────────────────────────── -->
+            <div id="authPane-register" class="hidden">
+                <div class="px-8 pt-4 pb-8">
+                    <h2 class="text-2xl font-bold text-white mb-1">Create your account</h2>
+                    <p class="text-secondary text-sm mb-6">Free access to your dosing history and preferences.</p>
+
+                    <form onsubmit="doRegister(event)" autocomplete="on">
+                        <div class="auth-field">
+                            <label class="auth-label">Full Name</label>
+                            <input id="regName" type="text" class="auth-input" placeholder="Dr. Jane Smith" required autocomplete="name">
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Email Address</label>
+                            <input id="regEmail" type="email" class="auth-input" placeholder="you@example.com" required autocomplete="email">
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Password</label>
+                            <input id="regPassword" type="password" class="auth-input" placeholder="Min 8 characters" required autocomplete="new-password">
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Confirm Password</label>
+                            <input id="regPassword2" type="password" class="auth-input" placeholder="Re-enter password" required autocomplete="new-password">
+                        </div>
+                        <div id="regMsg" class="auth-msg text-sm mb-3"></div>
+                        <button id="regBtn" type="submit" class="btn-cyan w-full">Create Account</button>
+                    </form>
+
+                    <p class="text-secondary text-sm text-center mt-5">
+                        Already have an account?
+                        <button onclick="showAuthPane('login')" class="text-cyan font-bold hover:underline ml-1">Sign in</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── ACCOUNT DASHBOARD PANE ─────────────────────────────── -->
+            <div id="authPane-dashboard" class="hidden">
+                <div class="px-8 pt-4 pb-8">
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+                        <div class="w-12 h-12 rounded-full bg-cyan/10 border border-cyan/30 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-cyan">person</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p id="dashUserName" class="text-white font-bold truncate"></p>
+                            <p id="dashUserEmail" class="text-secondary text-xs truncate"></p>
+                        </div>
+                        <button onclick="doLogout()" class="text-xs text-secondary hover:text-red-400 transition border border-white/10 rounded px-3 py-1">Sign Out</button>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="mb-6">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4">Calculator Preferences</p>
+
+                        <div class="auth-field">
+                            <label class="auth-label">Default Units</label>
+                            <select id="prefUnits" class="auth-input">
+                                <option value="mcg">mcg (Micrograms)</option>
+                                <option value="mg">mg (Milligrams)</option>
+                                <option value="units">IU / Units</option>
+                            </select>
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Default BAC Water (mL)</label>
+                            <input id="prefBacWater" type="number" step="0.1" min="0.5" max="10" class="auth-input" value="2.0">
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label">Favourite Compounds</label>
+                            <p id="prefFavs" class="text-secondary text-sm mt-1"></p>
+                        </div>
+                        <div id="prefMsg" class="auth-msg text-sm mb-3"></div>
+                        <button id="savePrefBtn" onclick="savePreferences()" class="btn-cyan-outline w-full text-sm">Save Preferences</button>
+                    </div>
+
+                    <!-- Order History -->
+                    <div>
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-4">Order History</p>
+                        <div id="dashOrders">
+                            <p class="text-secondary text-sm">Loading…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 </html>
