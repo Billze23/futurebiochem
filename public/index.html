@@ -374,6 +374,28 @@
 
         #navHamburger { display: none; }
 
+        /* ── MOBILE BOTTOM NAV ──────────────────────────────────────────────── */
+        #mobileBottomNav { display: none; }
+
+        @media (max-width: 767px) {
+            /* Bottom nav replaces the hamburger on phones */
+            #navHamburger { display: none !important; }
+            #mobileBottomNav { display: flex; }
+            /* Give all section content room above the bottom nav */
+            #sectionsWrapper { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+        }
+
+        .mob-nav-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            min-width: 0; flex: 1; padding: 6px 4px 4px;
+            color: #8891a4; background: transparent; border: none; cursor: pointer;
+            transition: color 0.2s; -webkit-tap-highlight-color: transparent;
+        }
+        .mob-nav-btn .material-symbols-outlined { font-size: 22px; line-height: 1; }
+        .mob-nav-btn .mob-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.02em; line-height: 1; }
+        .mob-nav-btn.mob-active { color: #00e5ff; }
+        .mob-nav-btn:active { color: #00ccff; }
+
         /* Drawer overlay */
         #mobileDrawer {
             position: fixed; inset: 0; z-index: 9500;
@@ -436,7 +458,7 @@
         <!-- FIXED NAV -->
         <nav class="fixed top-0 left-0 right-0 bg-surface bg-opacity-95 backdrop-blur border-b border-surface z-40" style="background: rgba(13,15,23,0.95);">
             <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-                <h1 class="text-xl md:text-2xl font-bold text-cyan font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
+                <button onclick="showSection('home')" class="text-xl md:text-2xl font-bold text-cyan font-['Space_Grotesk'] hover:opacity-75 transition-opacity" style="background:none;border:none;cursor:pointer;padding:0;" aria-label="Go to home">FUTUREBIOCHEM</button>
 
                 <!-- Desktop links -->
                 <div id="navLinks" class="items-center gap-6">
@@ -484,15 +506,41 @@
                 <button onclick="mobileNav('protocols')"  class="mobile-nav-link">📋  Protocols</button>
                 <button onclick="mobileNav('library')"    class="mobile-nav-link">📚  Library</button>
                 <button onclick="mobileNav('shop')"       class="mobile-nav-link">🛒  Shop</button>
-                <button id="mobileTrackerBtn" onclick="mobileNav('tracker')" class="mobile-nav-link hidden">📊  Tracker</button>
+                <button id="mobileTrackerBtn" onclick="mobileNav('tracker')" class="mobile-nav-link">📊  Tracker</button>
                 <div class="border-t border-white/10 my-4"></div>
                 <button onclick="openAuthModal(); closeMobileDrawer();" class="mobile-nav-link">👤  My Account</button>
                 <button onclick="mobileNav('calculator')" class="btn-cyan w-full text-sm mt-4">Get Started</button>
             </div>
         </div>
 
+        <!-- MOBILE BOTTOM NAV (phones only, always visible) -->
+        <nav id="mobileBottomNav" class="fixed bottom-0 left-0 right-0 z-50" style="background:rgba(13,15,23,0.97);border-top:1px solid rgba(255,255,255,0.09);backdrop-filter:blur(10px);padding-bottom:env(safe-area-inset-bottom,0px);">
+            <div class="flex items-stretch">
+                <button id="mobNav-home" onclick="showSection('home')" class="mob-nav-btn">
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="mob-lbl">Home</span>
+                </button>
+                <button id="mobNav-calc" onclick="showSection('calculator')" class="mob-nav-btn">
+                    <span class="material-symbols-outlined">calculate</span>
+                    <span class="mob-lbl">Calculator</span>
+                </button>
+                <button id="mobNav-tracker" onclick="openTracker()" class="mob-nav-btn">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <span class="mob-lbl">Tracker</span>
+                </button>
+                <button id="mobNav-shop" onclick="showSection('shop')" class="mob-nav-btn">
+                    <span class="material-symbols-outlined">storefront</span>
+                    <span class="mob-lbl">Shop</span>
+                </button>
+                <button id="mobNav-more" onclick="openMobileDrawer()" class="mob-nav-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                    <span class="mob-lbl">More</span>
+                </button>
+            </div>
+        </nav>
+
         <!-- SECTIONS CONTAINER -->
-        <div class="pt-20">
+        <div id="sectionsWrapper" class="pt-20">
             <!-- SECTION 1: HOME -->
             <section id="home" class="section active">
                 <!-- HERO SECTION -->
@@ -651,21 +699,21 @@
                                     <td class="text-cyan">250 - 500 mcg</td>
                                     <td>Daily / SubQ</td>
                                     <td>BAC Water / 5ml</td>
-                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                    <td><a href="https://pmc.ncbi.nlm.nih.gov/search/?term=BPC-157&sort=relevance&size=10&display_snippets=show" target="_blank" rel="noopener noreferrer" class="text-cyan text-lg" title="View PMC Research">🔗</a></td>
                                 </tr>
                                 <tr>
                                     <td class="text-white font-bold">TB-500</td>
                                     <td class="text-cyan">3.5 - 5 mg</td>
                                     <td>Bi-Weekly</td>
                                     <td>BAC Water</td>
-                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                    <td><a href="https://pmc.ncbi.nlm.nih.gov/search/?term=thymosin+beta-4+healing&sort=relevance&size=10&display_snippets=show" target="_blank" rel="noopener noreferrer" class="text-cyan text-lg" title="View PMC Research">🔗</a></td>
                                 </tr>
                                 <tr>
-                                    <td class="text-white font-bold">GHK-CU</td>
+                                    <td class="text-white font-bold">GHK-Cu</td>
                                     <td class="text-cyan">1.5 - 2 mg</td>
                                     <td>Daily / Cycle</td>
                                     <td>Highly Soluble</td>
-                                    <td><a href="#" class="text-cyan text-lg">🔗</a></td>
+                                    <td><a href="https://pmc.ncbi.nlm.nih.gov/search/?term=ghk-Cu&sort=relevance&size=10&display_snippets=show" target="_blank" rel="noopener noreferrer" class="text-cyan text-lg" title="View PMC Research">🔗</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -763,7 +811,6 @@
                         <button class="tab-button active whitespace-nowrap" onclick="switchTab('reconstitution', this)">Reconstitution</button>
                         <button class="tab-button whitespace-nowrap" onclick="switchTab('body-weight', this)">Body Weight</button>
                         <button class="tab-button whitespace-nowrap" onclick="switchTab('protocol-planner', this)">Protocol</button>
-                        <button class="tab-button whitespace-nowrap" onclick="switchTab('hgh', this)">HGH</button>
                         <button class="tab-button whitespace-nowrap" onclick="switchTab('blend', this)">Blend</button>
                     </div>
 
@@ -937,49 +984,6 @@
                             <p class="text-sm text-[#8891a4] mt-1">Total injections</p>
                             <p class="text-sm text-[#8891a4] mt-2" id="protocolSummaryLine">12 weeks · 3×/week</p>
                         </div>
-                    </div>
-
-                    <!-- HGH TAB -->
-                    <div id="hgh" class="tab-content bg-surface border border-surface rounded-xl p-5 md:p-8">
-                        <h2 class="text-xl md:text-2xl font-bold mb-2">HGH Calculator</h2>
-                        <p class="text-[#8891a4] text-sm mb-5">HGH is dosed in International Units (IU). Enter your vial size, BAC water, and desired dose to calculate the exact draw volume.</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                            <div>
-                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Vial Size (IU)</label>
-                                <input id="hghVialIU" type="number" value="10" step="1" min="1" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">Desired Dose (IU)</label>
-                                <input id="hghDoseIU" type="number" value="2" step="0.5" min="0.5" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-[#8891a4] text-xs font-bold tracking-widest uppercase mb-2">BAC Water (mL)</label>
-                                <input id="hghWaterMl" type="number" value="1" step="0.5" min="0.5" oninput="calcHGH()" class="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#00e5ff]/50 focus:outline-none">
-                            </div>
-                        </div>
-                        <div class="mt-5 md:mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                            <div class="p-4 md:p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
-                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">IU / mL</p>
-                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghConcIU">10.0</p>
-                                <p class="text-sm text-[#8891a4] mt-1">concentration</p>
-                            </div>
-                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
-                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Units to Draw</p>
-                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghResultUnits">20.0</p>
-                                <p class="text-sm text-[#8891a4] mt-1" id="hghResultVol">on U-100</p>
-                            </div>
-                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
-                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Draw Volume</p>
-                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghDrawMl">0.20</p>
-                                <p class="text-sm text-[#8891a4] mt-1">mL</p>
-                            </div>
-                            <div class="p-5 bg-[#0a0d14] border border-[#00e5ff]/25 rounded-lg">
-                                <p class="text-xs text-[#8891a4] tracking-widest uppercase mb-2">Doses / Vial</p>
-                                <p class="text-3xl font-bold font-['Space_Grotesk'] text-[#00e5ff]" id="hghDosesPerVial">5</p>
-                                <p class="text-sm text-[#8891a4] mt-1">injections</p>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-xs text-[#8891a4]">⚠ Research Use Only — 1 IU ≈ 333 mcg somatropin. Never freeze reconstituted HGH. Store at 2–8°C. Use within 21 days.</p>
                     </div>
 
                     <!-- BLEND TAB -->
@@ -1276,22 +1280,57 @@
                         </div>
                     </div>
 
+                    <!-- Body Diagram -->
+                    <div id="bodyDiagramWrapper" class="hidden mb-8">
+                        <p class="text-cyan text-xs font-bold tracking-widest uppercase mb-3">Injection Site Map — Last Dose Per Compound</p>
+                        <div class="relative rounded-2xl border border-[#00e5ff]/12 overflow-hidden" style="background:radial-gradient(ellipse at 50% 10%, rgba(0,229,255,0.05) 0%, #060810 65%);">
+                            <canvas id="particleCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.6;"></canvas>
+                            <svg id="bodyDiagram" viewBox="0 0 360 510" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto;position:relative;z-index:1;">
+                                <defs>
+                                    <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                    </filter>
+                                    <filter id="redGlow" x="-100%" y="-100%" width="300%" height="300%">
+                                        <feGaussianBlur stdDeviation="4" result="blur"/>
+                                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                    </filter>
+                                    <filter id="bodyEdgeGlow" x="-20%" y="-5%" width="140%" height="110%">
+                                        <feGaussianBlur stdDeviation="3" result="blur"/>
+                                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                    </filter>
+                                    <radialGradient id="figureAura" cx="50%" cy="45%" r="42%">
+                                        <stop offset="0%" stop-color="rgba(0,229,255,0.08)"/>
+                                        <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
+                                    </radialGradient>
+                                </defs>
+                                <!-- Aura behind figure -->
+                                <ellipse cx="180" cy="245" rx="118" ry="210" fill="url(#figureAura)"/>
+                                <!-- Static wireframe (lines + nodes) rendered by JS -->
+                                <g id="bodyWireframe"></g>
+                                <!-- Dynamic injection markers -->
+                                <g id="injectionMarkers"></g>
+                            </svg>
+                            <p class="text-secondary text-xs text-center pb-3" style="position:relative;z-index:1;">Patient's right = left side of diagram &nbsp;·&nbsp; Patient's left = right side</p>
+                        </div>
+                    </div>
+
                     <!-- Tabs -->
                     <div id="trackerContent" class="hidden">
-                        <div class="flex gap-0 mb-8 border-b border-white/10">
-                            <button onclick="switchTrackerTab('tlog')" id="ttab-tlog" class="tracker-tab active-tab px-5 py-3 text-sm font-bold border-b-2 border-cyan text-cyan -mb-px transition">
-                                <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">vaccines</span> Dose Log
-                            </button>
-                            <button onclick="switchTrackerTab('tvials')" id="ttab-tvials" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition">
+                        <div class="flex gap-0 mb-8 border-b border-white/10 overflow-x-auto" style="scrollbar-width:none;">
+                            <button onclick="switchTrackerTab('tvials')" id="ttab-tvials" class="tracker-tab active-tab px-5 py-3 text-sm font-bold border-b-2 border-cyan text-cyan -mb-px transition whitespace-nowrap">
                                 <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">science</span> Vials
                             </button>
-                            <button onclick="switchTrackerTab('tcycles')" id="ttab-tcycles" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition">
+                            <button onclick="switchTrackerTab('tcycles')" id="ttab-tcycles" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition whitespace-nowrap">
                                 <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">restart_alt</span> Cycles
+                            </button>
+                            <button onclick="switchTrackerTab('tlog')" id="ttab-tlog" class="tracker-tab px-5 py-3 text-sm font-bold border-b-2 border-transparent text-secondary hover:text-white -mb-px transition whitespace-nowrap">
+                                <span class="material-symbols-outlined text-sm align-middle" style="font-size:16px;vertical-align:-2px;">vaccines</span> Dose Log
                             </button>
                         </div>
 
                         <!-- ── DOSE LOG TAB ─────────────────────────────────── -->
-                        <div id="tlog" class="tracker-tab-content">
+                        <div id="tlog" class="tracker-tab-content hidden">
                             <!-- Quick Log Form -->
                             <div class="bg-surface border border-white/5 rounded-xl p-6 mb-6">
                                 <p class="text-xs font-bold tracking-widest uppercase text-cyan mb-4">Log a Dose</p>
@@ -1302,7 +1341,7 @@
                                             <option value="">— select —</option>
                                             <option>BPC-157</option><option>TB-500</option><option>GHK-Cu</option>
                                             <option>KPV</option><option>Retatrutide</option><option>Mots-C</option>
-                                            <option>NAD+</option><option>HGH</option><option>Wolverine Stack</option>
+                                            <option>NAD+</option><option>Wolverine Stack</option>
                                             <option>Klow</option><option>Glow</option><option>Other</option>
                                         </select>
                                     </div>
@@ -1318,12 +1357,37 @@
                                     </div>
                                     <div>
                                         <label class="auth-label">Injection Site</label>
-                                        <select id="logSite" class="auth-input">
+                                        <select id="logSite" onchange="onSiteChange()" class="auth-input">
                                             <option value="">— optional —</option>
-                                            <option>Abdomen</option><option>Thigh</option><option>Deltoid</option>
-                                            <option>Glute</option><option>Forearm</option>
+                                            <optgroup label="Abdomen">
+                                                <option>Upper Abdomen</option>
+                                                <option>Right Abdomen</option>
+                                                <option>Left Abdomen</option>
+                                            </optgroup>
+                                            <optgroup label="Thigh">
+                                                <option>Right Thigh</option>
+                                                <option>Left Thigh</option>
+                                            </optgroup>
+                                            <optgroup label="Deltoid">
+                                                <option>Right Deltoid</option>
+                                                <option>Left Deltoid</option>
+                                            </optgroup>
+                                            <optgroup label="Glute">
+                                                <option>Right Glute</option>
+                                                <option>Left Glute</option>
+                                            </optgroup>
+                                            <optgroup label="Forearm">
+                                                <option>Right Forearm</option>
+                                                <option>Left Forearm</option>
+                                            </optgroup>
+                                            <option value="Custom">Custom…</option>
                                         </select>
                                     </div>
+                                </div>
+                                <!-- Custom site input (hidden unless Custom selected) -->
+                                <div id="customSiteRow" class="hidden mb-3">
+                                    <label class="auth-label">Custom Site Description</label>
+                                    <input id="logCustomSite" type="text" placeholder="e.g. Left neck, Right hip…" class="auth-input">
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                                     <div>
@@ -1357,7 +1421,7 @@
                                             <option value="">— select —</option>
                                             <option>BPC-157</option><option>TB-500</option><option>GHK-Cu</option>
                                             <option>KPV</option><option>Retatrutide</option><option>Mots-C</option>
-                                            <option>NAD+</option><option>HGH</option><option>Klow</option>
+                                            <option>NAD+</option><option>Klow</option>
                                             <option>Glow</option><option>Wolverine Stack</option><option>Other</option>
                                         </select>
                                     </div>
@@ -1623,24 +1687,6 @@
                     { phase: 'Daily', weeks: '01-08', dose: '1 mg', doseRawMcg: 1000, units: '10 Units', freq: 'Once Daily' }
                 ]
             },
-            'HGH': {
-                category: 'GROWTH HORMONE',
-                sequence: '701-H',
-                formula: 'C₉₉₀ H₁₅₂₉ N₂₆₃ O₃₀₁ S₇',
-                intent: 'Anabolic & Regenerative Signaling',
-                halfLife: '~3.0 Hours',
-                receptor: 'GHR / IGF-1 Axis',
-                storage: 'Lyophilized: 2y / Recon: 21 days. Never freeze reconstituted.',
-                purity: '>99.2%',
-                reconVol: '1.0',
-                defaultVialMg: 10,
-                cycleDuration: '24 Weeks',
-                titration: [
-                    { phase: 'Conservative',  weeks: '01-08', dose: '1 IU',  doseRawMcg: null, units: '10 Units', freq: 'Daily (PM)' },
-                    { phase: 'Moderate',      weeks: '09-16', dose: '2 IU',  doseRawMcg: null, units: '20 Units', freq: 'Daily' },
-                    { phase: 'Research Max',  weeks: '17-24', dose: '4 IU',  doseRawMcg: null, units: '40 Units', freq: 'Split AM/PM' }
-                ]
-            },
             'Klow': {
                 category: 'MULTI-PEPTIDE BLEND',
                 sequence: '801-CG',
@@ -1683,7 +1729,8 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAw7C3-bFKS5pDehdXnMvL4komXFdkrQtG_BynY4AsB-PXRWtShRyD5pARDkfgVO4VtfDN7uxYY075tfJW4s0jQSpqN0PhVuBICZLS8IdwAtJxivYq-8gaIiNpCEk4Z5Q-ESh-hIg2Fuvj2g-GRPtAi4Oi_vBA-Nw4ZBHej4mhotDn5waUbRFIyWXgsSElihwd_u1vYjjm5qfLPSI488S8IAzSEgojN7iOt_7MOYYAxJrFsSBwJJZ47v4XdkpRPOEvxO31VuyDB',
                 description: 'GLP-1, GIP and Glucagon receptor agonist. Leading edge research for significant metabolic intervention.',
                 benefit: 'Extreme Fat Loss',
-                dosing: '1mg - 12mg / week'
+                dosing: '1mg - 12mg / week',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=retatrutide&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'Mots-C',
@@ -1691,7 +1738,8 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBbwv8rzXPLK6uBHesjB7ukkiGePrEeBc-nqemCV4Ru9zC4xEzRpTreeHBI3ZNrA965CK5GcocXUcvc9zfzBd0IMohOZjKfr9i8eXbNcsSZhCOjH41cf5g5ZRtFBAy9cCFdHzApRec7YKcLFRtVp-E6i-xAeOw3qS-OMI6V08Ndca8YaO8MpGvQSSSRUpIEYVbly5AoI5srsCdCIz1qyN5pg0jEfblbwzWP2Niiz4tu6-fvAy-l55vA0Q2yA4GqtF8XVLqW3bTgp',
                 description: 'Mitochondria-derived peptide that regulates metabolic homeostasis and systemic insulin sensitivity.',
                 benefit: 'Mitochondrial Health',
-                dosing: '5mg - 10mg / 3 days'
+                dosing: '5mg - 10mg / 3 days',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=MOTS-c+peptide&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'BPC-157',
@@ -1699,7 +1747,8 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRYPa-V4s6uNw9WQevfO85fyoeukKcCL7X5SGBGBOZFpnIXKEhIiSEFI2nfQ2aM5dFw0GNLVVyRqdOpy5bl8d7pOOYIjT_0TevwP087WOJsqIti_onukWQN18cg3Qcdfb7BTNx7cWM4jSQI3nJ8tg3gd1HTdIWG8SQx9LrnApnhHUiuPggMAStp-vDUVOlPHe8lmw9-oD0t2Pgd1CIRxM6YMn06AUVVKubyXF5dAi8cvASh53hVe0-DNbYi232vuE9uhwn5Msi',
                 description: 'Pentadecapeptide shown to accelerate healing of tendons, muscles, and ligaments via angiogenic pathways.',
                 benefit: 'Soft Tissue Repair',
-                dosing: '250mcg - 500mcg BID'
+                dosing: '250mcg - 500mcg BID',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=BPC-157&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'TB-500',
@@ -1707,7 +1756,8 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
                 description: 'Promotes actin upregulation and cell migration for systemic injury recovery and cardiovascular health.',
                 benefit: 'Systemic Healing',
-                dosing: '2mg - 5mg / week'
+                dosing: '2mg - 5mg / week',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=thymosin+beta-4+healing&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'NAD+',
@@ -1715,7 +1765,8 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
                 description: 'Critical co-enzyme for DNA repair and cellular energy production. A staple of longevity research.',
                 benefit: 'Cellular Longevity',
-                dosing: '100mg - 250mg SC'
+                dosing: '100mg - 250mg SC',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=NAD%2B+longevity+aging&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'GHK-Cu',
@@ -1723,23 +1774,26 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFZfxSQ5MqdZqLSUByW5Q5w99DSgKg8y2Xtcgk97P-B375JZp8EqbxAbdlZrNNsaGTuIzRCdjsXOpM_YGLHh9Mbu033lLDJCIgk6G5ouEvXIiz2iQI0JLVeXoiD-o6My_E8zlaKqMNuEdU5ntsaXxumOzBFNCrq-H8k9vqsrwJR-gidS_09b8nGIIVMaEGFl9Txj7p4hqoIiszrSTYrV6WqxpPVBouB0KEyNRkUUumf55FIwui9oCmB3eeVV2C_wtvt5AuBkg0',
                 description: 'Copper tripeptide that activates tissue remodeling, collagen synthesis, and antioxidant pathways.',
                 benefit: 'Skin & Collagen',
-                dosing: '1mg - 2mg Daily'
-            },
-            {
-                name: 'HGH',
-                category: 'HORMONE',
-                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBMf9RnXQAEVj_EMW5spTnis8D6TXjULnM7zqYYLY7iBoBZ7fAmVWXdGi8QJXEAefD_PFAiFTdl-oSQ5rN1QxNFJv5gi-TvMqch095Qfkp2rM2Kfq_gEAzdc_2nTlvefs8YV3xvW3kHKy-Ro01EqPgo--PHMBi64GrPR1YrIC5WXV82fEpMzNVIXzL_GZ2LLYhrTING7_cdwmsPyMZDBxw8LQ59DXrUkLAKfc89dX1ttiSHqZymSFOATqvqrriRxRtQv1Kucb',
-                description: '191 amino acid somatropin sequence for IGF-1 axis research, body composition, and regenerative signaling.',
-                benefit: 'Anabolic & Regenerative',
-                dosing: '1 IU - 4 IU Daily'
+                dosing: '1mg - 2mg Daily',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=ghk-Cu&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'KPV',
                 category: 'IMMUNE',
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9ovxzepxwvA0BRaLJw8Tq53mdwYkOwyDhEIycea0EpLGl71TQF41jnSbitkOKCim5IpU5LiQUTRhsq_zx4ihzwfr9dq5p9XDyPYkBz6YZUrDSF2PHNAUWrYSyCMREmztNsgocwap3q2C1GY0pW6R85Mu7b92oN9TSQPs6ItdIiq-7w7Eswc9fxGceSzHKO7_txQfTxx6HNEb-GBMY1e7XOYz3WGD2ETpMjZgq8gIIBeKu_dDu6q2A_0uYXYKuz0h7LV9Eg9BW',
-                description: 'Anti-inflammatory peptide for gut and skin health. Modulates immune response.',
+                description: 'Anti-inflammatory tripeptide for gut and skin health. Modulates innate immune response via MC1R.',
                 benefit: 'Immune Support',
-                dosing: '500mcg - 1mg Daily'
+                dosing: '500mcg - 1mg Daily',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=KPV+tripeptide+anti-inflammatory&sort=relevance&size=10&display_snippets=show'
+            },
+            {
+                name: 'Epithalon',
+                category: 'ANTI-AGING',
+                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
+                description: 'Tetrapeptide that activates telomerase, extends telomere length, and regulates neuroendocrine function for longevity research.',
+                benefit: 'Telomere & Longevity',
+                dosing: '5mg - 10mg / course',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=epithalon&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'Klow',
@@ -1747,39 +1801,39 @@
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
                 description: 'Cognitive blend combining neuroprotective compounds. Enhanced focus and clarity.',
                 benefit: 'Cognition Support',
-                dosing: '200mcg Daily'
+                dosing: '200mcg Daily',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=peptide+cognitive+neuroprotection&sort=relevance&size=10&display_snippets=show'
             },
             {
                 name: 'Glow',
                 category: 'ANTI-AGING',
                 image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
-                description: 'Premium anti-aging blend targeting multiple longevity pathways. Comprehensive formulation.',
+                description: 'Premium anti-aging blend targeting multiple longevity pathways: GHK-Cu, BPC-157, and TB-500.',
                 benefit: 'Longevity Stack',
-                dosing: 'Variable'
+                dosing: 'Variable',
+                pmcUrl: 'https://pmc.ncbi.nlm.nih.gov/search/?term=peptide+longevity+anti-aging&sort=relevance&size=10&display_snippets=show'
             }
         ];
 
         // Product images — sourced directly from Stitch design files
         const IMG = {
             retatrutide: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAw7C3-bFKS5pDehdXnMvL4komXFdkrQtG_BynY4AsB-PXRWtShRyD5pARDkfgVO4VtfDN7uxYY075tfJW4s0jQSpqN0PhVuBICZLS8IdwAtJxivYq-8gaIiNpCEk4Z5Q-ESh-hIg2Fuvj2g-GRPtAi4Oi_vBA-Nw4ZBHej4mhotDn5waUbRFIyWXgsSElihwd_u1vYjjm5qfLPSI488S8IAzSEgojN7iOt_7MOYYAxJrFsSBwJJZ47v4XdkpRPOEvxO31VuyDB',
-            motsc:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBbwv8rzXPLK6uBHesjB7ukkiGePrEBc-nqemCV4Ru9zC4xEzRpTreeHBI3ZNrA965CK5GcocXUcvc9zfzBd0IMohOZjKfr9i8eXbNcsSZhCOjH41cf5g5ZRtFBAy9cCFdHzApRec7YKcLFRtVp-E6i-xAeOw3qS-OMI6V08Ndca8YaO8MpGvQSSSRUpIEYVbly5AoI5srsCdCIz1qyN5pg0jEfblbwzWP2Niiz4tu6-fvAy-l55vA0Q2yA4GqtF8XVLqW3bTgp',
+            motsc:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBbwv8rzXPLK6uBHesjB7ukkiGePrEeBc-nqemCV4Ru9zC4xEzRpTreeHBI3ZNrA965CK5GcocXUcvc9zfzBd0IMohOZjKfr9i8eXbNcsSZhCOjH41cf5g5ZRtFBAy9cCFdHzApRec7YKcLFRtVp-E6i-xAeOw3qS-OMI6V08Ndca8YaO8MpGvQSSSRUpIEYVbly5AoI5srsCdCIz1qyN5pg0jEfblbwzWP2Niiz4tu6-fvAy-l55vA0Q2yA4GqtF8XVLqW3bTgp',
             nad:         'https://lh3.googleusercontent.com/aida-public/AB6AXuBRYPa-V4s6uNw9WQevfO85fyoeukKcCL7X5SGBGBOZFpnIXKEhIiSEFI2nfQ2aM5dFw0GNLVVyRqdOpy5bl8d7pOOYIjT_0TevwP087WOJsqIti_onukWQN18cg3Qcdfb7BTNx7cWM4jSQI3nJ8tg3gd1HTdIWG8SQx9LrnApnhHUiuPggMAStp-vDUVOlPHe8lmw9-oD0t2Pgd1CIRxM6YMn06AUVVKubyXF5dAi8cvASh53hVe0-DNbYi232vuE9uhwn5Msi',
             kpv:         'https://lh3.googleusercontent.com/aida-public/AB6AXuB9ovxzepxwvA0BRaLJw8Tq53mdwYkOwyDhEIycea0EpLGl71TQF41jnSbitkOKCim5IpU5LiQUTRhsq_zx4ihzwfr9dq5p9XDyPYkBz6YZUrDSF2PHNAUWrYSyCMREmztNsgocwap3q2C1GY0pW6R85Mu7b92oN9TSQPs6ItdIiq-7w7Eswc9fxGceSzHKO7_txQfTxx6HNEb-GBMY1e7XOYz3WGD2ETpMjZgq8gIIBeKu_dDu6q2A_0uYXYKuz0h7LV9Eg9BW',
             klow:        'https://lh3.googleusercontent.com/aida-public/AB6AXuBmKPlIH11E019fVZNyp2IBBKXGW9SH1FXxR0pVoat5AJVp10mJ6cCKL7wnNaIbOqrzOsJ2mKA1-r9ynzoJ0aDB6-j_OYiZdJLQ3-u60vptJVsDyCNAIZuop9DefwO-tjD89JbnmffpigR45NKZZLfshRHDemrpb38ChudJ1w5kJDS0xpmWGY_ZLWQ7fVpG4r2V8tdbJQFe-HSu-nh5Oe75Ubll4qTbcoQssW-pvAs316HRjvKUJweauGHSbT-ckZgl161P49Bv',
             glow:        'https://lh3.googleusercontent.com/aida-public/AB6AXuCRwV3IOYrt8s9SuvDcsgkOjy3CoNYFCIPvB5RirZgGcuyqco5CN8OOni_lB2NPbxjytcY45O8tu214epr97_Erq4hLv6RCs8FFG394RKVkeFwm7_lqn-xhfJ3Cd7kR3F4MQ-IZQ7vvXRUNfOVLj-10sjjWR0ztEE_TgZ6Hh03LLcFB9syEBNSBfyfaiwvZ3PXGhAL7CNnoOg2YzWj6hwCBqmpRs175QtwdGGsDxWALqJ4YntwHpL82BWSEJ5FCf9l1xTXgZ0jy',
-            ghkcu:       'https://lh3.googleusercontent.com/aida-public/AB6AXuAFZfxSQ5MqdZqLSUByW5Q5w99DSgKg8y2Xtcgk97P-B375JZp8EqbxAbdlZrNNsaGTuIzRCdjsXOpM_YGLHh9Mbu033lLDJCIgk6G5ouEvXIiz2iQI0JLVeXoiD-o6My_E8zlaKqMNuEdU5ntsaXxumOzBFNCrq-H8k9vqsrwJR-gidS_09b8nGIIVMaEGFl9Txj7p4hqoIiszrSTYrV6WqxpPVBouB0KEyNRkUUumf55FIwui9oCmB3eeVV2C_wtvt5AuBkg0',
-            hgh:         'https://lh3.googleusercontent.com/aida-public/AB6AXuBMf9RnXQAEVj_EMW5spTnis8D6TXjULnM7zqYYLY7iBoBZ7fAmVWXdGi8QJXEAefD_PFAiFTdl-oSQ5rN1QxNFJv5gi-TvMqch095Qfkp2rM2Kfq_gEAzdc_2nTlvefs8YV3xvW3kHKy-Ro01EqPgo--PHMBi64GrPR1YrIC5WXV82fEpMzNVIXzL_GZ2LLYhrTING7_cdwmsPyMZDBxw8LQ59DXrUkLAKfc89dX1ttiSHqZymSFOATqvqrriRxRtQv1Kucb'
+            ghkcu:       'https://lh3.googleusercontent.com/aida-public/AB6AXuAFZfxSQ5MqdZqLSUByW5Q5w99DSgKg8y2Xtcgk97P-B375JZp8EqbxAbdlZrNNsaGTuIzRCdjsXOpM_YGLHh9Mbu033lLDJCIgk6G5ouEvXIiz2iQI0JLVeXoiD-o6My_E8zlaKqMNuEdU5ntsaXxumOzBFNCrq-H8k9vqsrwJR-gidS_09b8nGIIVMaEGFl9Txj7p4hqoIiszrSTYrV6WqxpPVBouB0KEyNRkUUumf55FIwui9oCmB3eeVV2C_wtvt5AuBkg0'
         };
 
         const shopProducts = [
-            { name: 'Retatrutide', badge: 'GLP-1/GIP/GCG', desc: 'Experimental triple agonist targeting glucagon receptors for advanced metabolic research.', variants: [{ label: '10MG', price: 35 }, { label: '20MG', price: 45 }, { label: '30MG', price: 55 }], image: IMG.retatrutide },
-            { name: 'Mots-C',      badge: 'Mitochondrial',  desc: 'Mitochondria-derived peptide research focused on metabolic homeostasis and exercise mimetic properties.', variants: [{ label: '10MG', price: 35 }, { label: '40MG', price: 55 }], image: IMG.motsc },
-            { name: 'NAD+',        badge: 'Longevity',      desc: 'Nicotinamide Adenine Dinucleotide for cellular energy and DNA repair signaling pathways.', variants: [{ label: '500MG', price: 25 }, { label: '1000MG', price: 35 }], image: IMG.nad },
-            { name: 'KPV',         badge: 'Immune',         desc: 'Potent anti-inflammatory tripeptide research for intestinal and cutaneous immune modulation.', variants: [{ label: '10MG', price: 25 }, { label: '30MG', price: 50 }], image: IMG.kpv },
-            { name: 'Klow',        badge: 'Recovery Blend', desc: 'Comprehensive recovery, immunity & anti-aging blend: GHK-Cu + BPC-157 + TB-500 + KPV in a single vial.', variants: [{ label: '80MG', price: 50 }], image: IMG.klow },
-            { name: 'Glow',        badge: 'Anti-Aging Blend', desc: 'Dermal regeneration and longevity blend: GHK-Cu + BPC-157 + TB-500 in a single vial.', variants: [{ label: '50MG', price: 50 }, { label: '70MG', price: 65 }], image: IMG.glow },
-            { name: 'GHK-Cu',      badge: 'Aesthetics',     desc: 'Copper tripeptide complex with extensive documentation on tissue remodeling and DNA repair.', variants: [{ label: '50MG', price: 25 }, { label: '100MG', price: 35 }], image: IMG.ghkcu },
-            { name: 'HGH',         badge: 'Growth Hormone', desc: 'Human Growth Hormone somatropin sequence. High-stability lyophilized powder for research.', variants: [{ label: '15IU', price: 45 }, { label: '24IU', price: 55 }, { label: '36IU', price: 65 }], image: IMG.hgh }
+            { name: 'Retatrutide', badge: 'GLP-1/GIP/GCG',    desc: 'Experimental triple agonist targeting glucagon receptors for advanced metabolic research.', variants: [{ label: '10MG', price: 35 }, { label: '20MG', price: 45 }, { label: '30MG', price: 55 }], image: IMG.retatrutide },
+            { name: 'Mots-C',      badge: 'Mitochondrial',     desc: 'Mitochondria-derived peptide research focused on metabolic homeostasis and exercise mimetic properties.', variants: [{ label: '10MG', price: 35 }, { label: '40MG', price: 55 }], image: IMG.motsc },
+            { name: 'NAD+',        badge: 'Longevity',         desc: 'Nicotinamide Adenine Dinucleotide for cellular energy and DNA repair signaling pathways.', variants: [{ label: '500MG', price: 25 }, { label: '1000MG', price: 35 }], image: IMG.nad },
+            { name: 'KPV',         badge: 'Immune',            desc: 'Potent anti-inflammatory tripeptide research for intestinal and cutaneous immune modulation.', variants: [{ label: '10MG', price: 25 }, { label: '30MG', price: 50 }], image: IMG.kpv },
+            { name: 'Klow',        badge: 'Recovery Blend',    desc: 'Comprehensive recovery, immunity & anti-aging blend: GHK-Cu + BPC-157 + TB-500 + KPV in a single vial.', variants: [{ label: '80MG', price: 50 }], image: IMG.klow },
+            { name: 'Glow',        badge: 'Anti-Aging Blend',  desc: 'Dermal regeneration and longevity blend: GHK-Cu + BPC-157 + TB-500 in a single vial.', variants: [{ label: '50MG', price: 50 }, { label: '70MG', price: 65 }], image: IMG.glow },
+            { name: 'GHK-Cu',      badge: 'Aesthetics',        desc: 'Copper tripeptide complex with extensive documentation on tissue remodeling and DNA repair.', variants: [{ label: '50MG', price: 25 }, { label: '100MG', price: 35 }], image: IMG.ghkcu }
         ];
 
         let cart = [];
@@ -1821,7 +1875,6 @@
             calculateDosing();
             calcRecon();
             calcDraw();
-            calcHGH();
             onBlendSelect();
         }
 
@@ -1887,30 +1940,6 @@
             if (arrow) { arrow.setAttribute('points', `${fillX},75 ${fillX-5},67 ${fillX+5},67`); }
             if (lbl)   { lbl.setAttribute('x', fillX); lbl.textContent = units.toFixed(1) + ' units'; }
             if (syrlbl){ syrlbl.textContent = `U-${syringeMax} Syringe — ${units.toFixed(1)} units filled (${(units/syringeMax*100).toFixed(0)}%)`; }
-        }
-
-        // ── HGH IU CALCULATOR ───────────────────────────────────────────────
-        function calcHGH() {
-            const vialIU  = parseFloat(document.getElementById('hghVialIU')?.value)  || 10;
-            const doseIU  = parseFloat(document.getElementById('hghDoseIU')?.value)  || 2;
-            const waterMl = parseFloat(document.getElementById('hghWaterMl')?.value) || 1;
-
-            const concIUperMl = vialIU / waterMl;          // IU per mL
-            const drawMl      = doseIU / concIUperMl;       // mL to draw
-            const drawUnits   = drawMl * 100;               // units on U-100
-            const dosesPerVial = Math.floor(vialIU / doseIU);
-
-            const concEl  = document.getElementById('hghConcIU');
-            const unitsEl = document.getElementById('hghResultUnits');
-            const volEl   = document.getElementById('hghResultVol');
-            const mlEl    = document.getElementById('hghDrawMl');
-            const dosesEl = document.getElementById('hghDosesPerVial');
-
-            if (concEl)  concEl.textContent  = concIUperMl.toFixed(1);
-            if (unitsEl) unitsEl.textContent = drawUnits.toFixed(1);
-            if (volEl)   volEl.textContent   = `on U-100 (${drawMl.toFixed(3)} mL)`;
-            if (mlEl)    mlEl.textContent    = drawMl.toFixed(3);
-            if (dosesEl) dosesEl.textContent = dosesPerVial;
         }
 
         // ── BLEND CALCULATOR ────────────────────────────────────────────────
@@ -2345,7 +2374,7 @@
                             <div class="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
                                 ${libraryHTML}
                             </div>
-                            <a href="#" class="text-cyan text-xs font-bold tracking-widest hover:underline mt-4 inline-block">VIEW ALL RESEARCH →</a>
+                            <a href="https://pmc.ncbi.nlm.nih.gov/search/?term=${encodeURIComponent(currentProtocol||'peptide')}&sort=relevance&size=10&display_snippets=show" target="_blank" rel="noopener noreferrer" onclick="this.href='https://pmc.ncbi.nlm.nih.gov/search/?term='+encodeURIComponent((currentProtocol||'peptide'))+'&sort=relevance&size=10&display_snippets=show'" class="text-cyan text-xs font-bold tracking-widest hover:underline mt-4 inline-block">VIEW PMC RESEARCH →</a>
                         </div>
                     </div>
                 </div>
@@ -2374,7 +2403,10 @@
                         <p class="text-cyan text-sm font-bold mb-4">${item.benefit}</p>
                         <p class="text-secondary text-xs mb-1"><strong>DOSING RANGE</strong></p>
                         <p class="text-cyan text-sm font-bold mb-4">${item.dosing}</p>
-                        <button onclick="showSection('protocols')" class="w-full border border-cyan text-cyan px-4 py-2 rounded font-bold text-xs hover:bg-cyan hover:text-black transition">View Protocol →</button>
+                        <div class="flex gap-2">
+                            <button onclick="showSection('protocols')" class="flex-1 border border-cyan text-cyan px-3 py-2 rounded font-bold text-xs hover:bg-cyan hover:text-black transition">Protocol →</button>
+                            ${item.pmcUrl ? `<a href="${item.pmcUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 border border-white/20 text-secondary px-3 py-2 rounded font-bold text-xs hover:border-cyan hover:text-cyan transition text-center">PMC Research →</a>` : ''}
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -2619,8 +2651,8 @@
                 const data = await res.json();
                 if (!res.ok) { showAuthMsg('regMsg', data.error || 'Registration failed.'); return; }
                 authSetUser(data.user, data.token);
-                showAuthPane('dashboard');
-                loadDashboard();
+                closeAuthModal();
+                openTracker();
             } catch { showAuthMsg('regMsg', 'Network error. Please try again.'); }
             finally { btn.textContent = 'Create Account'; btn.disabled = false; }
         }
@@ -2643,8 +2675,8 @@
                 const data = await res.json();
                 if (!res.ok) { showAuthMsg('loginMsg', data.error || 'Login failed.'); return; }
                 authSetUser(data.user, data.token);
-                showAuthPane('dashboard');
-                loadDashboard();
+                closeAuthModal();
+                openTracker();
             } catch { showAuthMsg('loginMsg', 'Network error. Please try again.'); }
             finally { btn.textContent = 'Sign In'; btn.disabled = false; }
         }
@@ -2760,6 +2792,7 @@
         // ── Open tracker section ───────────────────────────────────────────
         function openTracker() {
             showSection('tracker');
+            updateMobileNav('tracker');
             if (!currentUser) {
                 document.getElementById('trackerLoginPrompt').classList.remove('hidden');
                 document.getElementById('trackerStats').classList.add('hidden');
@@ -2773,6 +2806,9 @@
                 loadVials();
                 loadCycles();
                 prefillVialDropdown();
+                document.getElementById('bodyDiagramWrapper').classList.remove('hidden');
+                buildBodyDiagram();
+                initParticleCanvas();
             }
             // Prefill date-time to now
             const now = new Date();
@@ -2803,6 +2839,7 @@
                 const res = await authFetch('/api/tracker/logs?limit=30');
                 if (!res.ok) { el.innerHTML = '<p class="text-secondary text-sm text-center py-8">Could not load logs.</p>'; return; }
                 const logs = await res.json();
+                updateBodyDiagram(extractLastSites(logs));
                 if (logs.length === 0) {
                     el.innerHTML = '<p class="text-secondary text-sm text-center py-8">No doses logged yet. Use the form above to log your first dose.</p>';
                     return;
@@ -2849,7 +2886,8 @@
             const compound = document.getElementById('logCompound').value;
             const dose_mg  = parseFloat(document.getElementById('logDoseMg').value);
             const vial_id  = document.getElementById('logVialId').value || null;
-            const site     = document.getElementById('logSite').value || null;
+            let   site     = document.getElementById('logSite').value || null;
+            if (site === 'Custom') site = (document.getElementById('logCustomSite').value || '').trim() || null;
             const notes    = document.getElementById('logNotes').value || null;
             const dt       = document.getElementById('logDateTime').value;
             const logged_at = dt ? new Date(dt).toISOString() : null;
@@ -3101,6 +3139,277 @@
             showSection.call(null, section, fakeEvent);
         }
 
+        // ══════════════════════════════════════════════════════════════════════
+        // ── BODY DIAGRAM ─────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════════
+
+        // Injection site screen coordinates in 360×510 SVG viewBox.
+        // Patient's right = left side of diagram; patient's left = right side.
+        const SITE_COORDS = {
+            'Upper Abdomen': { x: 180, y: 215, side: 'right' },
+            'Right Abdomen': { x: 148, y: 244, side: 'left'  },
+            'Left Abdomen':  { x: 212, y: 244, side: 'right' },
+            'Right Thigh':   { x: 135, y: 388, side: 'left'  },
+            'Left Thigh':    { x: 225, y: 388, side: 'right' },
+            'Right Deltoid': { x: 94,  y: 148, side: 'left'  },
+            'Left Deltoid':  { x: 266, y: 148, side: 'right' },
+            'Right Glute':   { x: 140, y: 335, side: 'left'  },
+            'Left Glute':    { x: 220, y: 335, side: 'right' },
+            'Right Forearm': { x: 80,  y: 278, side: 'left'  },
+            'Left Forearm':  { x: 280, y: 278, side: 'right' },
+        };
+
+        // Low-poly body nodes [x, y] in 360×510 viewBox
+        const BODY_NODES = [
+            // HEAD (0-9)
+            [180,22],[210,33],[228,55],[222,80],[210,92],[180,97],[150,92],[138,80],[132,55],[150,33],
+            // NECK (10-13)
+            [163,100],[197,100],[193,120],[167,120],
+            // SHOULDERS / UPPER CHEST (14-21)
+            [105,133],[82,148],[255,133],[278,148],[148,168],[212,168],[122,178],[238,178],
+            // TORSO MID (22-26)
+            [128,232],[175,248],[232,232],[118,248],[242,248],
+            // HIPS (27-31)
+            [125,298],[180,308],[235,298],[158,310],[202,310],
+            // RIGHT ARM — patient's right = diagram LEFT (32-39)
+            [98,145],[80,168],[77,202],[84,230],[78,258],[80,288],[78,320],[70,348],
+            // LEFT ARM — patient's left = diagram RIGHT (40-47)
+            [262,145],[280,168],[283,202],[276,230],[282,258],[280,288],[282,320],[290,348],
+            // RIGHT LEG — patient's right = diagram LEFT (48-55)
+            [143,312],[130,348],[118,388],[122,425],[112,462],[110,495],[130,502],[155,428],
+            // LEFT LEG — patient's left = diagram RIGHT (56-63)
+            [217,312],[230,348],[242,388],[238,425],[248,462],[250,495],[230,502],[205,428],
+        ];
+
+        const BODY_EDGES = [
+            // Head outline
+            [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],
+            [0,5],[2,8],[1,6],[3,7],
+            // Neck
+            [5,10],[5,11],[10,11],[10,12],[11,13],[12,13],[10,13],[11,12],
+            // Shoulders
+            [12,14],[13,16],[14,15],[16,17],[13,18],[12,19],
+            [14,18],[16,19],[15,20],[17,21],[18,19],[18,20],[19,21],[20,21],
+            // Torso upper → mid
+            [20,22],[21,24],[20,23],[21,23],[18,23],[19,23],[22,23],[23,24],[22,25],[24,26],
+            // Torso mid → hips
+            [25,27],[26,29],[23,28],[25,30],[26,31],[27,28],[28,29],[27,30],[29,31],[30,31],
+            // Right arm (diagram LEFT)
+            [14,32],[15,32],[32,33],[33,34],[34,35],[35,36],[36,37],[37,38],[38,39],
+            [32,34],[33,35],[34,36],[35,37],[36,38],
+            // Left arm (diagram RIGHT)
+            [16,40],[17,40],[40,41],[41,42],[42,43],[43,44],[44,45],[45,46],[46,47],
+            [40,42],[41,43],[42,44],[43,45],[44,46],
+            // Right leg (diagram LEFT)
+            [27,48],[30,48],[48,49],[49,50],[50,51],[51,52],[52,53],[53,54],[51,55],[54,55],
+            [48,50],[49,51],[50,55],[50,52],
+            // Left leg (diagram RIGHT)
+            [29,56],[31,56],[56,57],[57,58],[58,59],[59,60],[60,61],[61,62],[59,63],[62,63],
+            [56,58],[57,59],[58,63],[58,60],
+        ];
+
+        let _bodyDiagramBuilt = false;
+
+        function buildBodyDiagram() {
+            if (_bodyDiagramBuilt) return;
+            _bodyDiagramBuilt = true;
+
+            const ns = 'http://www.w3.org/2000/svg';
+            const g  = document.getElementById('bodyWireframe');
+            if (!g) return;
+
+            // Edges
+            for (const [a, b] of BODY_EDGES) {
+                const [x1, y1] = BODY_NODES[a];
+                const [x2, y2] = BODY_NODES[b];
+                const line = document.createElementNS(ns, 'line');
+                line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+                line.setAttribute('stroke', 'rgba(0,210,255,0.30)');
+                line.setAttribute('stroke-width', '0.65');
+                line.setAttribute('filter', 'url(#bodyEdgeGlow)');
+                g.appendChild(line);
+            }
+
+            // Nodes
+            for (const [cx, cy] of BODY_NODES) {
+                const circle = document.createElementNS(ns, 'circle');
+                circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
+                circle.setAttribute('r',  '2.2');
+                circle.setAttribute('fill', '#00e5ff');
+                circle.setAttribute('opacity', '0.72');
+                circle.setAttribute('filter', 'url(#nodeGlow)');
+                g.appendChild(circle);
+            }
+        }
+
+        function updateBodyDiagram(lastSites) {
+            const ns = 'http://www.w3.org/2000/svg';
+            const g  = document.getElementById('injectionMarkers');
+            if (!g) return;
+            g.innerHTML = '';
+
+            // Inject pulse keyframes once
+            if (!document.getElementById('injPulseStyle')) {
+                const s = document.createElement('style');
+                s.id = 'injPulseStyle';
+                s.textContent = `
+                  @keyframes injDotPulse {
+                    0%,100% { r:5; opacity:0.9; }
+                    50%      { r:9; opacity:0.35; }
+                  }
+                  .inj-pulse { animation: injDotPulse 2.2s ease-in-out infinite; }
+                `;
+                document.head.appendChild(s);
+            }
+
+            for (const [compound, site] of Object.entries(lastSites)) {
+                const coords = SITE_COORDS[site];
+                if (!coords) continue;
+
+                const { x, y, side } = coords;
+                const labelOffX = side === 'left' ? -58 : 58;
+                const labelCX   = x + labelOffX;
+                const lineEndX  = side === 'left' ? x - 9 : x + 9;
+                const labelW    = Math.max(52, compound.length * 6.8);
+                const labelRX   = side === 'left' ? labelCX - labelW / 2 : labelCX - labelW / 2;
+
+                // Connector line
+                const line = document.createElementNS(ns, 'line');
+                line.setAttribute('x1', lineEndX); line.setAttribute('y1', y);
+                line.setAttribute('x2', labelCX);  line.setAttribute('y2', y);
+                line.setAttribute('stroke', '#ff3344');
+                line.setAttribute('stroke-width', '1');
+                line.setAttribute('opacity', '0.65');
+                g.appendChild(line);
+
+                // Outer glow ring (pulsing)
+                const outer = document.createElementNS(ns, 'circle');
+                outer.setAttribute('cx', x); outer.setAttribute('cy', y);
+                outer.setAttribute('r',  '5');
+                outer.setAttribute('fill', 'rgba(255,50,68,0.35)');
+                outer.setAttribute('filter', 'url(#redGlow)');
+                outer.classList.add('inj-pulse');
+                g.appendChild(outer);
+
+                // Solid core dot
+                const dot = document.createElementNS(ns, 'circle');
+                dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+                dot.setAttribute('r',  '3');
+                dot.setAttribute('fill', '#ff3344');
+                dot.setAttribute('filter', 'url(#redGlow)');
+                g.appendChild(dot);
+
+                // Label pill background
+                const pill = document.createElementNS(ns, 'rect');
+                pill.setAttribute('x',      labelRX);
+                pill.setAttribute('y',      y - 9);
+                pill.setAttribute('width',  labelW);
+                pill.setAttribute('height', 18);
+                pill.setAttribute('rx',     '4');
+                pill.setAttribute('fill',   'rgba(14,5,8,0.88)');
+                pill.setAttribute('stroke', 'rgba(255,50,68,0.55)');
+                pill.setAttribute('stroke-width', '0.6');
+                g.appendChild(pill);
+
+                // Compound name
+                const txt = document.createElementNS(ns, 'text');
+                txt.setAttribute('x',           labelCX);
+                txt.setAttribute('y',           y + 4);
+                txt.setAttribute('text-anchor', 'middle');
+                txt.setAttribute('fill',        '#ff6677');
+                txt.setAttribute('font-size',   '9');
+                txt.setAttribute('font-family', 'Space Grotesk, sans-serif');
+                txt.setAttribute('font-weight', '700');
+                txt.setAttribute('filter',      'url(#redGlow)');
+                txt.textContent = compound;
+                g.appendChild(txt);
+            }
+        }
+
+        // Pull the most-recent injection site per compound from logs array
+        function extractLastSites(logs) {
+            const seen = new Set();
+            const out  = {};
+            for (const log of logs) {   // API returns newest-first
+                if (log.site && log.compound && !seen.has(log.compound)) {
+                    seen.add(log.compound);
+                    out[log.compound] = log.site;
+                }
+            }
+            return out;
+        }
+
+        // Show / hide the custom injection site input
+        function onSiteChange() {
+            const val = document.getElementById('logSite').value;
+            const row = document.getElementById('customSiteRow');
+            row.classList.toggle('hidden', val !== 'Custom');
+            if (val !== 'Custom') document.getElementById('logCustomSite').value = '';
+        }
+
+        // ── Particle canvas ───────────────────────────────────────────────────
+        function initParticleCanvas() {
+            const canvas = document.getElementById('particleCanvas');
+            if (!canvas || canvas._pcInit) return;
+            canvas._pcInit = true;
+
+            function resize() {
+                const p = canvas.parentElement;
+                canvas.width  = p.offsetWidth  || 360;
+                canvas.height = p.offsetHeight || 300;
+            }
+            resize();
+            window.addEventListener('resize', resize, { passive: true });
+
+            const ctx = canvas.getContext('2d');
+            const rnd = (a, b) => a + Math.random() * (b - a);
+            const N   = 42;
+
+            const pts = Array.from({ length: N }, () => ({
+                x:      rnd(0, canvas.width),
+                y:      rnd(0, canvas.height),
+                r:      rnd(0.8, 3.2),
+                vx:     rnd(-0.1, 0.1),
+                vy:     rnd(-0.08, 0.08),
+                o:      rnd(0.06, 0.32),
+                od:     Math.random() > 0.5 ? 1 : -1,
+                os:     rnd(0.002, 0.007),
+            }));
+
+            function frame() {
+                if (!canvas.isConnected) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (const p of pts) {
+                    p.x += p.vx; p.y += p.vy;
+                    p.o += p.od * p.os;
+                    if (p.o > 0.35 || p.o < 0.05) p.od *= -1;
+                    if (p.x < -8)              p.x = canvas.width  + 4;
+                    if (p.x > canvas.width  + 8) p.x = -4;
+                    if (p.y < -8)              p.y = canvas.height + 4;
+                    if (p.y > canvas.height + 8) p.y = -4;
+
+                    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.5);
+                    grd.addColorStop(0, `rgba(0,229,255,${p.o})`);
+                    grd.addColorStop(1, 'rgba(0,100,200,0)');
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r * 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = grd;
+                    ctx.fill();
+                }
+                requestAnimationFrame(frame);
+            }
+            frame();
+        }
+
+        // ── Mobile bottom-nav active-state helper ─────────────────────────
+        function updateMobileNav(section) {
+            const ids = { home:'mobNav-home', calculator:'mobNav-calc', tracker:'mobNav-tracker', shop:'mobNav-shop' };
+            document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('mob-active'));
+            const id = ids[section];
+            if (id) document.getElementById(id)?.classList.add('mob-active');
+        }
+
         // Patch showSection so it doesn't crash on synthetic events
         const _origShowSection = showSection;
         showSection = function(name, fakeEvt) {
@@ -3109,6 +3418,7 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
             if (window.event && window.event.target) window.event.target.classList.add('nav-active');
             window.scrollTo(0, 0);
+            updateMobileNav(name);
             // Trigger section data
             if (name === 'library')   renderLibraryGrid();
             if (name === 'shop')      renderShopGrid();
