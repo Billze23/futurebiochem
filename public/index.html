@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FutureBioChem - Research & Laboratory Portal</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         * {
@@ -14,6 +14,12 @@
         h1, h2, h3, .headline {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
+        }
+        /* Orbitron Bold for the brand name */
+        .brand-name {
+            font-family: 'Orbitron', 'Space Grotesk', sans-serif !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.04em;
         }
         body {
             background: #0d0f17;
@@ -428,7 +434,7 @@
     <div id="ageGate" class="fixed inset-0 z-9999 bg-[#0d0f17] flex flex-col items-center justify-center p-4" style="z-index: 9999;">
         <div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at 50% 0%, #00e5ff, transparent 70%);"></div>
         <div class="relative z-10 max-w-md w-full text-center">
-            <h1 class="text-4xl font-bold text-[#00e5ff] mb-2 font-['Space_Grotesk']">FUTUREBIOCHEM</h1>
+            <h1 class="text-4xl font-bold text-[#00e5ff] mb-2 brand-name">FUTUREBIOCHEM</h1>
             <p class="text-secondary mb-8">Research & Laboratory Portal</p>
 
             <div class="bg-surface border-l-4 border-gold p-6 mb-8 text-left">
@@ -458,7 +464,7 @@
         <!-- FIXED NAV -->
         <nav class="fixed top-0 left-0 right-0 bg-surface bg-opacity-95 backdrop-blur border-b border-surface z-40" style="background: rgba(13,15,23,0.95);">
             <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-                <button onclick="showSection('home')" class="text-xl md:text-2xl font-bold text-cyan font-['Space_Grotesk'] hover:opacity-75 transition-opacity" style="background:none;border:none;cursor:pointer;padding:0;" aria-label="Go to home">FUTUREBIOCHEM</button>
+                <button onclick="showSection('home')" class="text-xl md:text-2xl font-bold text-cyan brand-name hover:opacity-75 transition-opacity" style="background:none;border:none;cursor:pointer;padding:0;" aria-label="Go to home">FUTUREBIOCHEM</button>
 
                 <!-- Desktop links -->
                 <div id="navLinks" class="items-center gap-6">
@@ -496,7 +502,7 @@
         <div id="mobileDrawer" onclick="closeMobileDrawer()">
             <div id="mobileDrawerPanel" onclick="event.stopPropagation()">
                 <div class="flex items-center justify-between mb-6">
-                    <span class="text-cyan font-bold text-lg font-['Space_Grotesk']">FUTUREBIOCHEM</span>
+                    <span class="text-cyan font-bold text-lg brand-name">FUTUREBIOCHEM</span>
                     <button onclick="closeMobileDrawer()" class="text-secondary hover:text-white p-1">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -564,7 +570,15 @@
                                 <p class="text-[#8891a4] max-w-lg text-base md:text-lg leading-relaxed">Harness the power of laboratory-grade accuracy. Our advanced calculating engine ensures your protocols are measured with microscopic exactness.</p>
                                 <div class="flex gap-3 flex-wrap">
                                     <button onclick="showSection('calculator')" class="btn-cyan text-sm md:text-base px-5 md:px-8 py-3 md:py-4">Launch Calculator</button>
+                                    <button onclick="openTracker()" class="text-sm md:text-base px-5 md:px-8 py-3 md:py-4 font-bold rounded-lg transition-all" style="background:rgba(0,229,255,0.12);color:#00e5ff;border:2px solid #00e5ff;box-shadow:0 0 18px rgba(0,229,255,0.35),0 0 36px rgba(0,229,255,0.12);text-shadow:0 0 12px rgba(0,229,255,0.7);" onmouseover="this.style.background='rgba(0,229,255,0.22)';this.style.boxShadow='0 0 24px rgba(0,229,255,0.55),0 0 48px rgba(0,229,255,0.2)'" onmouseout="this.style.background='rgba(0,229,255,0.12)';this.style.boxShadow='0 0 18px rgba(0,229,255,0.35),0 0 36px rgba(0,229,255,0.12)'">
+                                        <span style="margin-right:6px;">⚡</span>Peptide Tracker
+                                    </button>
                                     <button onclick="showSection('protocols')" class="btn-cyan-outline text-sm md:text-base px-5 md:px-8 py-3 md:py-4">View Protocols</button>
+                                </div>
+                                <!-- Tracker feature callout -->
+                                <div class="flex items-center gap-3 mt-2 p-3 rounded-xl" style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.18);">
+                                    <span style="font-size:20px;">🧬</span>
+                                    <p class="text-xs text-secondary leading-relaxed"><span class="text-cyan font-bold">NEW — Peptide Tracker:</span> Log every dose, track injection sites on an interactive body map, and manage your vial inventory in one place.</p>
                                 </div>
                             </div>
                             <!-- Circular vial image -->
@@ -780,7 +794,7 @@
                 <!-- FOOTER -->
                 <footer class="border-t border-surface py-10 mt-16 md:mt-24">
                     <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 text-center md:text-left">
-                        <h3 class="text-cyan font-bold text-lg font-['Space_Grotesk']">FUTUREBIOCHEM</h3>
+                        <h3 class="text-cyan font-bold text-lg brand-name">FUTUREBIOCHEM</h3>
                         <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-secondary text-sm">
                             <a href="#" class="hover:text-cyan transition">Privacy Policy</a>
                             <a href="#" class="hover:text-cyan transition">Terms of Service</a>
@@ -1176,15 +1190,6 @@
                                     <option value="immune">Immune</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-secondary text-xs mb-2 font-bold">SOLUBILITY PROFILE</label>
-                                <select id="solubilityFilter" class="w-full">
-                                    <option value="">Any Solubility</option>
-                                    <option value="highly">Highly Soluble</option>
-                                    <option value="moderate">Moderately Soluble</option>
-                                    <option value="bac">BAC Water Required</option>
-                                </select>
-                            </div>
                         </div>
 
                         <!-- QUICK TAGS -->
@@ -1305,9 +1310,11 @@
                                 </defs>
                                 <!-- Aura behind figure -->
                                 <ellipse cx="180" cy="245" rx="118" ry="210" fill="url(#figureAura)"/>
-                                <!-- Static wireframe (lines + nodes) rendered by JS -->
+                                <!-- Wireframe body image -->
+                                <image href="/images/body-wireframe.png" x="0" y="0" width="360" height="510" preserveAspectRatio="xMidYMid meet"/>
+                                <!-- Placeholder group (unused, kept for JS compat) -->
                                 <g id="bodyWireframe"></g>
-                                <!-- Dynamic injection markers -->
+                                <!-- Dynamic injection markers overlaid on top -->
                                 <g id="injectionMarkers"></g>
                             </svg>
                             <p class="text-secondary text-xs text-center pb-3" style="position:relative;z-index:1;">Patient's right = left side of diagram &nbsp;·&nbsp; Patient's left = right side</p>
@@ -3180,6 +3187,12 @@
         let _bodyDiagramBuilt = false;
 
         function buildBodyDiagram() {
+            // Body wireframe is now a static PNG image embedded in the SVG.
+            // No JS drawing needed.
+            _bodyDiagramBuilt = true;
+        }
+
+        function _buildBodyDiagram_UNUSED() {
             if (_bodyDiagramBuilt) return;
             _bodyDiagramBuilt = true;
 
