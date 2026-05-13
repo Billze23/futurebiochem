@@ -773,7 +773,6 @@
                         <p class="text-secondary mb-8">Join thousands of researchers using FutureBioChem for error-free dosing and protocol management.</p>
                         <div class="flex gap-4 justify-center">
                             <button onclick="openAuthModal('register')" class="btn-cyan">Create Free Account</button>
-                            <button class="btn-cyan-outline">Download Guide</button>
                         </div>
                     </div>
                 </div>
@@ -1389,7 +1388,16 @@
                                     <label class="auth-label">Custom Site Description</label>
                                     <input id="logCustomSite" type="text" placeholder="e.g. Left neck, Right hip…" class="auth-input">
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                                    <div>
+                                        <label class="auth-label">Units</label>
+                                        <select id="logDoseUnits" class="auth-input">
+                                            <option value="mg">mg (milligrams)</option>
+                                            <option value="IU">IU (International Units)</option>
+                                            <option value="mcg">mcg (micrograms)</option>
+                                            <option value="mL">mL (millilitres)</option>
+                                        </select>
+                                    </div>
                                     <div>
                                         <label class="auth-label">Date / Time</label>
                                         <input id="logDateTime" type="datetime-local" class="auth-input">
@@ -1417,11 +1425,11 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                                     <div>
                                         <label class="auth-label">Compound</label>
-                                        <select id="vialCompound" class="auth-input">
+                                        <select id="vialCompound" onchange="onVialCompoundChange()" class="auth-input">
                                             <option value="">— select —</option>
                                             <option>BPC-157</option><option>TB-500</option><option>GHK-Cu</option>
                                             <option>KPV</option><option>Retatrutide</option><option>Mots-C</option>
-                                            <option>NAD+</option><option>Klow</option>
+                                            <option>NAD+</option><option>Epithalon</option><option>Klow</option>
                                             <option>Glow</option><option>Wolverine Stack</option><option>Other</option>
                                         </select>
                                     </div>
@@ -1437,6 +1445,11 @@
                                         <label class="auth-label">Expiry Date</label>
                                         <input id="vialExpiry" type="date" class="auth-input">
                                     </div>
+                                </div>
+                                <!-- Custom compound input (revealed when "Other" is selected) -->
+                                <div id="customVialCompoundRow" class="hidden mb-3">
+                                    <label class="auth-label">Custom Peptide Name</label>
+                                    <input id="vialCustomCompound" type="text" placeholder="Enter peptide name…" class="auth-input">
                                 </div>
                                 <div class="mb-4">
                                     <label class="auth-label">Lot / Batch Note</label>
@@ -2862,7 +2875,7 @@
                                     <tr class="hover:bg-white/2 transition">
                                         <td class="px-4 py-3 text-secondary text-xs whitespace-nowrap">${formatLogDate(l.logged_at)}</td>
                                         <td class="px-4 py-3 text-white font-bold">${l.compound}</td>
-                                        <td class="px-4 py-3 text-cyan font-bold">${l.dose_mg} mg</td>
+                                        <td class="px-4 py-3 text-cyan font-bold">${l.dose_mg} ${l.dose_units || 'mg'}</td>
                                         <td class="px-4 py-3 text-secondary text-xs">${l.site || '—'}</td>
                                         <td class="px-4 py-3 text-secondary text-xs">${l.notes || '—'}</td>
                                         <td class="px-4 py-3">
@@ -2883,10 +2896,11 @@
         }
 
         async function submitDoseLog() {
-            const compound = document.getElementById('logCompound').value;
-            const dose_mg  = parseFloat(document.getElementById('logDoseMg').value);
-            const vial_id  = document.getElementById('logVialId').value || null;
-            let   site     = document.getElementById('logSite').value || null;
+            const compound   = document.getElementById('logCompound').value;
+            const dose_mg    = parseFloat(document.getElementById('logDoseMg').value);
+            const dose_units = document.getElementById('logDoseUnits')?.value || 'mg';
+            const vial_id    = document.getElementById('logVialId').value || null;
+            let   site       = document.getElementById('logSite').value || null;
             if (site === 'Custom') site = (document.getElementById('logCustomSite').value || '').trim() || null;
             const notes    = document.getElementById('logNotes').value || null;
             const dt       = document.getElementById('logDateTime').value;
@@ -2898,11 +2912,11 @@
             try {
                 const res = await authFetch('/api/tracker/logs', {
                     method: 'POST',
-                    body: JSON.stringify({ compound, dose_mg, vial_id, site, notes, logged_at })
+                    body: JSON.stringify({ compound, dose_mg, dose_units, vial_id, site, notes, logged_at })
                 });
                 const data = await res.json();
                 if (!res.ok) return showAuthMsg('logMsg', data.error || 'Failed to log dose.');
-                showAuthMsg('logMsg', `✓ ${compound} ${dose_mg}mg logged.`, false);
+                showAuthMsg('logMsg', `✓ ${compound} ${dose_mg} ${dose_units} logged.`, false);
                 document.getElementById('logDoseMg').value = '';
                 document.getElementById('logNotes').value = '';
                 document.getElementById('logSite').value = '';
@@ -2986,7 +3000,11 @@
         }
 
         async function submitVial() {
-            const compound    = document.getElementById('vialCompound').value;
+            let compound      = document.getElementById('vialCompound').value;
+            if (compound === 'Other') {
+                compound = (document.getElementById('vialCustomCompound')?.value || '').trim();
+                if (!compound) return showAuthMsg('vialMsg', 'Please enter a custom peptide name.');
+            }
             const total_mg    = parseFloat(document.getElementById('vialTotalMg').value);
             const bac_water_ml = parseFloat(document.getElementById('vialBacWater').value) || 2.0;
             const expires_at  = document.getElementById('vialExpiry').value || null;
@@ -3159,55 +3177,6 @@
             'Left Forearm':  { x: 280, y: 278, side: 'right' },
         };
 
-        // Low-poly body nodes [x, y] in 360×510 viewBox
-        const BODY_NODES = [
-            // HEAD (0-9)
-            [180,22],[210,33],[228,55],[222,80],[210,92],[180,97],[150,92],[138,80],[132,55],[150,33],
-            // NECK (10-13)
-            [163,100],[197,100],[193,120],[167,120],
-            // SHOULDERS / UPPER CHEST (14-21)
-            [105,133],[82,148],[255,133],[278,148],[148,168],[212,168],[122,178],[238,178],
-            // TORSO MID (22-26)
-            [128,232],[175,248],[232,232],[118,248],[242,248],
-            // HIPS (27-31)
-            [125,298],[180,308],[235,298],[158,310],[202,310],
-            // RIGHT ARM — patient's right = diagram LEFT (32-39)
-            [98,145],[80,168],[77,202],[84,230],[78,258],[80,288],[78,320],[70,348],
-            // LEFT ARM — patient's left = diagram RIGHT (40-47)
-            [262,145],[280,168],[283,202],[276,230],[282,258],[280,288],[282,320],[290,348],
-            // RIGHT LEG — patient's right = diagram LEFT (48-55)
-            [143,312],[130,348],[118,388],[122,425],[112,462],[110,495],[130,502],[155,428],
-            // LEFT LEG — patient's left = diagram RIGHT (56-63)
-            [217,312],[230,348],[242,388],[238,425],[248,462],[250,495],[230,502],[205,428],
-        ];
-
-        const BODY_EDGES = [
-            // Head outline
-            [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],
-            [0,5],[2,8],[1,6],[3,7],
-            // Neck
-            [5,10],[5,11],[10,11],[10,12],[11,13],[12,13],[10,13],[11,12],
-            // Shoulders
-            [12,14],[13,16],[14,15],[16,17],[13,18],[12,19],
-            [14,18],[16,19],[15,20],[17,21],[18,19],[18,20],[19,21],[20,21],
-            // Torso upper → mid
-            [20,22],[21,24],[20,23],[21,23],[18,23],[19,23],[22,23],[23,24],[22,25],[24,26],
-            // Torso mid → hips
-            [25,27],[26,29],[23,28],[25,30],[26,31],[27,28],[28,29],[27,30],[29,31],[30,31],
-            // Right arm (diagram LEFT)
-            [14,32],[15,32],[32,33],[33,34],[34,35],[35,36],[36,37],[37,38],[38,39],
-            [32,34],[33,35],[34,36],[35,37],[36,38],
-            // Left arm (diagram RIGHT)
-            [16,40],[17,40],[40,41],[41,42],[42,43],[43,44],[44,45],[45,46],[46,47],
-            [40,42],[41,43],[42,44],[43,45],[44,46],
-            // Right leg (diagram LEFT)
-            [27,48],[30,48],[48,49],[49,50],[50,51],[51,52],[52,53],[53,54],[51,55],[54,55],
-            [48,50],[49,51],[50,55],[50,52],
-            // Left leg (diagram RIGHT)
-            [29,56],[31,56],[56,57],[57,58],[58,59],[59,60],[60,61],[61,62],[59,63],[62,63],
-            [56,58],[57,59],[58,63],[58,60],
-        ];
-
         let _bodyDiagramBuilt = false;
 
         function buildBodyDiagram() {
@@ -3218,28 +3187,132 @@
             const g  = document.getElementById('bodyWireframe');
             if (!g) return;
 
-            // Edges
-            for (const [a, b] of BODY_EDGES) {
-                const [x1, y1] = BODY_NODES[a];
-                const [x2, y2] = BODY_NODES[b];
-                const line = document.createElementNS(ns, 'line');
-                line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-                line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-                line.setAttribute('stroke', 'rgba(0,210,255,0.30)');
-                line.setAttribute('stroke-width', '0.65');
-                line.setAttribute('filter', 'url(#bodyEdgeGlow)');
-                g.appendChild(line);
+            function mk(tag, attrs) {
+                const el = document.createElementNS(ns, tag);
+                for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+                return el;
             }
 
-            // Nodes
-            for (const [cx, cy] of BODY_NODES) {
-                const circle = document.createElementNS(ns, 'circle');
-                circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
-                circle.setAttribute('r',  '2.2');
-                circle.setAttribute('fill', '#00e5ff');
-                circle.setAttribute('opacity', '0.72');
-                circle.setAttribute('filter', 'url(#nodeGlow)');
-                g.appendChild(circle);
+            const edgeStroke  = 'rgba(0,200,255,0.42)';
+            const ringStroke  = 'rgba(0,210,255,0.52)';
+            const edgeSW      = '1.0';
+            const ringSW      = '1.2';
+            const glowF       = 'url(#bodyEdgeGlow)';
+
+            // ── Structural skeleton lines ─────────────────────────────────
+            // Each entry: [x1,y1, x2,y2]
+            const skelLines = [
+                // Neck
+                [167,96,  167,130], [193,96,  193,130],
+                // Neck to shoulders
+                [167,130, 118,148], [193,130, 242,148],
+                // Torso sides (shoulder → hip)
+                [110,148, 105,205], [250,148, 255,205],  // shoulder to upper arm junction
+                [118,148, 126,340], [242,148, 234,340],  // torso flanks
+                // Arms — right (diagram-left = patient-right)
+                [105,205, 90,268],  [255,205, 270,268],  // upper arm
+                [90,268,  80,332],  [270,268, 280,332],  // forearm
+                [80,332,  74,375],  [280,332, 286,375],  // wrist-to-hand stub
+                // Legs — right
+                [150,340, 150,432], [210,340, 210,432],  // thigh
+                [150,432, 152,500], [210,432, 208,500],  // shin
+                // Clavicles
+                [167,130, 193,130],
+                // Shoulder width cross-bar
+                [118,148, 242,148],
+                // Hip width cross-bar
+                [126,340, 234,340],
+            ];
+
+            for (const [x1,y1,x2,y2] of skelLines) {
+                g.appendChild(mk('line', { x1,y1,x2,y2,
+                    stroke: edgeStroke, 'stroke-width': edgeSW, filter: glowF }));
+            }
+
+            // ── Head outline ellipse ──────────────────────────────────────
+            g.appendChild(mk('ellipse', { cx:180, cy:60, rx:34, ry:40,
+                fill:'none', stroke: ringStroke, 'stroke-width': ringSW, filter: glowF }));
+
+            // ── Cross-section scan rings ──────────────────────────────────
+            // Format: [cx, cy, rx, ry]
+            const rings = [
+                // Head internal scans
+                [180, 42,  30,  9],   // top of skull
+                [180, 72,  33, 10],   // mid head
+                // Neck
+                [180, 112, 14,  6],
+                // Torso — gradually narrowing then widening at hips
+                [180, 148, 64, 15],   // shoulder girdle
+                [180, 192, 54, 13],   // upper chest
+                [180, 235, 49, 12],   // mid chest
+                [180, 272, 46, 11],   // upper abdomen
+                [180, 308, 49, 12],   // lower abdomen
+                [180, 340, 56, 14],   // hip girdle
+                // Right thigh (diagram-left)
+                [150, 378, 21,  8],
+                [150, 432, 17,  7],   // right knee
+                [150, 475, 13,  5],   // right lower leg
+                // Left thigh (diagram-right)
+                [210, 378, 21,  8],
+                [210, 432, 17,  7],   // left knee
+                [210, 475, 13,  5],   // left lower leg
+                // Right upper arm
+                [105, 205, 10,  5],
+                [90,  268,  9,  4],   // right elbow
+                [80,  332,  8,  4],   // right forearm
+                // Left upper arm
+                [255, 205, 10,  5],
+                [270, 268,  9,  4],   // left elbow
+                [280, 332,  8,  4],   // left forearm
+            ];
+
+            for (const [cx,cy,rx,ry] of rings) {
+                g.appendChild(mk('ellipse', { cx, cy, rx, ry,
+                    fill:'none', stroke: ringStroke, 'stroke-width': ringSW, filter: glowF }));
+            }
+
+            // ── Vertical scan lines on rings (gives cross-section depth) ──
+            const ringTicks = [
+                // torso centre-line stubs
+                [180, 148-15, 180, 148+15],
+                [180, 192-13, 180, 192+13],
+                [180, 235-12, 180, 235+12],
+                [180, 272-11, 180, 272+11],
+                [180, 308-12, 180, 308+12],
+                [180, 340-14, 180, 340+14],
+            ];
+            for (const [x1,y1,x2,y2] of ringTicks) {
+                g.appendChild(mk('line', { x1,y1,x2,y2,
+                    stroke:'rgba(0,210,255,0.18)', 'stroke-width':'0.7', filter: glowF }));
+            }
+
+            // ── Joint nodes ───────────────────────────────────────────────
+            const joints = [
+                [180, 96],   // base of skull
+                [180, 130],  // chin / top neck
+                [118, 148],  // right shoulder
+                [242, 148],  // left shoulder
+                [105, 205],  // right upper-arm mid
+                [255, 205],  // left upper-arm mid
+                [90,  268],  // right elbow
+                [270, 268],  // left elbow
+                [80,  332],  // right wrist
+                [280, 332],  // left wrist
+                [150, 340],  // right hip
+                [210, 340],  // left hip
+                [150, 432],  // right knee
+                [210, 432],  // left knee
+                [152, 500],  // right ankle
+                [208, 500],  // left ankle
+            ];
+
+            for (const [cx, cy] of joints) {
+                // glow halo
+                g.appendChild(mk('circle', { cx, cy, r:'4',
+                    fill:'rgba(0,229,255,0.18)', filter:'url(#nodeGlow)' }));
+                // bright core
+                g.appendChild(mk('circle', { cx, cy, r:'2.6',
+                    fill:'#00e5ff', opacity:'0.9', filter:'url(#nodeGlow)' }));
             }
         }
 
@@ -3263,31 +3336,43 @@
                 document.head.appendChild(s);
             }
 
-            for (const [compound, site] of Object.entries(lastSites)) {
+            function fmtShortDate(ts) {
+                if (!ts) return '';
+                const d = new Date(ts);
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            for (const [compound, info] of Object.entries(lastSites)) {
+                const site = info.site;
+                const dateStr = fmtShortDate(info.date);
                 const coords = SITE_COORDS[site];
                 if (!coords) continue;
 
                 const { x, y, side } = coords;
-                const labelOffX = side === 'left' ? -58 : 58;
+                const labelOffX = side === 'left' ? -62 : 62;
                 const labelCX   = x + labelOffX;
                 const lineEndX  = side === 'left' ? x - 9 : x + 9;
-                const labelW    = Math.max(52, compound.length * 6.8);
-                const labelRX   = side === 'left' ? labelCX - labelW / 2 : labelCX - labelW / 2;
+                const lineEndY  = y;
+                const labelW    = Math.max(56, Math.max(compound.length, dateStr.length) * 6.5 + 10);
+                const labelH    = dateStr ? 28 : 18;
+                const labelRX   = labelCX - labelW / 2;
+                const labelRY   = y - labelH / 2;
 
-                // Connector line
-                const line = document.createElementNS(ns, 'line');
-                line.setAttribute('x1', lineEndX); line.setAttribute('y1', y);
-                line.setAttribute('x2', labelCX);  line.setAttribute('y2', y);
-                line.setAttribute('stroke', '#ff3344');
-                line.setAttribute('stroke-width', '1');
-                line.setAttribute('opacity', '0.65');
-                g.appendChild(line);
+                // Connector line (from dot edge to pill)
+                const lineEl = document.createElementNS(ns, 'line');
+                lineEl.setAttribute('x1', lineEndX); lineEl.setAttribute('y1', lineEndY);
+                lineEl.setAttribute('x2', side === 'left' ? labelCX + labelW / 2 : labelCX - labelW / 2);
+                lineEl.setAttribute('y2', y);
+                lineEl.setAttribute('stroke', '#ff3344');
+                lineEl.setAttribute('stroke-width', '0.9');
+                lineEl.setAttribute('opacity', '0.6');
+                g.appendChild(lineEl);
 
                 // Outer glow ring (pulsing)
                 const outer = document.createElementNS(ns, 'circle');
                 outer.setAttribute('cx', x); outer.setAttribute('cy', y);
                 outer.setAttribute('r',  '5');
-                outer.setAttribute('fill', 'rgba(255,50,68,0.35)');
+                outer.setAttribute('fill', 'rgba(255,50,68,0.32)');
                 outer.setAttribute('filter', 'url(#redGlow)');
                 outer.classList.add('inj-pulse');
                 g.appendChild(outer);
@@ -3303,38 +3388,52 @@
                 // Label pill background
                 const pill = document.createElementNS(ns, 'rect');
                 pill.setAttribute('x',      labelRX);
-                pill.setAttribute('y',      y - 9);
+                pill.setAttribute('y',      labelRY);
                 pill.setAttribute('width',  labelW);
-                pill.setAttribute('height', 18);
+                pill.setAttribute('height', labelH);
                 pill.setAttribute('rx',     '4');
-                pill.setAttribute('fill',   'rgba(14,5,8,0.88)');
-                pill.setAttribute('stroke', 'rgba(255,50,68,0.55)');
-                pill.setAttribute('stroke-width', '0.6');
+                pill.setAttribute('fill',   'rgba(10,3,6,0.92)');
+                pill.setAttribute('stroke', 'rgba(255,50,68,0.5)');
+                pill.setAttribute('stroke-width', '0.7');
                 g.appendChild(pill);
 
-                // Compound name
-                const txt = document.createElementNS(ns, 'text');
-                txt.setAttribute('x',           labelCX);
-                txt.setAttribute('y',           y + 4);
-                txt.setAttribute('text-anchor', 'middle');
-                txt.setAttribute('fill',        '#ff6677');
-                txt.setAttribute('font-size',   '9');
-                txt.setAttribute('font-family', 'Space Grotesk, sans-serif');
-                txt.setAttribute('font-weight', '700');
-                txt.setAttribute('filter',      'url(#redGlow)');
-                txt.textContent = compound;
-                g.appendChild(txt);
+                // Compound name (top line)
+                const nameY = dateStr ? y - 4 : y + 4;
+                const nameEl = document.createElementNS(ns, 'text');
+                nameEl.setAttribute('x',           labelCX);
+                nameEl.setAttribute('y',           nameY);
+                nameEl.setAttribute('text-anchor', 'middle');
+                nameEl.setAttribute('fill',        '#ff6677');
+                nameEl.setAttribute('font-size',   '8.5');
+                nameEl.setAttribute('font-family', 'Space Grotesk, sans-serif');
+                nameEl.setAttribute('font-weight', '700');
+                nameEl.textContent = compound;
+                g.appendChild(nameEl);
+
+                // Date (bottom line, dimmer)
+                if (dateStr) {
+                    const dateEl = document.createElementNS(ns, 'text');
+                    dateEl.setAttribute('x',           labelCX);
+                    dateEl.setAttribute('y',           y + 9);
+                    dateEl.setAttribute('text-anchor', 'middle');
+                    dateEl.setAttribute('fill',        'rgba(255,160,168,0.82)');
+                    dateEl.setAttribute('font-size',   '7.5');
+                    dateEl.setAttribute('font-family', 'Space Grotesk, sans-serif');
+                    dateEl.setAttribute('font-weight', '500');
+                    dateEl.textContent = dateStr;
+                    g.appendChild(dateEl);
+                }
             }
         }
 
-        // Pull the most-recent injection site per compound from logs array
+        // Pull the most-recent injection site + date per compound from logs array
         function extractLastSites(logs) {
             const seen = new Set();
             const out  = {};
             for (const log of logs) {   // API returns newest-first
                 if (log.site && log.compound && !seen.has(log.compound)) {
                     seen.add(log.compound);
-                    out[log.compound] = log.site;
+                    out[log.compound] = { site: log.site, date: log.logged_at };
                 }
             }
             return out;
@@ -3346,6 +3445,14 @@
             const row = document.getElementById('customSiteRow');
             row.classList.toggle('hidden', val !== 'Custom');
             if (val !== 'Custom') document.getElementById('logCustomSite').value = '';
+        }
+
+        // Show / hide the custom vial compound name input
+        function onVialCompoundChange() {
+            const val = document.getElementById('vialCompound').value;
+            const row = document.getElementById('customVialCompoundRow');
+            row.classList.toggle('hidden', val !== 'Other');
+            if (val !== 'Other') document.getElementById('vialCustomCompound').value = '';
         }
 
         // ── Particle canvas ───────────────────────────────────────────────────
