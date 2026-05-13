@@ -443,6 +443,23 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`FutureBioChem running at http://localhost:${PORT}`);
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received — shutting down gracefully');
+  process.exit(0);
+});
+
+// Catch any unhandled errors so they appear in the deploy logs
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection:', reason);
+  process.exit(1);
+});
+
+// Bind to 0.0.0.0 explicitly so the platform's health-check can reach the port
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`FutureBioChem running at http://0.0.0.0:${PORT}`);
 });
