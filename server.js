@@ -443,6 +443,18 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// ─── Error Handling Middleware ────────────────────────────────────────────────
+// Catches URIError thrown by Express when a request contains a malformed URL
+// (e.g. /%C0/ sent by security scanners). Without this the process would crash.
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  if (err instanceof URIError) {
+    return res.status(400).send('Bad Request: malformed URI');
+  }
+  console.error('Express error:', err);
+  res.status(500).send('Internal Server Error');
+});
+
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received — shutting down gracefully');
@@ -450,8 +462,12 @@ process.on('SIGTERM', () => {
 });
 
 // Catch any unhandled errors so they appear in the deploy logs
+// Only exit for truly fatal errors — URIError / TypeError from bad requests
+// should not bring down the whole server
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
+  // URIErrors come from malformed URLs in incoming requests — not fatal
+  if (err instanceof URIError) return;
   process.exit(1);
 });
 process.on('unhandledRejection', (reason) => {
